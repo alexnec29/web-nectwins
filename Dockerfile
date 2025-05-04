@@ -2,7 +2,7 @@
 FROM php:8.1-apache
 
 # Copiază tot conţinutul directorului în document root Apache
-COPY . /var/www/html/
+COPY src/ /var/www/html/
 
 # Pune drepturile corecte pe fişiere
 RUN chown -R www-data:www-data /var/www/html

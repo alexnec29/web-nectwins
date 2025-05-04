@@ -14,5 +14,14 @@ services:
       - db_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  php:
+    build: .
+    container_name: wow_php
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
 volumes:
   db_data:
