@@ -1,0 +1,45 @@
+<?php
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
+    $conn = new mysqli("db", "root", "root", "wow_db");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $hashed = hash("sha256", $password);
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
+    $stmt->bind_param("ss", $username, $hashed);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $_SESSION["username"] = $username;
+        header("Location: index.php");
+        exit();
+    } else {
+        $error = "❌ Invalid credentials.";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>Login</h2>
+
+    <?php if (isset($error)) echo "<p>$error</p>"; ?>
+
+    <form method="POST">
+      Username: <input type="text" name="username" required><br>
+      Password: <input type="password" name="password" required><br>
+      <input type="submit" value="Login">
+    </form>
+  </body>
+</html>
