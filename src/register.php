@@ -31,8 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->num_rows > 0) {
             $error = "Username or email already exists.";
-        }
-        elseif ($password !== $confirm_password) {
+        } elseif ($password !== $confirm_password) {
             $error = "Passwords do not match.";
         } elseif (strlen($password) < 8) {
             $error = "Password must be at least 8 characters long.";
@@ -42,8 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $error = "Password must contain at least one lowercase letter.";
         } elseif (!preg_match("/[0-9]/", $password)) {
             $error = "Password must contain at least one number.";
-        } 
-        else {
+        } else {
             $hashed = hash("sha256", $password);
             $insert = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
             $insert->bind_param("sss", $username, $hashed, $email);
@@ -64,28 +62,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Register</title>
-        <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/register.css">
-    </head>
-    <body>
-        <div class="register-card">
-            <h2>Register</h2>
 
-            <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
-            <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/register.css">
+</head>
 
-            <form method="POST">
+<body>
+    <div class="register-card">
+        <h2>Register</h2>
+
+        <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
+        <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
+
+        <form method="POST">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
             <input type="password" name="confirm_password" placeholder="Confirm Password" required><br>
             <input type="email" name="email" placeholder="Email" required><br>
             <input type="submit" value="Register">
-            </form>
+        </form>
 
-            <p>Already have an account? <a href="login.php">Log in here</a>.</p>
-        </div>
-    </body>
+        <p>Already have an account? <a href="login.php">Log in here</a>.</p>
+    </div>
+</body>
+
 </html>
