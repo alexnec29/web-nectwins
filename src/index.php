@@ -9,6 +9,11 @@ if (!isset($_SESSION["username"])) {
 
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Login | FitFlow</title>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
   <body>
     <h1>Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h1>
     <p>You are logged in.</p>

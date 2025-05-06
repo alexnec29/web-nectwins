@@ -10,7 +10,3 @@ CREATE TABLE users (
   email VARCHAR(100) NOT NULL UNIQUE
 );
 
-INSERT INTO users (username, password, email) VALUES
-('admin', SHA2('admin123', 256), 'admin@example.com'),
-('test', SHA2('testpass', 256), 'test@example.com');
-

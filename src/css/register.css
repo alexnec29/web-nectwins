@@ -1,0 +1,37 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d0f0f6, #f6d0e0);
+  }
+  
+  .register-card {
+    background: white;
+    padding: 2em;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+  
+  input[type="submit"] {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  input[type="submit"]:hover {
+    background-color: #005fa3;
+  }
