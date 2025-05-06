@@ -36,14 +36,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
 
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
+  </head>
   <body>
-    <h2>Login</h2>
-    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
-    <form method="POST">
-      Username: <input type="text" name="username" required><br>
-      Password: <input type="password" name="password" required><br>
-      <input type="submit" value="Login">
-    </form>
-    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+    <div class="login-card">
+      <h2>Login</h2>
+      <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
+      <form method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+      </form>
+      <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+    </div>
   </body>
 </html>

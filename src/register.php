@@ -51,19 +51,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <!DOCTYPE html>
 <html>
-  <body>
-    <h2>Register</h2>
+    <head>
+        <meta charset="UTF-8">
+        <title>Register</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/register.css">
+    </head>
+    <body>
+        <div class="register-card">
+            <h2>Register</h2>
 
-    <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
-    <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
+            <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
+            <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
 
-    <form method="POST">
-      Username: <input type="text" name="username" required><br>
-      Password: <input type="password" name="password" required><br>
-      Email: <input type="email" name="email" required><br>
-      <input type="submit" value="Register">
-    </form>
+            <form method="POST">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="submit" value="Register">
+            </form>
 
-    <p>Already have an account? <a href="login.php">Log in here</a>.</p>
-  </body>
+            <p>Already have an account? <a href="login.php">Log in here</a>.</p>
+        </div>
+    </body>
 </html>

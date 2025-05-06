@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  input, button {
+    font-size: 1rem;
+    padding: 0.6em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  a {
+    color: #0077cc;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
