@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (isset($_SESSION["username"])) {
+    header("Location: index.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
     $conn = new mysqli("db", "root", "root", "wow_db");
     if ($conn->connect_error) {
@@ -33,13 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
 <html>
   <body>
     <h2>Login</h2>
-
-    <?php if (isset($error)) echo "<p>$error</p>"; ?>
-
+    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
     <form method="POST">
       Username: <input type="text" name="username" required><br>
       Password: <input type="password" name="password" required><br>
       <input type="submit" value="Login">
     </form>
+    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
   </body>
 </html>
