@@ -1,18 +1,17 @@
 # Workout Web Generator - NecTwins
-If you're running it for the first time:
-
-```bash
-docker-compose up -d --build
-```
-
-If you've run it before:
+To run, use the command
 ```bash
 docker-compose up -d
 ```
 
+If you are changing the DockerFile, use
+```bash
+docker-compose up -d --build
+```
+
 You can then access the website locally via http://localhost:8080
 
-If you want to stop everything:
+If you want to stop the containers:
 ```bash
 docker-compose down
 ```

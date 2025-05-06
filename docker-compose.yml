@@ -22,6 +22,8 @@ services:
       - "8080:80"
     depends_on:
       - db
+    volumes:
+      - ./src:/var/www/html   # ✅ this enables live updates
 
 volumes:
   db_data:
