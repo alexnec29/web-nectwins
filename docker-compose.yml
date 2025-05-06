@@ -23,7 +23,8 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/var/www/html   # ✅ this enables live updates
+      - ./src:/var/www/html # ✅ this enables live updates
+      - ./assets:/var/www/html/assets
 
 volumes:
   db_data:

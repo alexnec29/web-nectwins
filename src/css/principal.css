@@ -1,0 +1,104 @@
+/* Reset simplu */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar */
+nav {
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 1.5rem;
+    color: #2a4365;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex-grow: 1;
+}
+
+.card {
+    width: 700px;
+    height: 400px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-button {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: center;
+    overflow: hidden;
+}
+
+.card-button p {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2c5282;
+}
+
+.card-button img {
+    width: 100%;
+    height: 80%;
+    display: block;
+}
+
+.card-button:hover p {
+    color: #1a365d;
+}
+
+footer {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #718096;
+    border-top: 1px solid #e2e8f0;
+}
+
+footer a {
+    color: #38a169;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
