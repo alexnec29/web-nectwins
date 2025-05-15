@@ -1,8 +1,9 @@
 ﻿# Foloseşte Apache + PHP 8.1
 FROM php:8.1-apache
 
-# Instalăm extensia mysqli (pentru conectare la MySQL)
-RUN docker-php-ext-install mysqli
+# Instalăm extensiile mysqli și pdo_pgsql (pentru MySQL și PostgreSQL)
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install mysqli pdo_pgsql
 
 # Copiază tot conţinutul directorului în document root Apache
 COPY src/ /var/www/html/

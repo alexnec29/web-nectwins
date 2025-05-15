@@ -10,53 +10,46 @@ $success = null;
 $error = null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $conn = new mysqli("db", "root", "root", "wow_db");
+    try {
+        $dsn = "pgsql:host=db;port=5432;dbname=wow_db";
+        $pdo = new PDO($dsn, "root", "root", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+        $username = trim($_POST["username"]);
+        $password = trim($_POST["password"]);
+        $confirm_password = trim($_POST["confirm_password"]);
+        $email = trim($_POST["email"]);
 
-    $username = trim($_POST["username"]);
-    $password = trim($_POST["password"]);
-    $confirm_password = trim($_POST["confirm_password"]);
-    $email = trim($_POST["email"]);
-
-    if (empty($username) || empty($password) || empty($email)) {
-        $error = "Please fill in all fields.";
-    } else {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
-        $stmt->bind_param("ss", $username, $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $error = "Username or email already exists.";
-        } elseif ($password !== $confirm_password) {
-            $error = "Passwords do not match.";
-        } elseif (strlen($password) < 8) {
-            $error = "Password must be at least 8 characters long.";
-        } elseif (!preg_match("/[A-Z]/", $password)) {
-            $error = "Password must contain at least one uppercase letter.";
-        } elseif (!preg_match("/[a-z]/", $password)) {
-            $error = "Password must contain at least one lowercase letter.";
-        } elseif (!preg_match("/[0-9]/", $password)) {
-            $error = "Password must contain at least one number.";
+        if (empty($username) || empty($password) || empty($email)) {
+            $error = "Please fill in all fields.";
         } else {
-            $hashed = hash("sha256", $password);
-            $insert = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-            $insert->bind_param("sss", $username, $hashed, $email);
-            if ($insert->execute()) {
-                $success = "✅ Registration successful! You can now <a href='login.php'>log in</a>.";
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username OR email = :email");
+            $stmt->execute(['username' => $username, 'email' => $email]);
+
+            if ($stmt->rowCount() > 0) {
+                $error = "Username or email already exists.";
+            } elseif ($password !== $confirm_password) {
+                $error = "Passwords do not match.";
+            } elseif (strlen($password) < 8) {
+                $error = "Password must be at least 8 characters long.";
+            } elseif (!preg_match("/[A-Z]/", $password)) {
+                $error = "Password must contain at least one uppercase letter.";
+            } elseif (!preg_match("/[a-z]/", $password)) {
+                $error = "Password must contain at least one lowercase letter.";
+            } elseif (!preg_match("/[0-9]/", $password)) {
+                $error = "Password must contain at least one number.";
             } else {
-                $error = "Something went wrong. Try again.";
+                $hashed = hash("sha256", $password);
+                $insert = $pdo->prepare("INSERT INTO users (username, password, email) VALUES (:username, :password, :email)");
+                if ($insert->execute(['username' => $username, 'password' => $hashed, 'email' => $email])) {
+                    $success = "✅ Registration successful! You can now <a href='login.php'>log in</a>.";
+                } else {
+                    $error = "Something went wrong. Try again.";
+                }
             }
-            $insert->close();
         }
-
-        $stmt->close();
+    } catch (PDOException $e) {
+        die("Connection failed: " . $e->getMessage());
     }
-
-    $conn->close();
 }
 ?>
 
