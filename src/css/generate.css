@@ -1,0 +1,31 @@
+
+form {
+    max-width: 400px;
+    margin: 2em auto;
+    background: white;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+  }
+  
+  form select, form button {
+    width: 100%;
+    margin-bottom: 1.5em;
+  }
+  
+  #result {
+    max-width: 400px;
+    margin: 1em auto;
+    padding: 1em;
+    background-color: #d9f0ff;
+    border: 1px solid #0077cc;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
