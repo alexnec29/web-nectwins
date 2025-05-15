@@ -7,30 +7,27 @@ if (isset($_SESSION["username"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
-  $conn = new mysqli("db", "root", "root", "wow_db");
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  try {
+    $dsn = "pgsql:host=db;port=5432;dbname=wow_db";
+    $pdo = new PDO($dsn, "root", "root", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $hashed = hash("sha256", $password);
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
+    $stmt->execute(['username' => $username, 'password' => $hashed]);
+
+    if ($stmt->rowCount() === 1) {
+      $_SESSION["username"] = $username;
+      header("Location: index.php");
+      exit();
+    } else {
+      $error = "❌ Invalid credentials.";
+    }
+  } catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
   }
-
-  $username = $_POST["username"];
-  $password = $_POST["password"];
-  $hashed = hash("sha256", $password);
-
-  $stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
-  $stmt->bind_param("ss", $username, $hashed);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows === 1) {
-    $_SESSION["username"] = $username;
-    header("Location: index.php");
-    exit();
-  } else {
-    $error = "❌ Invalid credentials.";
-  }
-
-  $stmt->close();
-  $conn->close();
 }
 ?>
 
