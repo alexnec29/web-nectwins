@@ -82,11 +82,11 @@ nav h1 {
 }
 
 .card-button:hover p {
-    color: #1a365d;
+    color: #4885d4;
 }
 
 footer {
-    background: #fff;
+    background: #718096;
     padding: 1.5rem 2rem;
     text-align: center;
     font-size: 0.9rem;
