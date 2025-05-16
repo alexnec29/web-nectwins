@@ -12,7 +12,6 @@ body {
     min-height: 100vh;
 }
 
-/* Navbar */
 nav {
     background: #28282B;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -20,6 +19,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #0b0b0c;
 }
 
 nav h1 {
@@ -42,6 +42,7 @@ nav h1 {
     height: 400px;
     padding: 20px;
     background: #28282B;
+    border-radius: 4%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
 }
