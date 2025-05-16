@@ -7,26 +7,24 @@
 
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f0f4f8;
-    color: #333;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* Navbar */
 nav {
-    background: #fff;
+    background: #28282B;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #0b0b0c;
 }
 
 nav h1 {
     font-size: 1.5rem;
-    color: #2a4365;
+    color: #4885d4;
 }
 
 .grid {
@@ -43,7 +41,8 @@ nav h1 {
     width: 700px;
     height: 400px;
     padding: 20px;
-    background: #fff;
+    background: #28282B;
+    border-radius: 4%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -72,7 +71,7 @@ nav h1 {
     font-size: 30px;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: #2c5282;
+    color: #4885d4;
 }
 
 .card-button img {
@@ -82,11 +81,11 @@ nav h1 {
 }
 
 .card-button:hover p {
-    color: #1a365d;
+    color: #6596d6;
 }
 
 footer {
-    background: #fff;
+    background: #28282B;
     padding: 1.5rem 2rem;
     text-align: center;
     font-size: 0.9rem;
