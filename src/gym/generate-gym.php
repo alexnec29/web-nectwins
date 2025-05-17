@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Generare Antrenament | FitFlow</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/generate.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="css/generate-gym.css">
 </head>
 <?php
 $muscleOptions = [
@@ -41,7 +41,7 @@ $selectedLocation = $_POST['location'] ?? '';
 <body>
     <nav>
         <h1>Generează antrenament</h1>
-        <a href="principal.php">Înapoi</a>
+        <a href="principal-gym.php">Înapoi</a>
     </nav>
 
     <form id="generateForm" method="POST">
