@@ -20,18 +20,27 @@ if (!isset($_SESSION["username"])) {
 <body>
     <nav>
         <h1>Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h1>
-        <button type="button" class="gym buton-apasat">
-            <img src="/assets/gym.png" alt="gym">
-            <span class="nav-tooltip">Bodybuilding</span>
-        </button>
-        <button type="button" class="kineto" onclick="window.location.href='/kineto/principal-kineto.php'">
-            <img src="/assets/kineto.png" alt="kineto">
-            <span class="nav-tooltip">Kinetoterapie</span>
-        </button>
-        <button type="button" class="fizioterapie" onclick="window.location.href='/fizio/principal-fizio.php'">
-            <img src="/assets/fizio.png" alt="fizioterapie">
-            <span class="nav-tooltip">Fizioterapie</span>
-        </button>
+        <form method="post">
+            <input type="hidden" name="active" value="gym">
+            <button type="button" class="gym" onclick="window.location.href='/gym/principal-gym.php'">
+                <img src="/assets/gym.png" alt="gym">
+                <span class="nav-tooltip">Bodybuilding</span>
+            </button>
+        </form>
+        <form method="post">
+            <input type="hidden" name="active" value="kineto">
+            <button type="button" class="kineto" onclick="window.location.href='/kineto/principal-kineto.php'">
+                <img src="/assets/kineto.png" alt="kineto">
+                <span class="nav-tooltip">Kinetoterapie</span>
+            </button>
+        </form>
+        <form method="post">
+            <input type="hidden" name="active" value="fizioterapie">
+            <button type="button" class="fizioterapie buton-apasat">
+                <img src="/assets/fizio.png" alt="fizioterapie">
+                <span class="nav-tooltip">Fizioterapie</span>
+            </button>
+        </form>
         <a href="./../logout.php">Logout</a>
     </nav>
 
