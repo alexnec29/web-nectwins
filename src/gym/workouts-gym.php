@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Antrenamentele Mele | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="css/workouts-gym.css">
+    <link rel="stylesheet" href="/css/workouts.css">
 </head>
 
 <body>

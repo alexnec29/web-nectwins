@@ -47,21 +47,21 @@ if (!isset($_SESSION["username"])) {
     <div class="grid">
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='generate-gym.php'">
+            <button class="card-button" onclick="window.location.href='generate-fizio.php'">
                 <p>Generare Antrenament</p>
                 <img src="/assets/generare-fizio.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='workouts-gym.php'">
+            <button class="card-button" onclick="window.location.href='workouts-fizio.php'">
                 <p>Antrenamentele mele</p>
                 <img src="/assets/workouts-fizio.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='statistics-gym.php'">
+            <button class="card-button" onclick="window.location.href='statistics-fizio.php'">
                 <p>Statistici</p>
                 <img src="/assets/statistics-fizio.png" alt="Generate Workout">
             </button>

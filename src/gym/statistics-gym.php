@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Statistici | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="css/statistics-gym.css">
+    <link rel="stylesheet" href="/css/statistics.css">
 </head>
 
 <body>
