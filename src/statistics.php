@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Statistici | FitFlow</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/statistics.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/statistics.css"> 
 </head>
-
 <body>
     <nav>
         <h1>Statistici</h1>
-        <a href="principal-gym.php">Înapoi</a>
+        <a href="principal.php">Înapoi</a>
     </nav>
 
     <div>
@@ -26,5 +24,4 @@
         </ul>
     </div>
 </body>
-
 </html>

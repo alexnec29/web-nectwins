@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Generare Antrenament | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="css/generate-gym.css">
+    <link rel="stylesheet" href="/css/generate.css">
 </head>
 <?php
 $muscleOptions = [

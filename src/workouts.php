@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Antrenamentele Mele | FitFlow</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/workouts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/workouts.css"> 
 </head>
-
 <body>
     <nav>
         <h1>Antrenamentele mele</h1>
-        <a href="principal-gym.php">Înapoi</a>
+        <a href="principal.php">Înapoi</a>
     </nav>
 
     <div class="workouts-list">
@@ -27,5 +25,4 @@
         </div>
     </div>
 </body>
-
 </html>

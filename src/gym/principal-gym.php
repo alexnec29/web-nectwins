@@ -32,7 +32,17 @@ if (!isset($_SESSION["username"])) {
             <img src="/assets/fizio.png" alt="fizioterapie">
             <span class="nav-tooltip">Fizioterapie</span>
         </button>
-        <a href="./../logout.php">Logout</a>
+        <div class="nav-user">
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <img src="/assets/user.png" alt="Profil" style="height: 24px; vertical-align: middle;">
+                </button>
+                <div class="dropdown-content">
+                    <a href="/profil.php">Vezi/Editează profil</a>
+                    <a href="/logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <div class="grid">
@@ -40,21 +50,28 @@ if (!isset($_SESSION["username"])) {
         <div class="card">
             <button class="card-button" onclick="window.location.href='generate-gym.php'">
                 <p>Generare Antrenament</p>
-                <img src="/assets/generare.png" alt="Generate Workout">
+                <img src="/assets/generare-gym.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
             <button class="card-button" onclick="window.location.href='workouts-gym.php'">
                 <p>Antrenamentele mele</p>
-                <img src="/assets/workouts.png" alt="Generate Workout">
+                <img src="/assets/workouts-gym.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
             <button class="card-button" onclick="window.location.href='statistics-gym.php'">
                 <p>Statistici</p>
-                <img src="/assets/statistics.png" alt="Generate Workout">
+                <img src="/assets/statistics-gym.png" alt="Generate Workout">
+            </button>
+        </div>
+
+        <div class="card">
+            <button class="card-button" onclick="window.location.href='leaderboard-gym.php'">
+                <p>Clasament</p>
+                <img src="/assets/leaderboard-gym.png" alt="Leaderboard">
             </button>
         </div>
 
