@@ -41,7 +41,17 @@ if (!isset($_SESSION["username"])) {
                 <span class="nav-tooltip">Fizioterapie</span>
             </button>
         </form>
-        <a href="./../logout.php">Logout</a>
+        <div class="nav-user">
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <img src="/assets/user.png" alt="Profil" style="height: 24px; vertical-align: middle;">
+                </button>
+                <div class="dropdown-content">
+                    <a href="/profil.php">Vezi/Editează profil</a>
+                    <a href="/logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <div class="grid">
@@ -64,6 +74,13 @@ if (!isset($_SESSION["username"])) {
             <button class="card-button" onclick="window.location.href='statistics-fizio.php'">
                 <p>Statistici</p>
                 <img src="/assets/statistics-fizio.png" alt="Generate Workout">
+            </button>
+        </div>
+
+        <div class="card">
+            <button class="card-button" onclick="window.location.href='leaderboard-fizio.php'">
+                <p>Clasament</p>
+                <img src="/assets/leaderboard-fizio.png" alt="Leaderboard">
             </button>
         </div>
 
