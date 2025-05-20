@@ -49,21 +49,21 @@ if (!isset($_SESSION["username"])) {
         <div class="card">
             <button class="card-button" onclick="window.location.href='generate-gym.php'">
                 <p>Generare Antrenament</p>
-                <img src="/assets/generare.png" alt="Generate Workout">
+                <img src="/assets/generare-kineto.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
             <button class="card-button" onclick="window.location.href='workouts-gym.php'">
                 <p>Antrenamentele mele</p>
-                <img src="/assets/workouts.png" alt="Generate Workout">
+                <img src="/assets/workouts-kineto.png" alt="Generate Workout">
             </button>
         </div>
 
         <div class="card">
             <button class="card-button" onclick="window.location.href='statistics-gym.php'">
                 <p>Statistici</p>
-                <img src="/assets/statistics.png" alt="Generate Workout">
+                <img src="/assets/statistics-kineto.png" alt="Generate Workout">
             </button>
         </div>
 
