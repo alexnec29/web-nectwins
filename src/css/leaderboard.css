@@ -1,0 +1,94 @@
+body {
+    background-color: #1f1f21;
+    font-family: 'Segoe UI', sans-serif;
+    color: #d3e0f0;
+}
+
+nav {
+    background: #28282B;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #0b0b0c;
+}
+
+.leaderboard-container {
+    max-width: 900px;
+    margin: 2em auto;
+    background-color: #28282B;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+}
+
+.leaderboard-container h2 {
+    color: #7da4d8;
+    margin-bottom: 1em;
+    font-size: 1.6rem;
+}
+
+.leaderboard-container h3 {
+    margin-top: 1.5em;
+    color: #9dc1f0;
+    font-size: 1.2rem;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 0.5em;
+}
+
+ul li {
+    background-color: #3a3a3d;
+    margin-bottom: 0.5em;
+    padding: 0.6em 1em;
+    border-radius: 6px;
+    color: #d0e0ff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+table th, table td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid #444;
+}
+
+table thead {
+    background-color: #3a3a3d;
+    color: #fff;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #333;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #2a2a2d;
+}
+
+.export-links {
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+.export-links a {
+    background-color: #0077cc;
+    color: white;
+    padding: 0.6em 1.2em;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.export-links a:hover {
+    background-color: #005fa3;
+}
