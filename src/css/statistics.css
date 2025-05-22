@@ -23,7 +23,6 @@ h2 {
 }
 
 h3 {
-  margin-top: 2em;
   margin-bottom: 1em;
 }
 
@@ -39,4 +38,43 @@ ul li {
   padding: 0.7em 1em;
   border-radius: 8px;
   font-weight: 600;
+}
+
+.rss-section {
+  margin: 2em auto;
+  max-width: 700px;
+  background-color: #28282B;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.rss-section h3 {
+  color: #7da4d8;
+  font-size: 1.3rem;
+  margin-bottom: 1em;
+}
+
+.rss-section p {
+  color: #ccc;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 1.2em;
+}
+
+.rss-link {
+  display: inline-block;
+  background-color: #0077cc;
+  color: white;
+  padding: 0.7em 1.2em;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.rss-link:hover {
+  background-color: #005fa3;
 }
