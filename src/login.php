@@ -19,11 +19,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
     $stmt->execute(['username' => $username, 'password' => $hashed]);
 
     if ($stmt->rowCount() === 1) {
-      $_SESSION["username"] = $username;
-      header("Location: index.php");
+      $user = $stmt->fetch();
+      $_SESSION["username"] = $user["username"];
+      $_SESSION["user_id"] = $user["id"];
+    
+      // Verificăm dacă userul și-a completat profilul
+      if (empty($user["nume"]) || empty($user["varsta"]) || empty($user["gen"])) {
+        header("Location: profil.php");
+      } else {
+        header("Location: index.php");
+      }
       exit();
-    } else {
-      $error = "❌ Invalid credentials.";
     }
   } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
