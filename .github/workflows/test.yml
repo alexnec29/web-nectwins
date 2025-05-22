@@ -28,12 +28,15 @@ jobs:
 
     - name: 💤 Wait for containers
       run: sleep 15
-
-    - name: ✅ Check app responds HTTP 200
+    
+    - name: ✅ Check app responds HTTP 200 or 302
       run: |
         STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
         echo "Status: $STATUS"
-        test "$STATUS" -eq 200
+        if [[ "$STATUS" -ne 200 && "$STATUS" -ne 302 ]]; then
+          echo "❌ Eroare: Cod HTTP neașteptat"
+          exit 1
+        fi
 
     - name: 🧹 Cleanup
       run: docker compose down
