@@ -59,16 +59,11 @@ button.card-button {
   cursor: pointer;
   width: 100%;
   border: none;
-  background-color: #0077cc;
   color: white;
   font-weight: 700;
   padding: 1em;
   border-radius: 10px;
   transition: background-color 0.3s ease;
-}
-
-button.card-button:hover {
-  background-color: #005fa3;
 }
 
 .grid {
@@ -81,7 +76,7 @@ button.card-button:hover {
 .card {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 1em;
   width: 200px;
   text-align: center;
@@ -126,7 +121,7 @@ footer {
   right: 0;
   background-color: white;
   min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
 

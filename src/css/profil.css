@@ -3,7 +3,7 @@
     font-family: 'Segoe UI', sans-serif;
     color: #98acc5;
   }
-  
+
   nav {
     background: #28282B;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -13,17 +13,17 @@
     align-items: center;
     border-bottom: 1px solid #0b0b0c;
   }
-  
+
   nav h1 {
     color: white;
     font-size: 1.5rem;
   }
-  
+
   .dropdown {
     position: relative;
     display: inline-block;
   }
-  
+
   .dropbtn {
     background-color: white;
     color: #28282B;
@@ -33,17 +33,17 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .dropdown-content {
     display: none;
     position: absolute;
     right: 0;
     background-color: white;
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 10;
   }
-  
+
   .dropdown-content a {
     color: #28282B;
     padding: 12px 16px;
@@ -51,15 +51,15 @@
     display: block;
     font-weight: 500;
   }
-  
+
   .dropdown-content a:hover {
     background-color: #f0f0f0;
   }
-  
+
   .dropdown:hover .dropdown-content {
     display: block;
   }
-  
+
   form {
     max-width: 500px;
     margin: 3em auto;
@@ -68,7 +68,7 @@
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   }
-  
+
   form label {
     display: block;
     margin-bottom: 0.5em;
@@ -76,7 +76,7 @@
     font-size: 1.1rem;
     color: #d3e0f0;
   }
-  
+
   form input,
   form select {
     width: 100%;
@@ -88,7 +88,7 @@
     font-size: 1rem;
     border: 1px solid #555;
   }
-  
+
   form button {
     width: 100%;
     background-color: #28a745;
@@ -101,15 +101,38 @@
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  
+
   form button:hover {
     background-color: #218838;
     transform: translateY(-2px);
   }
-  
+
   h2 {
     text-align: center;
     margin-top: 1.5em;
     margin-bottom: 1em;
     color: #7da4d8;
+  }
+
+  .dropbtn {
+    color: #0077cc;
+    background-color: #242427;
+    border: 1.6px solid black;
+  }
+
+  .dropdown-content {
+    background-color: #242427;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown-content a {
+    color: #0077cc;
+    ;
+    background-color: #242427;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #2b2b2e;
   }

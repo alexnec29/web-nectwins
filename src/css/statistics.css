@@ -46,7 +46,7 @@ ul li {
   background-color: #28282B;
   padding: 2em;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -77,4 +77,27 @@ ul li {
 
 .rss-link:hover {
   background-color: #005fa3;
+}
+
+.dropbtn {
+  color: #0077cc;
+  background-color: #242427;
+  border: 1.6px solid black;
+}
+
+.dropdown-content {
+  background-color: #242427;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-content a {
+  color: #0077cc;
+  ;
+  background-color: #242427;
+}
+
+.dropdown-content a:hover {
+  background-color: #2b2b2e;
 }
