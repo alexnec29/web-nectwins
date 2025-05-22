@@ -1,0 +1,45 @@
+name: Workout App Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: wow_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Compose
+      run: docker-compose up -d
+
+    - name: Wait for PHP to be ready
+      run: |
+        echo "Așteptăm serviciul PHP..."
+        sleep 10
+
+    - name: Test homepage HTTP 200
+      run: |
+        curl --fail http://localhost:8080 || (echo "Eroare: pagina nu s-a încărcat" && exit 1)
+
+    - name: Shutdown Docker
+      run: docker-compose down
