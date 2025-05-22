@@ -41,7 +41,7 @@ $selectedLocation = $_POST['location'] ?? '';
 <body>
     <nav>
         <h1>Generează antrenament</h1>
-        <a href="principal-gym.php">Înapoi</a>
+        <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
     </nav>
 
     <form id="generateForm" method="POST">

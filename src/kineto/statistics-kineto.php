@@ -11,7 +11,7 @@
 <body>
     <nav>
         <h1>Statistici Kinetoterapie</h1>
-        <a href="principal-kineto.php">Înapoi</a>
+        <a class="buton-inapoi" href="principal-kineto.php">Înapoi</a>
     </nav>
 
     <div>

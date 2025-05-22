@@ -11,7 +11,7 @@
 <body>
     <nav>
         <h1>Antrenamentele mele</h1>
-        <a href="principal-gym.php">Înapoi</a>
+        <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
     </nav>
 
     <div class="workouts-list">

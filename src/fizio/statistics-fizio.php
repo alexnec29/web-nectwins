@@ -11,7 +11,7 @@
 <body>
     <nav>
         <h1>Statistici Fizioterapie</h1>
-        <a href="principal-fizio.php">Înapoi</a>
+        <a class="buton-inapoi" href="principal-fizio.php">Înapoi</a>
     </nav>
 
     <div>

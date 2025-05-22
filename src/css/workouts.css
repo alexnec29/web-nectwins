@@ -40,25 +40,26 @@ nav {
   border-radius: 8px;
 }
 
-.dropbtn {
-  color: #0077cc;
-  background-color: #242427;
+.buton-inapoi {
+  background-color: #202023;
+  color: #98acc5;
   border: 1.6px solid black;
-}
-
-.dropdown-content {
-  background-color: #242427;
+  padding: 0.6em 1.2em;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.dropdown-content a {
-  color: #0077cc;
-  ;
-  background-color: #242427;
-}
-
-.dropdown-content a:hover {
+.buton-inapoi:hover {
   background-color: #2b2b2e;
+  color: #5691df;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+nav h1 {
+  color: #4885d4;
 }
