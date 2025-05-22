@@ -11,20 +11,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: 🔁 Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Docker Compose
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: ⚙️ Install Docker Compose Plugin
+      run: |
+        mkdir -p ~/.docker/cli-plugins
+        curl -SL https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+        chmod +x ~/.docker/cli-plugins/docker-compose
+
+    - name: 🚀 Build and run containers
       run: docker compose up --build -d
 
-    - name: Wait for container to be ready
-      run: |
-        echo "⏳ Așteptăm serviciul să pornească..."
-        sleep 15
+    - name: 💤 Wait for containers
+      run: sleep 15
 
-    - name: Test PHP container (HTTP 200)
+    - name: ✅ Check app responds HTTP 200
       run: |
-        curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep 200
+        STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+        echo "Status: $STATUS"
+        test "$STATUS" -eq 200
 
-    - name: Shut down services
+    - name: 🧹 Cleanup
       run: docker compose down
