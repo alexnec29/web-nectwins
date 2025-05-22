@@ -10,36 +10,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: root
-          POSTGRES_DB: wow_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
 
     - name: Set up Docker Compose
-      run: docker-compose up -d
+      run: docker compose up --build -d
 
-    - name: Wait for PHP to be ready
+    - name: Wait for container to be ready
       run: |
-        echo "Așteptăm serviciul PHP..."
-        sleep 10
+        echo "⏳ Așteptăm serviciul să pornească..."
+        sleep 15
 
-    - name: Test homepage HTTP 200
+    - name: Test PHP container (HTTP 200)
       run: |
-        curl --fail http://localhost:8080 || (echo "Eroare: pagina nu s-a încărcat" && exit 1)
+        curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep 200
 
-    - name: Shutdown Docker
-      run: docker-compose down
+    - name: Shut down services
+      run: docker compose down
