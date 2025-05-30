@@ -1,6 +1,17 @@
+html, body {
+  background-image: url("/assets/wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: 'Segoe UI', sans-serif;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+}
+
 nav {
-  background: #28282B;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: rgba(40, 40, 43, 0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -8,49 +19,56 @@ nav {
   border-bottom: 1px solid #0b0b0c;
 }
 
-.workouts-list {
-  max-width: 900px;
-  margin: 2em auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2em;
-}
-
-.workout-card {
-  background: #28282B;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  padding: 1.5em;
-  text-align: center;
-}
-
-.workout-card h2 {
-  margin-bottom: 0.5em;
+nav h1 {
   color: #4885d4;
 }
 
-.workout-card p {
-  font-size: 0.9rem;
-  color: rgb(171, 171, 171);
-  margin-bottom: 1em;
+.workouts-list {
+  max-width: 1000px;
+  margin: 3em auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2em;
+  padding: 0 1em;
 }
 
-.workout-card img {
-  max-width: 100%;
-  border-radius: 8px;
+.workout-card {
+  background: rgba(40, 40, 43, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 1.5em;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.workout-card:hover {
+  transform: translateY(-5px);
+}
+
+.workout-card h2 {
+  color: #4aa2ff;
+  margin-bottom: 0.5em;
+}
+
+.workout-card p {
+  font-size: 0.95rem;
+  color: #cccccc;
+  margin-bottom: 0.8em;
 }
 
 .buton-inapoi {
   background-color: #202023;
   color: #98acc5;
   border: 1.6px solid black;
-  padding: 0.6em 1.2em;
+  padding: 0.5em 1em;
   border-radius: 8px;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  display: inline-block;
 }
 
 .buton-inapoi:hover {
@@ -58,8 +76,4 @@ nav {
   color: #5691df;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-nav h1 {
-  color: #4885d4;
 }
