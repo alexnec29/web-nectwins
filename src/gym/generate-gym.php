@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/generate.css">
 </head>
+
 <?php
+$host = 'db';
+$port = '5432';
+$dbname = 'wow_db';
+$user = 'root';
+$pass = 'root';
+
+try {
+    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("❌ Conexiune eșuată: " . $e->getMessage());
+}
+$stmt = $pdo->query("SELECT id, name FROM training_level ORDER BY id");
+$trainingLevels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $muscleOptions = [
     "push-pull-legs" => [
         "push" => "Piept, Triceps, Umeri",
@@ -35,6 +52,7 @@ $muscleOptions = [
 $selectedSplit = $_POST['tipAntrenament'] ?? 'push-pull-legs';
 $selectedMuscle = $_POST['muscleGroup'] ?? '';
 $selectedDuration = $_POST['duration'] ?? '';
+$selectedNivel = $_POST['nivel'] ?? '';
 $selectedLocation = $_POST['location'] ?? '';
 ?>
 
@@ -64,42 +82,44 @@ $selectedLocation = $_POST['location'] ?? '';
 
         <label for="duration">Durată (minute):</label>
         <select id="duration" name="duration">
-            <option value="10"> 30</option>
-            <option value="20"> 60</option>
-            <option value="60"> 90</option>
-            <option value="120">120</option>
-            <option value="150">150</option>
-            <option value="Rich Piana">😈Rich Piana😈</option>
+            <option value="30" <?= $selectedDuration == '30' ? 'selected' : '' ?>>30</option>
+            <option value="60" <?= $selectedDuration == '60' ? 'selected' : '' ?>>60</option>
+            <option value="90" <?= $selectedDuration == '90' ? 'selected' : '' ?>>90</option>
+            <option value="120" <?= $selectedDuration == '120' ? 'selected' : '' ?>>120</option>
+            <option value="150" <?= $selectedDuration == '150' ? 'selected' : '' ?>>150</option>
+            <option value="Rich Piana" <?= $selectedDuration == 'Rich Piana' ? 'selected' : '' ?>>😈Rich Piana😈</option>
         </select>
 
         <label for="nivel">Nivel:</label>
         <select id="nivel" name="nivel">
-            <option value="incepator">Începator</option>
-            <option value="intermediar">Intermediar</option>
-            <option value="avansat">Avansat</option>
-            <option value="tren twin">💪Tren Twins🧨</option>
+            <option value="">-- Selectează nivel --</option>
+            <?php foreach ($trainingLevels as $level): ?>
+                <option value="<?= htmlspecialchars($level['id']) ?>" <?= ($selectedNivel == $level['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($level['name']) ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
         <label for="location">Locație:</label>
         <select id="location" name="location">
-            <option value="outdoor">Aer liber</option>
-            <option value="home">Acasă</option>
+            <option value="outdoor" <?= $selectedLocation == 'outdoor' ? 'selected' : '' ?>>Aer liber</option>
+            <option value="home" <?= $selectedLocation == 'home' ? 'selected' : '' ?>>Acasă</option>
         </select>
 
         <button type="submit">Generează</button>
     </form>
 
-    <div id="result"></div>
-
-    <script>
-        document.getElementById('generateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const muscleGroup = document.getElementById('muscleGroup').value;
-            const duration = document.getElementById('duration').value;
-            const location = document.getElementById('location').value;
-            document.getElementById('result').innerHTML = `<p>Rutina generată pentru ${muscleGroup} de ${duration} minute, la ${location}.</p>`;
-        });
-    </script>
+    <?php if ($_SERVER["REQUEST_METHOD"] === "POST"): ?>
+        <div id="result">
+            <h2>Rezultat:</h2>
+            <p>
+                Rutina generată pentru <strong><?= htmlspecialchars($selectedMuscle) ?></strong>,
+                timp de <strong><?= htmlspecialchars($selectedDuration) ?></strong> minute,
+                nivel <strong><?= htmlspecialchars($selectedNivel) ?></strong>,
+                la <strong><?= htmlspecialchars($selectedLocation) ?></strong>.
+            </p>
+        </div>
+    <?php endif; ?>
 </body>
 
 </html>

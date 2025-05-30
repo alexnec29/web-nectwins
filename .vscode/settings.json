@@ -1,0 +1,10 @@
+{
+    "oracle.format.enabled": false,
+    "oracle.format.formatOnSave": false,
+    "oracle.format.formatOnType": false,
+    "[sql]": {
+        "editor.formatOnSave": false,
+        "editor.formatOnType": false,
+        "editor.defaultFormatter": null
+    }
+}

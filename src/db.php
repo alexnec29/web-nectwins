@@ -12,4 +12,3 @@ try {
 } catch (PDOException $e) {
     die("❌ Conexiune eșuată: " . $e->getMessage());
 }
-?>
