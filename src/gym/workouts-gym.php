@@ -47,7 +47,7 @@ $workouts = $workouts->fetchAll(PDO::FETCH_ASSOC);
                 <h2><?= htmlspecialchars($w['name']) ?></h2>
                 <p>Durată: <?= intval($w['duration_minutes']) ?> min</p>
                 <p>Generat: <?= date('d.m.Y H:i', strtotime($w['generated_at'])) ?></p>
-                <a href="workout-gym.php?id=<?= $w['id'] ?>" class="buton-inapoi">Vezi detalii</a>
+                <a href="workout.php?id=<?= $w['id'] ?>" class="buton-inapoi">Vezi detalii</a>
             </div>
         <?php endforeach; ?>
     </div>
