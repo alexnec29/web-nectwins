@@ -79,6 +79,11 @@ if ($action === 'save' && $exercises && isset($_SESSION['user_id'])) {
         ]);
         $workoutId = $w->fetchColumn();
 
+        $pdo->prepare("
+            INSERT INTO user_workout (user_id, workout_id, completed)
+            VALUES (?, ?, FALSE)
+        ")->execute([$_SESSION['user_id'], $workoutId]);
+
         $wx = $pdo->prepare("
             INSERT INTO workout_exercise (workout_id, exercise_id, order_in_workout, sets, reps)
             VALUES (?, ?, ?, 3, 10)

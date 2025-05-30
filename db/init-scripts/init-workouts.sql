@@ -101,8 +101,11 @@ create table workout_exercise (
 );
 
 CREATE TABLE IF NOT EXISTS user_workout (
-    id          serial PRIMARY KEY,
-    user_id     integer REFERENCES users(id) ON DELETE CASCADE,
-    workout_id  integer REFERENCES workout(id) ON DELETE CASCADE,
-    generated_at timestamp DEFAULT NOW()
+    id           serial PRIMARY KEY,
+    user_id      integer REFERENCES users(id) ON DELETE CASCADE,
+    workout_id   integer REFERENCES workout(id) ON DELETE CASCADE,
+    generated_at timestamp DEFAULT NOW(),
+    completed    boolean   DEFAULT FALSE,
+    started_at   timestamp,
+    completed_at timestamp
 );
