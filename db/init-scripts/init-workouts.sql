@@ -25,7 +25,9 @@ cascade;
 drop table if exists location
 
 cascade;
+drop table if exists user_workout
 
+cascade;
 
 create table muscle_group (
    id   serial primary key,
