@@ -38,17 +38,18 @@ $selectedLocation = $_POST['location'] ?? '';
     </nav>
 
     <form id="generateForm" method="POST">
-        <label for="tipProgram">Tip program:</label>
-        <select id="tipProgram" name="tipProgram" onchange="this.form.submit()">
-            <option value="recuperare post-operatorie" <?= $selectedProgram == 'recuperare post-operatorie' ? 'selected' : '' ?>>Recuperare post-operatorie</option>
-            <option value="reeducare neuromusculara" <?= $selectedProgram == 'reeducare neuromusculara' ? 'selected' : '' ?>>Reeducare neuromusculară</option>
-            <option value="dureri cronice" <?= $selectedProgram == 'dureri cronice' ? 'selected' : '' ?>>Dureri cronice</option>
+        <label for="tipAntrenament">Split antrenament:</label>
+        <select id="tipAntrenament" name="tipAntrenament" onchange="this.form.submit()">
+            <option value="push-pull-legs" <?= $selectedSplit == 'push-pull-legs' ? 'selected' : '' ?>>Push Pull Legs</option>
+            <option value="upper-lower" <?= $selectedSplit == 'upper-lower' ? 'selected' : '' ?>>Upper Lower</option>
+            <option value="bro split" <?= $selectedSplit == 'bro split' ? 'selected' : '' ?>>Bro Split</option>
+            <option value="arnold split" <?= $selectedSplit == 'arnold split' ? 'selected' : '' ?>>Arnold Split</option>
         </select>
 
-        <label for="zonaVizata">Zonă vizată:</label>
-        <select id="zonaVizata" name="zonaVizata">
-            <?php foreach ($fizioOptions[$selectedProgram] as $value => $label): ?>
-                <option value="<?= htmlspecialchars($value) ?>" <?= $selectedZone == $value ? 'selected' : '' ?>>
+        <label for="muscleGroup">Grupă mușchi:</label>
+        <select id="muscleGroup" name="muscleGroup">
+            <?php foreach ($muscleOptions[$selectedSplit] as $value => $label): ?>
+                <option value="<?= htmlspecialchars($value) ?>" <?= $selectedMuscle == $value ? 'selected' : '' ?>>
                     <?= htmlspecialchars($label) ?>
                 </option>
             <?php endforeach; ?>
@@ -56,40 +57,42 @@ $selectedLocation = $_POST['location'] ?? '';
 
         <label for="duration">Durată (minute):</label>
         <select id="duration" name="duration">
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-            <option value="60">60</option>
+            <option value="30" <?= $selectedDuration == '30' ? 'selected' : '' ?>>30</option>
+            <option value="60" <?= $selectedDuration == '60' ? 'selected' : '' ?>>60</option>
+            <option value="90" <?= $selectedDuration == '90' ? 'selected' : '' ?>>90</option>
+            <option value="120" <?= $selectedDuration == '120' ? 'selected' : '' ?>>120</option>
+            <option value="150" <?= $selectedDuration == '150' ? 'selected' : '' ?>>150</option>
+            <option value="Rich Piana" <?= $selectedDuration == 'Rich Piana' ? 'selected' : '' ?>>😈Rich Piana😈</option>
         </select>
 
         <label for="nivel">Nivel:</label>
         <select id="nivel" name="nivel">
-            <option value="incepator">Începător</option>
-            <option value="mediu">Mediu</option>
-            <option value="avansat">Avansat</option>
+            <option value="incepator" <?= $selectedNivel == 'incepator' ? 'selected' : '' ?>>Începător</option>
+            <option value="intermediar" <?= $selectedNivel == 'intermediar' ? 'selected' : '' ?>>Intermediar</option>
+            <option value="avansat" <?= $selectedNivel == 'avansat' ? 'selected' : '' ?>>Avansat</option>
+            <option value="tren twin" <?= $selectedNivel == 'tren twin' ? 'selected' : '' ?>>💪Tren Twins🧨</option>
         </select>
 
         <label for="location">Locație:</label>
         <select id="location" name="location">
-            <option value="home">Acasă</option>
-            <option value="clinica">Clinică</option>
-            <option value="spital">Spital</option>
+            <option value="outdoor" <?= $selectedLocation == 'outdoor' ? 'selected' : '' ?>>Aer liber</option>
+            <option value="home" <?= $selectedLocation == 'home' ? 'selected' : '' ?>>Acasă</option>
         </select>
 
         <button type="submit">Generează</button>
     </form>
 
-    <div id="result"></div>
-
-    <script>
-        document.getElementById('generateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const zona = document.getElementById('zonaVizata').value;
-            const duration = document.getElementById('duration').value;
-            const location = document.getElementById('location').value;
-            document.getElementById('result').innerHTML = `<p>Program de fizioterapie pentru zona ${zona}, durata ${duration} minute, locație: ${location}.</p>`;
-        });
-    </script>
+    <?php if ($_SERVER["REQUEST_METHOD"] === "POST"): ?>
+        <div id="result">
+            <h2>Rezultat:</h2>
+            <p>
+                Rutina generată pentru <strong><?= htmlspecialchars($selectedMuscle) ?></strong>,
+                timp de <strong><?= htmlspecialchars($selectedDuration) ?></strong> minute,
+                nivel <strong><?= htmlspecialchars($selectedNivel) ?></strong>,
+                la <strong><?= htmlspecialchars($selectedLocation) ?></strong>.
+            </p>
+        </div>
+    <?php endif; ?>
 </body>
 
 </html>
