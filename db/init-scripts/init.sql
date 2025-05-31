@@ -1,3 +1,4 @@
+-- generate workout
 -- 1. Funcție pentru extragerea exercițiilor
 CREATE OR REPLACE FUNCTION get_exercises_by_groups(p_groups TEXT[])
 RETURNS TABLE(id INT, name TEXT, description TEXT, link TEXT)
@@ -46,6 +47,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+--workouts list
 CREATE OR REPLACE PROCEDURE start_workout_session(
     p_workout_id INT,
     p_user_id INT,
@@ -109,5 +112,80 @@ BEGIN
   JOIN exercise e ON e.id = we.exercise_id
   WHERE we.workout_id = p_workout_id
   ORDER BY we.order_in_workout;
+END;
+$$ LANGUAGE plpgsql;
+
+-- statistics
+CREATE OR REPLACE FUNCTION get_total_completed_workouts(p_user_id INT)
+RETURNS INT AS $$
+DECLARE
+    v_count INT;
+BEGIN
+    SELECT COUNT(*) INTO v_count
+    FROM workout_session
+    WHERE user_id = p_user_id AND completed_at IS NOT NULL;
+
+    RETURN v_count;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_total_workout_duration(p_user_id INT)
+RETURNS INT AS $$
+DECLARE
+    v_minutes INT;
+BEGIN
+    SELECT COALESCE(SUM(EXTRACT(EPOCH FROM completed_at - started_at) / 60), 0)
+    INTO v_minutes
+    FROM workout_session
+    WHERE user_id = p_user_id AND completed_at IS NOT NULL;
+
+    RETURN ROUND(v_minutes);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT)
+RETURNS TABLE(name TEXT, cnt INT)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT msg.name::TEXT, COUNT(DISTINCT ws.id)::INT
+  FROM workout_session ws
+  JOIN workout_exercise we ON we.workout_id = ws.workout_id
+  JOIN exercise_muscle_group emg ON emg.exercise_id = we.exercise_id
+  JOIN muscle_subgroup msg ON msg.id = emg.muscle_subgroup_id
+  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  GROUP BY msg.name
+  ORDER BY cnt DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_top_exercises(p_user_id INT, p_limit INT DEFAULT 5)
+RETURNS TABLE(name TEXT, uses INT)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT e.name::TEXT, COUNT(*)::INT AS uses
+  FROM workout_session ws
+  JOIN workout_exercise we ON we.workout_id = ws.workout_id
+  JOIN exercise e ON e.id = we.exercise_id
+  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  GROUP BY e.name
+  ORDER BY uses DESC
+  LIMIT p_limit;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_training_type_stats(p_user_id INT)
+RETURNS TABLE(name TEXT, cnt INT)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT tt.name::TEXT, COUNT(DISTINCT ws.id)::INT
+  FROM workout_session ws
+  JOIN workout w ON ws.workout_id = w.id
+  JOIN training_type tt ON tt.id = w.type_id
+  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  GROUP BY tt.name
+  ORDER BY cnt DESC;
 END;
 $$ LANGUAGE plpgsql;

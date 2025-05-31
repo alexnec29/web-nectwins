@@ -11,56 +11,11 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 
 $uid = $_SESSION['user_id'];
 
-// Total workout completions
-$totalWorkouts = $pdo->prepare("SELECT COUNT(*) FROM workout_session WHERE user_id = ? AND completed_at IS NOT NULL");
-$totalWorkouts->execute([$uid]);
-$totalWorkouts = (int)$totalWorkouts->fetchColumn();
-
-// Total workout duration
-$totalMinutes = $pdo->prepare("SELECT COALESCE(SUM(EXTRACT(EPOCH FROM completed_at - started_at) / 60), 0) FROM workout_session WHERE user_id = ? AND completed_at IS NOT NULL");
-$totalMinutes->execute([$uid]);
-$totalMinutes = (int)round($totalMinutes->fetchColumn());
-
-// Muscle subgroup distribution
-$subgroupDist = $pdo->prepare("
-    SELECT msg.name, COUNT(DISTINCT ws.id) AS cnt
-    FROM workout_session ws
-    JOIN workout_exercise we ON we.workout_id = ws.workout_id
-    JOIN exercise_muscle_group emg ON emg.exercise_id = we.exercise_id
-    JOIN muscle_subgroup msg ON msg.id = emg.muscle_subgroup_id
-    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
-    GROUP BY msg.name
-    ORDER BY cnt DESC
-");
-$subgroupDist->execute([$uid]);
-$subgroupRows = $subgroupDist->fetchAll(PDO::FETCH_ASSOC);
-
-// Most used exercises
-$exerciseDist = $pdo->prepare("
-    SELECT e.name, COUNT(*) AS uses
-    FROM workout_session ws
-    JOIN workout_exercise we ON we.workout_id = ws.workout_id
-    JOIN exercise e ON e.id = we.exercise_id
-    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
-    GROUP BY e.name
-    ORDER BY uses DESC
-    LIMIT 5
-");
-$exerciseDist->execute([$uid]);
-$exerciseRows = $exerciseDist->fetchAll(PDO::FETCH_ASSOC);
-
-// Training type distribution
-$typeDist = $pdo->prepare("
-    SELECT tt.name, COUNT(DISTINCT ws.id) AS cnt
-    FROM workout_session ws
-    JOIN workout w ON ws.workout_id = w.id
-    JOIN training_type tt ON tt.id = w.type_id
-    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
-    GROUP BY tt.name
-    ORDER BY cnt DESC
-");
-$typeDist->execute([$uid]);
-$typeRows = $typeDist->fetchAll(PDO::FETCH_ASSOC);
+$totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid)")->fetchColumn();
+$totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid)")->fetchColumn();
+$subgroupRows  = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid)")->fetchAll(PDO::FETCH_ASSOC);
+$exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, 5)")->fetchAll(PDO::FETCH_ASSOC);
+$typeRows      = $pdo->query("SELECT * FROM get_training_type_stats($uid)")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="ro">
