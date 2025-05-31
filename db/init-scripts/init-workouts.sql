@@ -9,9 +9,9 @@ DROP TABLE IF EXISTS training_level CASCADE;
 DROP TABLE IF EXISTS split_type CASCADE;
 DROP TABLE IF EXISTS location CASCADE;
 
-CREATE TABLE muscle_group (
-   id   serial       PRIMARY KEY,
-   name varchar(100) NOT NULL UNIQUE
+create table muscle_group (
+   id   serial primary key,
+   name varchar(100) not null unique
 );
 
 CREATE TABLE muscle_subgroup (
@@ -67,7 +67,11 @@ CREATE TABLE workout (
    type_id           integer      REFERENCES training_type(id),
    level_id          integer      REFERENCES training_level(id),
    split_id          integer      REFERENCES split_type(id),
-   location_id       integer      REFERENCES location(id)
+   location_id       integer      REFERENCES location(id),
+   created_at        timestamp    DEFAULT CURRENT_TIMESTAMP,
+   started_at        timestamp,
+   completed_at      timestamp,
+   completed_count   integer      DEFAULT 0
 );
 
 CREATE TABLE workout_exercise (
@@ -77,4 +81,13 @@ CREATE TABLE workout_exercise (
    sets              integer,
    reps              integer,
    PRIMARY KEY (workout_id, exercise_id)
+);
+
+CREATE TABLE workout_session (
+    id SERIAL PRIMARY KEY,
+    workout_id INTEGER NOT NULL REFERENCES workout(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    completed_count INTEGER DEFAULT 0
 );
