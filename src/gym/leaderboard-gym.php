@@ -1,114 +1,118 @@
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
-    header("Location: ../login.php");
+if (!isset($_SESSION["user_id"])) {
+    header("Location: login.php");
     exit();
 }
 
-// Mock: total sesiuni + nivel + vârstă + tip + durată totală
-$users = [
-    ["nume" => "Andrei Popescu", "sesiuni" => 25, "nivel" => "Tren Twins 🧨", "varsta" => "18–25", "tip" => "Gym", "durata" => 1200],
-    ["nume" => "Maria Ionescu", "sesiuni" => 22, "nivel" => "Avansat", "varsta" => "26–35", "tip" => "Gym", "durata" => 900],
-    ["nume" => "Vlad Stoica", "sesiuni" => 18, "nivel" => "Intermediar", "varsta" => "18–25", "tip" => "Gym", "durata" => 870],
-    ["nume" => "Bogdan Mihai", "sesiuni" => 12, "nivel" => "Începator", "varsta" => "18–25", "tip" => "Gym", "durata" => 500],
-];
+$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
+// ───── Colectăm datele pentru leaderboard ─────
+$sql = "
+    SELECT 
+        u.username,
+        u.nume,
+        u.varsta,
+        u.conditie,
+        COUNT(uw.id) FILTER (WHERE uw.completed = TRUE) AS sesiuni,
+        COALESCE(SUM(EXTRACT(EPOCH FROM (uw.completed_at - uw.started_at)))/60, 0) AS durata
+    FROM users u
+    LEFT JOIN user_workout uw ON uw.user_id = u.id
+    GROUP BY u.id
+    ORDER BY sesiuni DESC
+";
+$rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+// Grupăm pe nivel și pe grupe de vârstă
+$by_level = [];
+$by_age = [];
+foreach ($rows as &$r) {
+    $r['durata'] = round($r['durata']);
+    $r['grupa_varsta'] = match (true) {
+        $r['varsta'] < 18      => "<18",
+        $r['varsta'] <= 25     => "18–25",
+        $r['varsta'] <= 35     => "26–35",
+        $r['varsta'] <= 50     => "36–50",
+        default                => ">50"
+    };
+    $by_level[$r['conditie']][] = $r;
+    $by_age[$r['grupa_varsta']][] = $r;
+}
+unset($r);
 ?>
+
 <!DOCTYPE html>
 <html lang="ro">
-
 <head>
     <meta charset="UTF-8">
     <title>Clasamente Gym | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/leaderboard.css">
 </head>
-
 <body>
 
-    <nav>
-        <h1>Clasamente Bodybuilding</h1>
-        <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
-    </nav>
+<nav>
+    <h1>Clasamente Bodybuilding</h1>
+    <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
+</nav>
 
-    <div class="leaderboard-container">
-        <h2>Top General (după număr sesiuni)</h2>
-        <table>
-            <thead>
+<div class="leaderboard-container">
+    <h2>Top General (după număr sesiuni)</h2>
+    <table>
+        <thead>
+            <tr><th>Loc</th><th>Nume</th><th>Sesiuni</th></tr>
+        </thead>
+        <tbody>
+            <?php foreach ($rows as $i => $u): ?>
                 <tr>
-                    <th>Loc</th>
-                    <th>Nume</th>
-                    <th>Sesiuni</th>
+                    <td>#<?= $i + 1 ?></td>
+                    <td><?= htmlspecialchars($u['nume']) ?></td>
+                    <td><?= $u['sesiuni'] ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php
-                usort($users, fn($a, $b) => $b['sesiuni'] - $a['sesiuni']);
-                foreach ($users as $i => $u): ?>
-                    <tr>
-                        <td>#<?= $i + 1 ?></td>
-                        <td><?= $u['nume'] ?></td>
-                        <td><?= $u['sesiuni'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
-        <h2>Top pe Nivel</h2>
-        <?php
-        $niveluri = array_unique(array_column($users, 'nivel'));
-        foreach ($niveluri as $nivel): ?>
-            <h3><?= $nivel ?></h3>
-            <ul>
-                <?php foreach ($users as $u):
-                    if ($u['nivel'] === $nivel): ?>
-                        <li><?= $u['nume'] ?> – <?= $u['sesiuni'] ?> sesiuni</li>
-                <?php endif;
-                endforeach; ?>
-            </ul>
-        <?php endforeach; ?>
+    <h2>Top pe Nivel</h2>
+    <?php foreach ($by_level as $nivel => $users): ?>
+        <h3><?= htmlspecialchars(ucfirst($nivel)) ?></h3>
+        <ul>
+            <?php foreach ($users as $u): ?>
+                <li><?= htmlspecialchars($u['nume']) ?> – <?= $u['sesiuni'] ?> sesiuni</li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
 
-        <h2>Top pe Clasă de Vârstă</h2>
-        <?php
-        $varste = array_unique(array_column($users, 'varsta'));
-        foreach ($varste as $grupa): ?>
-            <h3>Vârstă <?= $grupa ?></h3>
-            <ul>
-                <?php foreach ($users as $u):
-                    if ($u['varsta'] === $grupa): ?>
-                        <li><?= $u['nume'] ?> – <?= $u['sesiuni'] ?> sesiuni</li>
-                <?php endif;
-                endforeach; ?>
-            </ul>
-        <?php endforeach; ?>
+    <h2>Top pe Clasă de Vârstă</h2>
+    <?php foreach ($by_age as $grupa => $users): ?>
+        <h3>Vârstă <?= $grupa ?></h3>
+        <ul>
+            <?php foreach ($users as $u): ?>
+                <li><?= htmlspecialchars($u['nume']) ?> – <?= $u['sesiuni'] ?> sesiuni</li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
 
-        <h2>Top după Durată Totală (minute)</h2>
-        <table>
-            <thead>
+    <h2>Top după Durată Totală (minute)</h2>
+    <table>
+        <thead>
+            <tr><th>Loc</th><th>Nume</th><th>Durată totală</th></tr>
+        </thead>
+        <tbody>
+            <?php
+            usort($rows, fn($a, $b) => $b['durata'] <=> $a['durata']);
+            foreach ($rows as $i => $u): ?>
                 <tr>
-                    <th>Loc</th>
-                    <th>Nume</th>
-                    <th>Durată totală</th>
+                    <td>#<?= $i + 1 ?></td>
+                    <td><?= htmlspecialchars($u['nume']) ?></td>
+                    <td><?= $u['durata'] ?> min</td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php
-                usort($users, fn($a, $b) => $b['durata'] - $a['durata']);
-                foreach ($users as $i => $u): ?>
-                    <tr>
-                        <td>#<?= $i + 1 ?></td>
-                        <td><?= $u['nume'] ?></td>
-                        <td><?= $u['durata'] ?> min</td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <div class="export-links">
-            <a href="leaderboard-gym.json">Export JSON</a>
-            <a href="leaderboard-gym.pdf">Export PDF</a>
-        </div>
-    </div>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 </body>
-
 </html>
