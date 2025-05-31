@@ -86,3 +86,31 @@ form button:hover {
 nav h1 {
   color: #4885d4;
 }
+
+.exercise-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1.5rem;
+  max-width:1000px;
+  margin:2rem auto;
+}
+.exercise-card{
+  background:#28282B;
+  border:1px solid #3a3a3d;
+  border-radius:12px;
+  padding:1.3rem;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
+  transition:transform .3s ease;
+}
+.exercise-card:hover{transform:translateY(-6px);}
+.exercise-card h4{color:#4aa2ff;margin-bottom:.5rem;}
+.exercise-link{
+  display:inline-block;
+  padding:.4rem 1rem;
+  background:#0077cc;
+  color:#fff;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
+}
+.exercise-link:hover{background:#005fa3;}
