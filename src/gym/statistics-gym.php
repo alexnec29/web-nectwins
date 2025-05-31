@@ -1,45 +1,66 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
-$pdo = new PDO(
-    "pgsql:host=db;port=5432;dbname=wow_db",
-    'root',
-    'root',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 
 $uid = $_SESSION['user_id'];
 
-$totalWorkouts = $pdo->prepare("
-    SELECT COUNT(*) FROM user_workout
-    WHERE user_id = ? AND completed = TRUE
-");
+// Total workout completions
+$totalWorkouts = $pdo->prepare("SELECT COUNT(*) FROM workout_session WHERE user_id = ? AND completed_at IS NOT NULL");
 $totalWorkouts->execute([$uid]);
 $totalWorkouts = (int)$totalWorkouts->fetchColumn();
 
-$totalMinutes = $pdo->prepare("
-    SELECT COALESCE(SUM(
-        EXTRACT(EPOCH FROM completed_at - started_at)
-    )/60, 0)
-    FROM user_workout
-    WHERE user_id = ? AND completed = TRUE
-");
+// Total workout duration
+$totalMinutes = $pdo->prepare("SELECT COALESCE(SUM(EXTRACT(EPOCH FROM completed_at - started_at) / 60), 0) FROM workout_session WHERE user_id = ? AND completed_at IS NOT NULL");
 $totalMinutes->execute([$uid]);
 $totalMinutes = (int)round($totalMinutes->fetchColumn());
 
-$muscleDist = $pdo->prepare("
-    SELECT mg.name, COUNT(DISTINCT uw.id) AS cnt
-    FROM user_workout uw
-    JOIN workout_exercise we   ON we.workout_id = uw.workout_id
+// Muscle subgroup distribution
+$subgroupDist = $pdo->prepare("
+    SELECT msg.name, COUNT(DISTINCT ws.id) AS cnt
+    FROM workout_session ws
+    JOIN workout_exercise we ON we.workout_id = ws.workout_id
     JOIN exercise_muscle_group emg ON emg.exercise_id = we.exercise_id
-    JOIN muscle_group mg      ON mg.id = emg.muscle_group_id
-    WHERE uw.user_id = ? AND uw.completed = TRUE
-    GROUP BY mg.name
+    JOIN muscle_subgroup msg ON msg.id = emg.muscle_subgroup_id
+    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
+    GROUP BY msg.name
     ORDER BY cnt DESC
 ");
-$muscleDist->execute([$uid]);
-$distRows = $muscleDist->fetchAll(PDO::FETCH_ASSOC);
+$subgroupDist->execute([$uid]);
+$subgroupRows = $subgroupDist->fetchAll(PDO::FETCH_ASSOC);
+
+// Most used exercises
+$exerciseDist = $pdo->prepare("
+    SELECT e.name, COUNT(*) AS uses
+    FROM workout_session ws
+    JOIN workout_exercise we ON we.workout_id = ws.workout_id
+    JOIN exercise e ON e.id = we.exercise_id
+    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
+    GROUP BY e.name
+    ORDER BY uses DESC
+    LIMIT 5
+");
+$exerciseDist->execute([$uid]);
+$exerciseRows = $exerciseDist->fetchAll(PDO::FETCH_ASSOC);
+
+// Training type distribution
+$typeDist = $pdo->prepare("
+    SELECT tt.name, COUNT(DISTINCT ws.id) AS cnt
+    FROM workout_session ws
+    JOIN workout w ON ws.workout_id = w.id
+    JOIN training_type tt ON tt.id = w.type_id
+    WHERE ws.user_id = ? AND ws.completed_at IS NOT NULL
+    GROUP BY tt.name
+    ORDER BY cnt DESC
+");
+$typeDist->execute([$uid]);
+$typeRows = $typeDist->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="ro">
@@ -60,15 +81,37 @@ $distRows = $muscleDist->fetchAll(PDO::FETCH_ASSOC);
     <h2>Total antrenamente efectuate: <?= $totalWorkouts ?></h2>
     <h2>Durata totală: <?= $totalMinutes ?> minute</h2>
 
-    <h3>Distribuția pe grupe de mușchi</h3>
-    <?php if ($distRows): ?>
+    <h3>🔸 Distribuția pe subgrupe musculare</h3>
+    <?php if ($subgroupRows): ?>
         <ul>
-            <?php foreach ($distRows as $r): ?>
-                <li><?= htmlspecialchars($r['name']) ?>: <?= $r['cnt'] ?> antrenamente</li>
+            <?php foreach ($subgroupRows as $r): ?>
+                <li><?= htmlspecialchars($r['name']) ?>: <?= $r['cnt'] ?> sesiuni</li>
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <p>Nu există date pentru distribuție (niciun antrenament finalizat).</p>
+        <p>Nicio distribuție disponibilă (niciun antrenament finalizat).</p>
+    <?php endif; ?>
+
+    <h3>🔹 Cele mai folosite exerciții</h3>
+    <?php if ($exerciseRows): ?>
+        <ol>
+            <?php foreach ($exerciseRows as $r): ?>
+                <li><?= htmlspecialchars($r['name']) ?> — <?= $r['uses'] ?> apariții</li>
+            <?php endforeach; ?>
+        </ol>
+    <?php else: ?>
+        <p>Fără exerciții înregistrate în antrenamente finalizate.</p>
+    <?php endif; ?>
+
+    <h3>🔸 Distribuție pe tipuri de antrenament</h3>
+    <?php if ($typeRows): ?>
+        <ul>
+            <?php foreach ($typeRows as $r): ?>
+                <li><?= htmlspecialchars($r['name']) ?>: <?= $r['cnt'] ?> sesiuni</li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>Nu există date pentru tipuri de antrenamente.</p>
     <?php endif; ?>
 </div>
 
