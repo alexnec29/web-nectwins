@@ -45,3 +45,69 @@ BEGIN
   END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE start_workout_session(
+    p_workout_id INT,
+    p_user_id INT,
+    OUT p_session_id INT
+)
+AS $$
+BEGIN
+    INSERT INTO workout_session (workout_id, user_id, started_at)
+    VALUES (p_workout_id, p_user_id, NOW())
+    RETURNING id INTO p_session_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_latest_session(p_user_id INT, p_workout_id INT)
+RETURNS TABLE(id INT, started_at TIMESTAMP, completed_at TIMESTAMP)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT s.id, s.started_at, s.completed_at
+  FROM workout_session s
+  WHERE s.user_id = p_user_id
+    AND s.workout_id = p_workout_id
+    AND s.completed_at IS NULL
+  ORDER BY s.started_at DESC
+  LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE complete_workout_session(p_session_id INT, p_user_id INT)
+AS $$
+BEGIN
+    UPDATE workout_session
+    SET completed_at = NOW()
+    WHERE id = p_session_id AND user_id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE cancel_workout_session(p_session_id INT, p_user_id INT)
+AS $$
+BEGIN
+    DELETE FROM workout_session
+    WHERE id = p_session_id AND user_id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_exercises_for_workout(p_workout_id INT)
+RETURNS TABLE(
+    name TEXT,
+    description TEXT,
+    link TEXT,
+    sets INT,
+    reps INT,
+    order_in_workout INT
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT e.name::TEXT, e.description::TEXT, e.link::TEXT,
+         we.sets, we.reps, we.order_in_workout
+  FROM workout_exercise we
+  JOIN exercise e ON e.id = we.exercise_id
+  WHERE we.workout_id = p_workout_id
+  ORDER BY we.order_in_workout;
+END;
+$$ LANGUAGE plpgsql;

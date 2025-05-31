@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wid'])) {
     $wid = (int)$_POST['wid'];
 
     if (isset($_POST['start'])) {
-        $pdo->prepare("INSERT INTO workout_session (workout_id, user_id, started_at) VALUES (?, ?, NOW())")
-            ->execute([$wid, $uid]);
+        $stmt = $pdo->prepare("CALL start_workout_session(:wid, :uid, :sid)");
+        $stmt->bindParam(':wid', $wid, PDO::PARAM_INT);
+        $stmt->bindParam(':uid', $uid, PDO::PARAM_INT);
+        $stmt->bindParam(':sid', $sid, PDO::PARAM_INT | PDO::PARAM_INPUT_OUTPUT);
+        $sid = 0;
+        $stmt->execute();
 
-        $sid = $pdo->lastInsertId();
         header("Location: workout.php?wid=$wid&sid=$sid");
         exit;
     }
