@@ -219,3 +219,39 @@ BEGIN
   GROUP BY u.id;
 END;
 $$ LANGUAGE plpgsql;
+
+-- 1. Trigger pentru incrementare completări workout
+CREATE OR REPLACE FUNCTION trg_increment_workout_completion()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.completed_at IS NOT NULL AND OLD.completed_at IS NULL THEN
+    UPDATE workout
+    SET completed_count = completed_count + 1
+    WHERE id = NEW.workout_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_workout_session_completed
+AFTER UPDATE ON workout_session
+FOR EACH ROW
+WHEN (NEW.completed_at IS NOT NULL AND OLD.completed_at IS NULL)
+EXECUTE FUNCTION trg_increment_workout_completion();
+
+
+-- 2. Trigger pentru autocompletare started_at dacă NULL
+CREATE OR REPLACE FUNCTION trg_autofill_started_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.started_at IS NULL THEN
+    NEW.started_at := CURRENT_TIMESTAMP;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_started_at
+BEFORE INSERT ON workout_session
+FOR EACH ROW
+EXECUTE FUNCTION trg_autofill_started_at();
