@@ -12,14 +12,17 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 // ───── Colectăm datele pentru leaderboard ─────
 $sql = "
     SELECT 
+        u.id,
         u.username,
         u.nume,
         u.varsta,
-        u.conditie,
         COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL) AS sesiuni,
-        COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at)))/60, 0) AS durata
+        COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at)))/60, 0) AS durata,
+        MAX(tl.name) AS nivel
     FROM users u
     LEFT JOIN workout_session ws ON ws.user_id = u.id
+    LEFT JOIN workout w ON w.id = ws.workout_id
+    LEFT JOIN training_level tl ON tl.id = w.level_id
     GROUP BY u.id
     ORDER BY sesiuni DESC
 ";
@@ -37,7 +40,7 @@ foreach ($rows as &$r) {
         $r['varsta'] <= 50     => "36–50",
         default                => ">50"
     };
-    $by_level[$r['conditie']][] = $r;
+    $by_level[$r['nivel'] ?? 'Necunoscut'][] = $r;
     $by_age[$r['grupa_varsta']][] = $r;
 }
 unset($r);
@@ -77,7 +80,7 @@ unset($r);
 
     <h2>Top pe Nivel</h2>
     <?php foreach ($by_level as $nivel => $users): ?>
-        <h3><?= htmlspecialchars(ucfirst($nivel)) ?></h3>
+        <h3><?= htmlspecialchars($nivel) ?></h3>
         <ul>
             <?php foreach ($users as $u): ?>
                 <li><?= htmlspecialchars($u['nume']) ?> – <?= $u['sesiuni'] ?> sesiuni</li>
