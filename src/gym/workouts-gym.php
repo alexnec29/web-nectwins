@@ -11,27 +11,33 @@ $pdo = new PDO(
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 );
 
-/* ===== buton „Start” – redirecţionează către workout.php ===== */
-if ($_SERVER['REQUEST_METHOD'] === 'POST'
-    && ($_POST['action'] ?? '') === 'start'
-    && isset($_POST['wid'])
-) {
-    header('Location: workout.php?wid=' . (int)$_POST['wid']);
+$uid = $_SESSION['user_id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $wid = (int)($_POST['wid'] ?? 0);
+
+    if (isset($_POST['start'])) {
+        // pornire workout: setează started_at, anulează completed_at
+        $pdo->prepare("UPDATE workout SET started_at = NOW(), completed_at = NULL WHERE id = ? AND user_id = ?")
+            ->execute([$wid, $uid]);
+    } elseif (isset($_POST['complete'])) {
+        // finalizare workout: setează completed_at, incrementează counter
+        $pdo->prepare("UPDATE workout SET completed_at = NOW(), completed_count = completed_count + 1 WHERE id = ? AND user_id = ? AND started_at IS NOT NULL AND completed_at IS NULL")
+            ->execute([$wid, $uid]);
+    } elseif (isset($_POST['cancel'])) {
+        // anulare workout: şterge started_at
+        $pdo->prepare("UPDATE workout SET started_at = NULL WHERE id = ? AND user_id = ?")
+            ->execute([$wid, $uid]);
+    }
+    header("Location: workouts-gym.php");
     exit;
 }
 
-/* ===== toate workout-urile acestui user ===== */
-$stmt = $pdo->prepare("
-    SELECT id   AS wid,
-           name,
-           duration_minutes
-    FROM   workout
-    WHERE  user_id = ?
-    ORDER  BY id DESC
-");
-$stmt->execute([ $_SESSION['user_id'] ]);
+$stmt = $pdo->prepare("SELECT * FROM workout WHERE user_id = ? ORDER BY id DESC");
+$stmt->execute([$uid]);
 $workouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -46,30 +52,30 @@ $workouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
 </nav>
 
-<?php if ($workouts): ?>
-  <div class="workouts-list">
-    <?php foreach ($workouts as $w): ?>
-      <div class="workout-card">
-        <h2><?= htmlspecialchars($w['name']) ?></h2>
-        <p>Durată: <?= (int)$w['duration_minutes'] ?> min</p>
+<div class="workouts-list">
+  <?php foreach ($workouts as $w): ?>
+    <div class="workout-card">
+      <h2><?= htmlspecialchars($w['name']) ?></h2>
+      <p>Durată: <?= $w['duration_minutes'] ?> min</p>
 
-        <!-- buton START -->
-        <form method="POST" style="margin-bottom:0.6rem">
-          <input type="hidden" name="wid"    value="<?= $w['wid'] ?>">
-          <input type="hidden" name="action" value="start">
-          <button class="buton-inapoi" style="width:100%">▶️ Start</button>
+      <?php if ($w['completed_at']): ?>
+        <p style="color:lightgreen">✔️ Completat la <?= date('d.m H:i', strtotime($w['completed_at'])) ?><br>(x<?= $w['completed_count'] ?>)</p>
+      <?php elseif ($w['started_at']): ?>
+        <form method="POST">
+          <input type="hidden" name="wid" value="<?= $w['id'] ?>">
+          <button name="complete" class="buton-inapoi">✅ Finalizează</button>
+          <button name="cancel"   class="buton-inapoi" style="background:#c44">⏹️ Anulează</button>
         </form>
+      <?php else: ?>
+        <form method="POST">
+          <input type="hidden" name="wid" value="<?= $w['id'] ?>">
+          <button name="start" class="buton-inapoi">▶️ Start</button>
+        </form>
+      <?php endif; ?>
 
-        <a class="buton-inapoi" href="workout.php?wid=<?= $w['wid'] ?>">
-          Vezi detalii
-        </a>
-      </div>
-    <?php endforeach; ?>
-  </div>
-<?php else: ?>
-  <p style="text-align:center;margin-top:2rem;color:#cdd6f4">
-      Nu ai niciun antrenament salvat încă.
-  </p>
-<?php endif; ?>
+      <a class="buton-inapoi" href="workout.php?wid=<?= $w['id'] ?>">📄 Detalii</a>
+    </div>
+  <?php endforeach; ?>
+</div>
 </body>
 </html>

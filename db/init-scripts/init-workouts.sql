@@ -67,7 +67,11 @@ CREATE TABLE workout (
    type_id           integer      REFERENCES training_type(id),
    level_id          integer      REFERENCES training_level(id),
    split_id          integer      REFERENCES split_type(id),
-   location_id       integer      REFERENCES location(id)
+   location_id       integer      REFERENCES location(id),
+   created_at        timestamp    DEFAULT CURRENT_TIMESTAMP,
+   started_at        timestamp,
+   completed_at      timestamp,
+   completed_count   integer      DEFAULT 0
 );
 
 CREATE TABLE workout_exercise (
@@ -77,12 +81,4 @@ CREATE TABLE workout_exercise (
    sets              integer,
    reps              integer,
    PRIMARY KEY (workout_id, exercise_id)
-);
-
-CREATE TABLE user_workout (
-   id          serial PRIMARY KEY,
-   user_id     integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-   workout_id  integer NOT NULL REFERENCES workout(id) ON DELETE CASCADE,
-   started_at  timestamp,
-   completed   boolean DEFAULT FALSE
 );
