@@ -9,35 +9,6 @@ DROP TABLE IF EXISTS training_level CASCADE;
 DROP TABLE IF EXISTS split_type CASCADE;
 DROP TABLE IF EXISTS location CASCADE;
 
-cascade;
-drop table if exists exercise_muscle_group
-
-cascade;
-drop table if exists workout
-
-cascade;
-drop table if exists exercise
-
-cascade;
-drop table if exists muscle_group
-
-cascade;
-drop table if exists training_type
-
-cascade;
-drop table if exists training_level
-
-cascade;
-drop table if exists split_type
-
-cascade;
-drop table if exists location
-
-cascade;
-drop table if exists user_workout
-
-cascade;
-
 create table muscle_group (
    id   serial primary key,
    name varchar(100) not null unique
