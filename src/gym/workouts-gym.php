@@ -1,41 +1,45 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header("Location: login.php");
     exit;
 }
 
-$pdo = new PDO(
-    "pgsql:host=db;port=5432;dbname=wow_db",
-    'root', 'root',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 
 $uid = $_SESSION['user_id'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $wid = (int)($_POST['wid'] ?? 0);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wid'])) {
+    $wid = (int)$_POST['wid'];
 
     if (isset($_POST['start'])) {
-        // pornire workout: setează started_at, anulează completed_at
-        $pdo->prepare("UPDATE workout SET started_at = NOW(), completed_at = NULL WHERE id = ? AND user_id = ?")
+        $pdo->prepare("INSERT INTO workout_session (workout_id, user_id, started_at) VALUES (?, ?, NOW())")
             ->execute([$wid, $uid]);
-    } elseif (isset($_POST['complete'])) {
-        // finalizare workout: setează completed_at, incrementează counter
-        $pdo->prepare("UPDATE workout SET completed_at = NOW(), completed_count = completed_count + 1 WHERE id = ? AND user_id = ? AND started_at IS NOT NULL AND completed_at IS NULL")
-            ->execute([$wid, $uid]);
-    } elseif (isset($_POST['cancel'])) {
-        // anulare workout: şterge started_at
-        $pdo->prepare("UPDATE workout SET started_at = NULL WHERE id = ? AND user_id = ?")
-            ->execute([$wid, $uid]);
+
+        $sid = $pdo->lastInsertId();
+        header("Location: workout.php?wid=$wid&sid=$sid");
+        exit;
     }
-    header("Location: workouts-gym.php");
-    exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM workout WHERE user_id = ? ORDER BY id DESC");
-$stmt->execute([$uid]);
-$workouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$workouts = $pdo->prepare("
+    SELECT w.id, w.name, w.duration_minutes,
+           s.id AS session_id, s.started_at, s.completed_at
+    FROM workout w
+    LEFT JOIN LATERAL (
+        SELECT *
+        FROM workout_session s
+        WHERE s.workout_id = w.id AND s.user_id = ? AND s.completed_at IS NULL
+        ORDER BY s.started_at DESC
+        LIMIT 1
+    ) s ON true
+    WHERE w.user_id = ?
+    ORDER BY w.id DESC
+");
+$workouts->execute([$uid, $uid]);
+$rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -53,19 +57,13 @@ $workouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </nav>
 
 <div class="workouts-list">
-  <?php foreach ($workouts as $w): ?>
+  <?php foreach ($rows as $w): ?>
     <div class="workout-card">
       <h2><?= htmlspecialchars($w['name']) ?></h2>
-      <p>Durată: <?= $w['duration_minutes'] ?> min</p>
+      <p>Durată: <?= (int)$w['duration_minutes'] ?> min</p>
 
-      <?php if ($w['completed_at']): ?>
-        <p style="color:lightgreen">✔️ Completat la <?= date('d.m H:i', strtotime($w['completed_at'])) ?><br>(x<?= $w['completed_count'] ?>)</p>
-      <?php elseif ($w['started_at']): ?>
-        <form method="POST">
-          <input type="hidden" name="wid" value="<?= $w['id'] ?>">
-          <button name="complete" class="buton-inapoi">✅ Finalizează</button>
-          <button name="cancel"   class="buton-inapoi" style="background:#c44">⏹️ Anulează</button>
-        </form>
+      <?php if ($w['started_at']): ?>
+        <p style="color:gold">🕒 În curs de desfășurare...</p>
       <?php else: ?>
         <form method="POST">
           <input type="hidden" name="wid" value="<?= $w['id'] ?>">

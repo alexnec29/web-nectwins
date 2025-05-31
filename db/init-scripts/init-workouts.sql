@@ -82,3 +82,12 @@ CREATE TABLE workout_exercise (
    reps              integer,
    PRIMARY KEY (workout_id, exercise_id)
 );
+
+CREATE TABLE workout_session (
+    id SERIAL PRIMARY KEY,
+    workout_id INTEGER NOT NULL REFERENCES workout(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    completed_count INTEGER DEFAULT 0
+);
