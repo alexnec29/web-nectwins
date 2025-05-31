@@ -10,23 +10,7 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 // ───── Colectăm datele pentru leaderboard ─────
-$sql = "
-    SELECT 
-        u.id,
-        u.username,
-        u.nume,
-        u.varsta,
-        COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL) AS sesiuni,
-        COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at)))/60, 0) AS durata,
-        MAX(tl.name) AS nivel
-    FROM users u
-    LEFT JOIN workout_session ws ON ws.user_id = u.id
-    LEFT JOIN workout w ON w.id = ws.workout_id
-    LEFT JOIN training_level tl ON tl.id = w.level_id
-    GROUP BY u.id
-    ORDER BY sesiuni DESC
-";
-$rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$rows = $pdo->query("SELECT * FROM get_leaderboard_data()")->fetchAll(PDO::FETCH_ASSOC);
 
 // Grupăm pe nivel și pe grupe de vârstă
 $by_level = [];

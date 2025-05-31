@@ -10,21 +10,19 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 $uid = $_SESSION['user_id'];
-
 $wid = $_GET['wid'] ?? null;
 $sid = $_GET['sid'] ?? null;
+
 if (!$wid || !is_numeric($wid)) die("Link invalid.");
 
-// Get workout basic data
 $stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ?");
 $stmt->execute([$wid]);
 $workout = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$workout) die("Workout inexistent.");
 
-// Get latest active session if no sid is passed
 if (!$sid || !is_numeric($sid)) {
-    $stmt = $pdo->prepare("SELECT * FROM workout_session WHERE user_id = ? AND workout_id = ? AND completed_at IS NULL ORDER BY started_at DESC LIMIT 1");
-    $stmt->execute([$uid, $wid]);
+    $stmt = $pdo->prepare("SELECT * FROM get_latest_session(:uid, :wid)");
+    $stmt->execute(['uid' => $uid, 'wid' => $wid]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($session) {
         header("Location: workout.php?wid=$wid&sid=" . $session['id']);
@@ -38,15 +36,14 @@ if (!$sid || !is_numeric($sid)) {
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Handle actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $session) {
     if (isset($_POST['complete'])) {
-        $pdo->prepare("UPDATE workout_session SET completed_at = NOW() WHERE id = ? AND user_id = ?")
-            ->execute([$session['id'], $uid]);
+        $stmt = $pdo->prepare("CALL complete_workout_session(:sid, :uid)");
+        $stmt->execute(['sid' => $session['id'], 'uid' => $uid]);
         $session['completed_at'] = date('Y-m-d H:i:s');
     } elseif (isset($_POST['cancel'])) {
-        $pdo->prepare("DELETE FROM workout_session WHERE id = ? AND user_id = ?")
-            ->execute([$session['id'], $uid]);
+        $stmt = $pdo->prepare("CALL cancel_workout_session(:sid, :uid)");
+        $stmt->execute(['sid' => $session['id'], 'uid' => $uid]);
         header("Location: workouts-gym.php");
         exit;
     }
@@ -54,15 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $session) {
     exit;
 }
 
-// Fetch exercises
-$ex = $pdo->prepare("SELECT e.name, e.description, e.link, we.sets, we.reps, we.order_in_workout
-                    FROM workout_exercise we
-                    JOIN exercise e ON e.id = we.exercise_id
-                    WHERE we.workout_id = ?
-                    ORDER BY we.order_in_workout");
-$ex->execute([$wid]);
+$ex = $pdo->prepare("SELECT * FROM get_exercises_for_workout(:wid)");
+$ex->execute(['wid' => $wid]);
 $exercises = $ex->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>

@@ -55,7 +55,7 @@ INSERT INTO split_type (name) VALUES
   ('Full Body'),
   ('Upper/Lower'),
   ('Push/Pull/Legs'),
-  ('Bro Split (o grupă/zi)');
+  ('Bro Split');
 
 -- 8.6. Tabela location (locații de antrenament)
 INSERT INTO location (name) VALUES
