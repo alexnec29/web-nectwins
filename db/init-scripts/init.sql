@@ -189,3 +189,33 @@ BEGIN
   ORDER BY cnt DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+-- leaderboard
+CREATE OR REPLACE FUNCTION get_leaderboard_data()
+RETURNS TABLE (
+    user_id     INT,
+    username    TEXT,
+    nume        TEXT,
+    varsta      INT,
+    sesiuni     INT,
+    durata      INT,
+    nivel       TEXT
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+      u.id::INT,
+      u.username::TEXT,
+      u.nume::TEXT,
+      u.varsta::INT,
+      COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL)::INT AS sesiuni,
+      COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT AS durata,
+      MAX(tl.name)::TEXT AS nivel
+  FROM users u
+  LEFT JOIN workout_session ws ON ws.user_id = u.id
+  LEFT JOIN workout w ON w.id = ws.workout_id
+  LEFT JOIN training_level tl ON tl.id = w.level_id
+  GROUP BY u.id;
+END;
+$$ LANGUAGE plpgsql;
