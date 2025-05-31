@@ -16,10 +16,10 @@ $sql = "
         u.nume,
         u.varsta,
         u.conditie,
-        COUNT(uw.id) FILTER (WHERE uw.completed = TRUE) AS sesiuni,
-        COALESCE(SUM(EXTRACT(EPOCH FROM (uw.completed_at - uw.started_at)))/60, 0) AS durata
+        COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL) AS sesiuni,
+        COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at)))/60, 0) AS durata
     FROM users u
-    LEFT JOIN user_workout uw ON uw.user_id = u.id
+    LEFT JOIN workout_session ws ON ws.user_id = u.id
     GROUP BY u.id
     ORDER BY sesiuni DESC
 ";
