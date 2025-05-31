@@ -112,6 +112,10 @@ unset($r);
             <?php endforeach; ?>
         </tbody>
     </table>
+    <div class="export-links">
+        <a href="leaderboard-gym.json.php" target="_blank">Export JSON</a>
+        <a href="leaderboard-gym.pdf.php" target="_blank">Export PDF</a>
+    </div>
 </div>
 
 </body>
