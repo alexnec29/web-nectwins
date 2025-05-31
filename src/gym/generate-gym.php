@@ -60,17 +60,12 @@ $level = ctype_digit($_POST['nivel']??'') ? (int)$_POST['nivel'] : null;
 $locId = ctype_digit($_POST['location']??'') ? (int)$_POST['location'] : null;
 
 /* --- funcţie: extrage exerciţii (fără filtru locaţie) --- */
-function getExercises(PDO $pdo,array $muscles):array{
-    if(!$muscles) return [];
-    $ph=implode(',',array_fill(0,count($muscles),'?'));
-    $sql="SELECT DISTINCT e.id,e.name,e.description,e.link
-          FROM exercise e
-          JOIN exercise_muscle_group emg ON e.id=emg.exercise_id
-          JOIN muscle_subgroup ms ON ms.id=emg.muscle_subgroup_id
-          JOIN muscle_group mg ON mg.id=ms.principal_group
-          WHERE mg.name IN ($ph) LIMIT 6";
-    $st=$pdo->prepare($sql); $st->execute($muscles);
-    return $st->fetchAll(PDO::FETCH_ASSOC);
+function getExercises(PDO $pdo, array $muscles): array {
+    if (!$muscles) return [];
+    $sql = "SELECT * FROM get_exercises_by_groups(:groups)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['groups' => '{' . implode(',', array_map(fn($x) => '"' . $x . '"', $muscles)) . '}']);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /* --- generate --- */
@@ -81,32 +76,36 @@ if(isset($opt[$split][$part])) {
 }
 
 /* --- save --- */
-if($act==='save' && $ex){
-  $splitId=$slug2id[$split] ?? null;
-  if(!$splitId||!$locId){ $msg='❌ Split/Locaţie invalidă.'; }
-  else{
-    $pdo->beginTransaction();
-    try{
-      $w=$pdo->prepare("INSERT INTO workout
-          (name,duration_minutes,type_id,level_id,split_id,location_id,user_id)
-       VALUES (?,?,?,?,?,?,?) RETURNING id");
-      $w->execute([
-        'Custom '.date('d.m H:i'), $mins, 1, $level, $splitId, $locId, $_SESSION['user_id']
-      ]);
-      $wid=$w->fetchColumn();
+if ($act === 'save' && $ex) {
+    $splitId = $slug2id[$split] ?? null;
+    if (!$splitId || !$locId) {
+        $msg = '❌ Split/Locaţie invalidă.';
+    } else {
+        try {
+            $exerciseIds = array_column($ex, 'id');
+            $exerciseArray = '{' . implode(',', $exerciseIds) . '}';
 
-      $ins=$pdo->prepare("INSERT INTO workout_exercise
-             (workout_id,exercise_id,order_in_workout,sets,reps)
-             VALUES (?,?,?,3,10)");
-      $o=1; foreach($ex as $e){ $ins->execute([$wid,$e['id'],$o++]); }
+            $sql = "CALL save_generated_workout(
+                :name, :duration, :type_id, :level_id, :split_id, :location_id, :user_id, :exercise_ids
+            )";
 
-      $pdo->commit();
-      $msg='✅ Salvat! Vezi în lista de antrenamente.';
-      // header('Location: workouts-gym.php'); exit;   // ← decomentează dacă vrei redirect
-    }catch(Throwable $e){
-      $pdo->rollBack(); $msg='❌ '.$e->getMessage();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                'name'         => 'Custom ' . date('d.m H:i'),
+                'duration'     => $mins,
+                'type_id'      => 1,
+                'level_id'     => $level,
+                'split_id'     => $splitId,
+                'location_id'  => $locId,
+                'user_id'      => $_SESSION['user_id'],
+                'exercise_ids' => $exerciseArray
+            ]);
+
+            $msg = '✅ Salvat! Vezi în lista de antrenamente.';
+        } catch (Throwable $e) {
+            $msg = '❌ ' . $e->getMessage();
+        }
     }
-  }
 }
 ?>
 <!DOCTYPE html>
