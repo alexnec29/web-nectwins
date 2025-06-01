@@ -131,6 +131,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_total_workout_duration(p_user_id INT, p_section TEXT)
+RETURNS INT AS $$
+DECLARE
+    v_total_minutes INT;
+BEGIN
+    SELECT COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT
+    INTO v_total_minutes
+    FROM workout_session ws
+    JOIN workout w ON w.id = ws.workout_id
+    WHERE ws.user_id = p_user_id
+      AND ws.completed_at IS NOT NULL
+      AND w.section = p_section;
+
+    RETURN v_total_minutes;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT)
 RETURNS TABLE(name TEXT, cnt INT)
 AS $$

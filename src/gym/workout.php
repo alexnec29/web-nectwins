@@ -12,11 +12,12 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 $uid = $_SESSION['user_id'];
 $wid = $_GET['wid'] ?? null;
 $sid = $_GET['sid'] ?? null;
+$section = 'gym';
 
 if (!$wid || !is_numeric($wid)) die("Link invalid.");
 
-$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ?");
-$stmt->execute([$wid]);
+$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ?");
+$stmt->execute([$wid, $section]);
 $workout = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$workout) die("Workout inexistent.");
 
