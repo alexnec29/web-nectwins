@@ -10,7 +10,7 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 // ───── Colectăm datele pentru leaderboard ─────
-$rows = $pdo->query("SELECT * FROM get_leaderboard_data()")->fetchAll(PDO::FETCH_ASSOC);
+$rows = $pdo->query("SELECT * FROM get_leaderboard_data('gym')")->fetchAll(PDO::FETCH_ASSOC);
 
 // Grupăm pe nivel și pe grupe de vârstă
 $by_level = [];

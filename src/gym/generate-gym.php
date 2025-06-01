@@ -83,8 +83,8 @@ if ($act === 'save' && $ex) {
             $exerciseIds = array_column($ex, 'id');
             $exerciseArray = '{' . implode(',', $exerciseIds) . '}';
             $sql = "CALL save_generated_workout(
-                :name, :duration, :type_id, :level_id, :split_id, :location_id, :user_id, :exercise_ids
-            )";
+                :name, :duration, :type_id, :level_id, :split_id, :location_id, :user_id, :exercise_ids, :section
+            )";            
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'name'         => 'Custom ' . date('d.m H:i'),
@@ -94,7 +94,8 @@ if ($act === 'save' && $ex) {
                 'split_id'     => $splitId,
                 'location_id'  => $locId,
                 'user_id'      => $_SESSION['user_id'],
-                'exercise_ids' => $exerciseArray
+                'exercise_ids' => $exerciseArray,
+                'section'      => 'gym'
             ]);
             $msg = '✅ Salvat! Vezi în lista de antrenamente.';
         } catch (Throwable $e) {

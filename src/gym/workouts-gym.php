@@ -10,6 +10,7 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 $uid = $_SESSION['user_id'];
+$section = 'gym';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wid'])) {
     $wid = (int)$_POST['wid'];
@@ -38,10 +39,10 @@ $workouts = $pdo->prepare("
         ORDER BY s.started_at DESC
         LIMIT 1
     ) s ON true
-    WHERE w.user_id = ?
+    WHERE w.user_id = ? AND w.section = ?
     ORDER BY w.id DESC
 ");
-$workouts->execute([$uid, $uid]);
+$workouts->execute([$uid, $uid, $section]);
 $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
 ?>
 

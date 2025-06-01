@@ -10,11 +10,12 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 $uid = $_SESSION['user_id'];
+$section = 'gym';
 
-$totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid)")->fetchColumn();
-$totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid)")->fetchColumn();
+$totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid, '$section')")->fetchColumn();
+$totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid, '$section')")->fetchColumn();
 $subgroupRows  = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid)")->fetchAll(PDO::FETCH_ASSOC);
-$exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, 5)")->fetchAll(PDO::FETCH_ASSOC);
+$exerciseRows = $pdo->query("SELECT * FROM get_top_exercises($uid, 'gym', 5)")->fetchAll(PDO::FETCH_ASSOC);
 $typeRows      = $pdo->query("SELECT * FROM get_training_type_stats($uid)")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
