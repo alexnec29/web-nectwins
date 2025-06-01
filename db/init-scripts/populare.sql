@@ -236,3 +236,114 @@ INSERT INTO workout_exercise (workout_id, exercise_id, order_in_workout, sets, r
   (3, 6, 2, 3, 8),
   -- Exercițiu: Planșă pe antebrațe (id=13) – core stabilizare
   (3, 13, 3, 3, 20);
+
+-- kineto
+INSERT INTO split_type (name) VALUES
+  ('Recuperare'),
+  ('Mobilitate'),
+  ('Intarire');
+
+  INSERT INTO exercise (name, description, dificulty, type_id, is_bodyweight, equipment_needed, link) VALUES
+  -- Recuperare Genunchi (Picioare)
+  ('Întinderi pentru genunchi',
+   'Exercițiu de întindere ușoară pentru genunchi și mușchii picioarelor.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/intinderi_genunchi'),
+
+  ('Ridicări picior întins',
+   'Activare mușchi cvadricepși cu piciorul întins, recomandat în recuperare.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_picior_intins'),
+
+  -- Recuperare Umăr (Umeri)
+  ('Rotiri de umăr cu banda elastică',
+   'Mobilitate și reabilitare pentru articulația umărului cu banda elastică.',
+   1, 5, TRUE, TRUE, 'https://youtu.be/rotiri_umar'),
+
+  ('Ridicări frontale cu gantere ușoare',
+   'Întărire ușoară a deltoidului anterior.',
+   2, 5, FALSE, TRUE, 'https://youtu.be/ridicari_frontale'),
+
+  -- Recuperare Spate (Spate)
+  ('Extensii lombare',
+   'Mobilitate și întărire pentru zona lombară.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/extensii_lombare'),
+
+  ('Ridicări în pronație',
+   'Activare mușchi spate pentru reabilitare.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_pronatie'),
+
+  -- Mobilitate Generală
+  ('Rotiri de trunchi',
+   'Exercițiu de mobilitate pentru coloana vertebrală și trunchi.',
+   1, 3, TRUE, FALSE, 'https://youtu.be/rotiri_trunchi'),
+
+  ('Genuflexiuni lente',
+   'Genuflexiuni controlate pentru mobilitate și flexibilitate.',
+   1, 3, TRUE, FALSE, 'https://youtu.be/genuflexiuni_lente'),
+
+  -- Mobilitate Membre
+  ('Cercuri cu brațele',
+   'Mobilitate pentru umeri și brațe.',
+   1, 3, TRUE, FALSE, 'https://youtu.be/cercuri_brațe'),
+
+  ('Ridicări pe vârfuri',
+   'Mobilitate pentru glezne și gambe.',
+   1, 3, TRUE, FALSE, 'https://youtu.be/ridicari_varfuri'),
+
+  -- Intarire Trunchi
+  ('Plank cu menținere',
+   'Exercițiu de întărire a trunchiului și core-ului.',
+   2, 1, TRUE, FALSE, 'https://youtu.be/plank'),
+
+  ('Ridicări de bazin',
+   'Întărire pentru fesieri și spate inferior.',
+   2, 1, TRUE, FALSE, 'https://youtu.be/ridicari_bazin'),
+
+  -- Intarire Postura
+  ('Ridicări laterale cu gantere',
+   'Întărire deltoizi laterali pentru postură corectă.',
+   2, 1, FALSE, TRUE, 'https://youtu.be/ridicari_laterale'),
+
+  ('Remedieri scapulare',
+   'Exercițiu pentru corectarea posturii scapulare.',
+   2, 1, TRUE, FALSE, 'https://youtu.be/remedieri_scapulare');
+
+   -- Recuperare Genunchi (Picioare: id 3)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (15, 7),  -- Întinderi pentru genunchi - Cvadricepși
+  (16, 7);  -- Ridicări picior întins - Cvadricepși
+
+-- Recuperare Umăr (Umeri: id 4)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (17, 10), -- Rotiri de umăr cu banda elastică - Deltoid Anterior
+  (18, 10); -- Ridicări frontale cu gantere ușoare - Deltoid Anterior
+
+-- Recuperare Spate (Spate: id 2)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (19, 6),  -- Extensii lombare - Romboizi
+  (20, 4);  -- Ridicări în pronație - Dorsali
+
+-- Mobilitate Generală (Piept(1), Spate(2), Umeri(4), Brațe(5), Picioare(3))
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (21, 6),  -- Rotiri de trunchi - Romboizi (Spate)
+  (21, 1),  -- Rotiri de trunchi - Piept Superior
+  (21, 10), -- Rotiri de trunchi - Deltoid Anterior
+  (21, 13), -- Rotiri de trunchi - Biceps (Brațe)
+  (21, 7);  -- Rotiri de trunchi - Cvadricepși (Picioare)
+
+  (22, 7);  -- Genuflexiuni lente - Cvadricepși
+
+-- Mobilitate Membre (Brațe(5), Picioare(3))
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (23, 13), -- Cercuri cu brațele - Biceps
+  (23, 12), -- Cercuri cu brațele - Triceps
+  (24, 14); -- Ridicări pe vârfuri - Antebraț (gambe nu e definit, deci antebraț pentru flexibilitate)
+
+-- Intarire Trunchi (Piept(1), Spate(2), Umeri(4))
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (25, 14), -- Plank cu menținere - Antebraț (core nu există)
+  (26, 8);  -- Ridicări de bazin - Fesieri
+
+-- Intarire Postura (Spate(2), Umeri(4), Piept(1))
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (27, 11), -- Ridicări laterale cu gantere - Deltoid Lateral
+  (28, 6);  -- Remedieri scapulare - Romboizi
