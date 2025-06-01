@@ -28,15 +28,16 @@ CREATE OR REPLACE PROCEDURE save_generated_workout(
     p_split_id INT,
     p_location_id INT,
     p_user_id INT,
-    p_exercise_ids INT[]
+    p_exercise_ids INT[],
+    p_section TEXT
 )
 AS $$
 DECLARE
   new_workout_id INT;
   i INT := 1;
 BEGIN
-  INSERT INTO workout(name, duration_minutes, type_id, level_id, split_id, location_id, user_id)
-  VALUES (p_name, p_duration, p_type_id, p_level_id, p_split_id, p_location_id, p_user_id)
+  INSERT INTO workout(name, duration_minutes, type_id, level_id, split_id, location_id, user_id, section)
+  VALUES (p_name, p_duration, p_type_id, p_level_id, p_split_id, p_location_id, p_user_id, p_section)
   RETURNING id INTO new_workout_id;
 
   FOREACH i IN ARRAY p_exercise_ids
@@ -116,30 +117,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- statistics
-CREATE OR REPLACE FUNCTION get_total_completed_workouts(p_user_id INT)
+CREATE OR REPLACE FUNCTION get_total_completed_workouts(p_user_id INT, p_section TEXT)
 RETURNS INT AS $$
 DECLARE
     v_count INT;
 BEGIN
     SELECT COUNT(*) INTO v_count
-    FROM workout_session
-    WHERE user_id = p_user_id AND completed_at IS NOT NULL;
+    FROM workout_session ws
+    JOIN workout w ON w.id = ws.workout_id
+    WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL AND w.section = p_section;
 
     RETURN v_count;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION get_total_workout_duration(p_user_id INT)
-RETURNS INT AS $$
-DECLARE
-    v_minutes INT;
-BEGIN
-    SELECT COALESCE(SUM(EXTRACT(EPOCH FROM completed_at - started_at) / 60), 0)
-    INTO v_minutes
-    FROM workout_session
-    WHERE user_id = p_user_id AND completed_at IS NOT NULL;
-
-    RETURN ROUND(v_minutes);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -159,16 +147,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_top_exercises(p_user_id INT, p_limit INT DEFAULT 5)
+CREATE OR REPLACE FUNCTION get_top_exercises(p_user_id INT, p_section TEXT, p_limit INT DEFAULT 6)
 RETURNS TABLE(name TEXT, uses INT)
 AS $$
 BEGIN
   RETURN QUERY
   SELECT e.name::TEXT, COUNT(*)::INT AS uses
   FROM workout_session ws
-  JOIN workout_exercise we ON we.workout_id = ws.workout_id
+  JOIN workout w ON w.id = ws.workout_id
+  JOIN workout_exercise we ON we.workout_id = w.id
   JOIN exercise e ON e.id = we.exercise_id
-  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL AND w.section = p_section
   GROUP BY e.name
   ORDER BY uses DESC
   LIMIT p_limit;
@@ -191,7 +180,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- leaderboard
-CREATE OR REPLACE FUNCTION get_leaderboard_data()
+CREATE OR REPLACE FUNCTION get_leaderboard_data(p_section TEXT)
 RETURNS TABLE (
     user_id     INT,
     username    TEXT,
@@ -214,7 +203,7 @@ BEGIN
       MAX(tl.name)::TEXT AS nivel
   FROM users u
   LEFT JOIN workout_session ws ON ws.user_id = u.id
-  LEFT JOIN workout w ON w.id = ws.workout_id
+  LEFT JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
   LEFT JOIN training_level tl ON tl.id = w.level_id
   GROUP BY u.id;
 END;

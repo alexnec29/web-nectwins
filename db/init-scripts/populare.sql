@@ -192,21 +192,20 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
 -- ============================
 -- 11. Populare tabela workout
 -- ============================
--- Exemplu 1: Workout pentru user_id=1 (Alex), un antrenament de forță pentru Piept & Brațe
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id)
+-- Exemplu 1: Workout pentru user_id=1 (Alex) - sală normală
+INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
 VALUES
-  (1, 'Piept & Triceps - Forță',  50, 1, 2, 2, 1);  -- type_id=1 (Forță), level_id=2 (Intermediar), split=Upper/Lower, location=Sală
+  (1, 'Piept & Triceps - Forță',  50, 1, 2, 2, 1, 'gym');
 
--- Exemplu 2: Workout pentru user_id=2 (Maria), un antrenament de mobilitate ACASĂ
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id)
+-- Exemplu 2: Workout pentru user_id=2 (Maria) - mobilitate acasă
+INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
 VALUES
-  (2, 'Mobilitate Spate & Core', 30, 3, 1, 1, 2);  -- type_id=3 (Mobilitate), level_id=1 (Începător), split=Full Body, location=Acasă
+  (2, 'Mobilitate Spate & Core', 30, 3, 1, 1, 2, 'gym');
 
--- Exemplu 3: Workout pentru user_id=3 (Andrei), un program de reabilitare la kineto
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id)
+-- Exemplu 3: Workout pentru user_id=3 (Andrei) - reabilitare la kineto
+INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
 VALUES
-  (3, 'Reabilitare ACL - Ziua 1', 40, 5, 1, NULL, 3);  -- type_id=5 (Reabilitare), level_id=1 (Începător), split=NULL, location=Kineto Cabinet
-
+  (3, 'Reabilitare ACL - Ziua 1', 40, 5, 1, NULL, 3, 'kineto');
 -- =============================================
 -- 12. Populare tabela workout_exercise (conținut)
 -- =============================================

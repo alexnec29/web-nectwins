@@ -73,19 +73,19 @@ CREATE TABLE exercise_muscle_group (
 );
 
 CREATE TABLE workout (
-   id                serial       PRIMARY KEY,
-   name              varchar(100) NOT NULL,
-    user_id           integer      NOT NULL
-     REFERENCES users(id) ON DELETE CASCADE,
-   duration_minutes  integer      NOT NULL CHECK (duration_minutes > 0),
-   type_id           integer      REFERENCES training_type(id),
-   level_id          integer      REFERENCES training_level(id),
-   split_id          integer      REFERENCES split_type(id),
-   location_id       integer      REFERENCES location(id),
-   created_at        timestamp    DEFAULT CURRENT_TIMESTAMP,
-   started_at        timestamp,
-   completed_at      timestamp,
-   completed_count   integer      DEFAULT 0
+   id               SERIAL       PRIMARY KEY,
+   name             VARCHAR(100) NOT NULL,
+   user_id          INTEGER      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+   duration_minutes INTEGER      NOT NULL CHECK (duration_minutes > 0),
+   type_id          INTEGER      REFERENCES training_type(id),
+   level_id         INTEGER      REFERENCES training_level(id),
+   split_id         INTEGER      REFERENCES split_type(id),
+   location_id      INTEGER      REFERENCES location(id),
+   section          VARCHAR(10)  NOT NULL,
+   created_at       TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+   started_at       TIMESTAMP,
+   completed_at     TIMESTAMP,
+   completed_count  INTEGER      DEFAULT 0
 );
 
 CREATE TABLE workout_exercise (
