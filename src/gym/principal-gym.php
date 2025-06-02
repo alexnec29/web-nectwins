@@ -71,7 +71,7 @@ if (!isset($_SESSION["username"])) {
         <div class="card">
             <button class="card-button" onclick="window.location.href='leaderboard-gym.php'">
                 <p>Clasament</p>
-                <img src="/assets/leaderboard-gym.png" alt="Leaderboard">
+                <img src="/assets/clasament-gym.png" alt="Leaderboard">
             </button>
         </div>
 

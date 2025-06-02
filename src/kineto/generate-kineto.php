@@ -48,15 +48,12 @@ function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $durat
 {
     if (empty($groups)) return [];
 
-    $stmt = $pdo->prepare("
-        SELECT * 
-          FROM get_exercises_filtered(:groups, :level_id, :duration, :type_id)
-    ");
+    $stmt = $pdo->prepare("SELECT * FROM get_exercises_filtered(:groups, :level_id, :duration, :type_id)");
     $stmt->execute([
         'groups'   => '{' . implode(',', array_map(fn($g) => '"' . $g . '"', $groups)) . '}',
         'level_id' => $levelId,
         'duration' => $duration,
-        'type_id'  => 2
+        'type_id'  => 2 // tipul de antrenament - kineto
     ]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
