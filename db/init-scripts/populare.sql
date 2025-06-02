@@ -6,6 +6,29 @@ INSERT INTO muscle_group (name) VALUES
   ('Umeri'),
   ('Brațe');
 
+INSERT INTO health_condition (name) VALUES
+  ('Hernie de disc'),
+  ('Durere lombară'),
+  ('Luxație umăr'),
+  ('Artroză genunchi'),
+  ('Diabet'),
+  ('Hipertensiune');
+
+INSERT INTO users (username, password, email, nume, varsta, gen, inaltime, greutate) VALUES
+  ('ana123', 'parola1', 'ana@gmail.com', 'Ana Popescu', 27, 'F', 165, 58),
+  ('ionut99', 'pass99', 'ionut@yahoo.com', 'Ionuț Vasile', 34, 'M', 180, 80),
+  ('maria_fit', 'mfit', 'maria.fit@gmail.com', 'Maria Ionescu', 45, 'F', 170, 70),
+  ('vali_recuperare', 'recval', 'vali@recuperare.ro', 'Vali Petrescu', 52, 'M', 172, 85);
+
+  -- Ionuț (id=2) → Hernie de disc
+INSERT INTO user_health_condition (user_id, condition_id) VALUES (2, 1);
+
+-- Maria (id=3) → Artroză genunchi, Diabet
+INSERT INTO user_health_condition (user_id, condition_id) VALUES (3, 4), (3, 5);
+
+-- Vali (id=4) → Durere lombară
+INSERT INTO user_health_condition (user_id, condition_id) VALUES (4, 2);
+
 INSERT INTO muscle_subgroup (name, principal_group) VALUES
   -- Piept
   ('Piept Superior', 1),
@@ -48,13 +71,77 @@ INSERT INTO split_type (name) VALUES
   ('Push/Pull/Legs'),
   ('Bro Split');
 
+INSERT INTO split_subtype (name, split_type_id) VALUES
+  -- Push/Pull/Legs
+  ('push', 3),
+  ('pull', 3),
+  ('legs', 3),
+
+  -- Upper/Lower
+  ('upper', 2),
+  ('lower', 2),
+
+  -- Bro Split
+  ('chest', 4),
+  ('back', 4),
+  ('arms', 4),
+  ('shoulders', 4),
+  ('legs', 4),
+
+  -- Full Body
+  ('full-body', 1);
+
+INSERT INTO split_subtype_muscle_group (split_subtype_id, muscle_group_id) VALUES
+  -- Push
+  ((SELECT id FROM split_subtype WHERE name = 'push'), (SELECT id FROM muscle_group WHERE name = 'Piept')),
+  ((SELECT id FROM split_subtype WHERE name = 'push'), (SELECT id FROM muscle_group WHERE name = 'Umeri')),
+  ((SELECT id FROM split_subtype WHERE name = 'push'), (SELECT id FROM muscle_group WHERE name = 'Brațe')),
+
+  -- Pull
+  ((SELECT id FROM split_subtype WHERE name = 'pull'), (SELECT id FROM muscle_group WHERE name = 'Spate')),
+  ((SELECT id FROM split_subtype WHERE name = 'pull'), (SELECT id FROM muscle_group WHERE name = 'Brațe')),
+
+  -- Legs (Push/Pull/Legs și Bro Split folosesc același nume → se separă prin split_subtype_id)
+  ((SELECT id FROM split_subtype WHERE name = 'legs' AND split_type_id = 3), (SELECT id FROM muscle_group WHERE name = 'Picioare')),
+  ((SELECT id FROM split_subtype WHERE name = 'legs' AND split_type_id = 4), (SELECT id FROM muscle_group WHERE name = 'Picioare')),
+
+  -- Upper
+  ((SELECT id FROM split_subtype WHERE name = 'upper'), (SELECT id FROM muscle_group WHERE name = 'Piept')),
+  ((SELECT id FROM split_subtype WHERE name = 'upper'), (SELECT id FROM muscle_group WHERE name = 'Spate')),
+  ((SELECT id FROM split_subtype WHERE name = 'upper'), (SELECT id FROM muscle_group WHERE name = 'Umeri')),
+  ((SELECT id FROM split_subtype WHERE name = 'upper'), (SELECT id FROM muscle_group WHERE name = 'Brațe')),
+
+  -- Lower
+  ((SELECT id FROM split_subtype WHERE name = 'lower'), (SELECT id FROM muscle_group WHERE name = 'Picioare')),
+
+  -- Bro Split
+  ((SELECT id FROM split_subtype WHERE name = 'chest'), (SELECT id FROM muscle_group WHERE name = 'Piept')),
+  ((SELECT id FROM split_subtype WHERE name = 'back'), (SELECT id FROM muscle_group WHERE name = 'Spate')),
+  ((SELECT id FROM split_subtype WHERE name = 'arms'), (SELECT id FROM muscle_group WHERE name = 'Brațe')),
+  ((SELECT id FROM split_subtype WHERE name = 'shoulders'), (SELECT id FROM muscle_group WHERE name = 'Umeri')),
+
+  -- Full Body
+  ((SELECT id FROM split_subtype WHERE name = 'full-body'), (SELECT id FROM muscle_group WHERE name = 'Piept')),
+  ((SELECT id FROM split_subtype WHERE name = 'full-body'), (SELECT id FROM muscle_group WHERE name = 'Spate')),
+  ((SELECT id FROM split_subtype WHERE name = 'full-body'), (SELECT id FROM muscle_group WHERE name = 'Umeri')),
+  ((SELECT id FROM split_subtype WHERE name = 'full-body'), (SELECT id FROM muscle_group WHERE name = 'Brațe')),
+  ((SELECT id FROM split_subtype WHERE name = 'full-body'), (SELECT id FROM muscle_group WHERE name = 'Picioare'));
+
 -- 8.6. Tabela location (locații de antrenament)
-INSERT INTO location (name) VALUES
-  ('Sală'),
-  ('Acasă'),
-  ('Kineto Cabinet'),
-  ('Fizio Cabinet'),
-  ('Aer Liber');
+-- GYM
+INSERT INTO location (name, section) VALUES 
+  ('Acasă', 'gym'),
+  ('Sală', 'gym');
+
+-- KINETO
+INSERT INTO location (name, section) VALUES 
+  ('Centru recuperare', 'kineto'),
+  ('Spital', 'kineto');
+
+-- FIZIO
+INSERT INTO location (name, section) VALUES 
+  ('Terapie fizică', 'fizio'),
+  ('Ambulator', 'fizio');
 
 -- =====================================
 -- 9. Populare tabela exercise cu câteva exerciții
@@ -110,6 +197,26 @@ VALUES
   ('Stretching spate inferior',
    'Exercițiu de stretching pentru regiunea lombară.',
    NULL, 1, TRUE, FALSE, 'https://youtu.be/stretch_lombar');
+
+   -- Gym: id-uri 1 – 14
+INSERT INTO exercise_section (exercise_id, section) VALUES
+  (1, 'gym'), (2, 'gym'), (3, 'gym'), (4, 'gym'),
+  (5, 'gym'), (6, 'gym'), (7, 'gym'), (8, 'gym'),
+  (9, 'gym'), (10, 'gym'), (11, 'gym'), (12, 'gym'),
+  (13, 'gym'), (14, 'gym');
+
+-- Kineto: id-uri 15 – 28
+INSERT INTO exercise_section (exercise_id, section) VALUES
+  (15, 'kineto'), (16, 'kineto'), (17, 'kineto'), (18, 'kineto'),
+  (19, 'kineto'), (20, 'kineto'), (21, 'kineto'), (22, 'kineto'),
+  (23, 'kineto'), (24, 'kineto'), (25, 'kineto'), (26, 'kineto'),
+  (27, 'kineto'), (28, 'kineto');
+
+-- Fizio: id-uri 31 – 38
+INSERT INTO exercise_section (exercise_id, section) VALUES
+  (31, 'fizio'), (32, 'fizio'), (33, 'fizio'), (34, 'fizio'),
+  (35, 'fizio'), (36, 'fizio'), (37, 'fizio'), (38, 'fizio');
+
 
 -- ===============================================
 -- 10. Populare tabela exercise_muscle_group (legături exercițiu – subgrupă)
@@ -364,3 +471,69 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
 -- 8. Șold – Fesieri (id 8)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (38, 8);   -- Exercițiu de mobilitate pentru șold → Fesieri
+
+  -- Exerciții potrivite pentru: Hernie de disc
+INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
+  (14, 1), -- Stretching lombar
+  (19, 1), -- Extensii lombare
+  (20, 1); -- Ridicări în pronație
+
+-- Durere lombară
+INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
+  (14, 2),
+  (19, 2),
+  (21, 2); -- Rotiri trunchi
+
+-- Artroză genunchi
+INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
+  (15, 4),
+  (16, 4),
+  (31, 4);
+
+-- Diabet – exerciții moderate recomandate
+INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
+  (12, 5), -- Pod gluteal
+  (13, 5); -- Planșă antebrațe
+
+-- Hipertensiune
+INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
+  (21, 6),
+  (22, 6);
+
+-- Workout generic pentru Ana (fără afecțiuni)
+INSERT INTO workout (name, user_id, duration_minutes, type_id, level_id, split_id, location_id, section)
+VALUES
+  ('Full Body Basic', 1, 30, 1, 1, 1, 2, 'gym');  -- Sala, Gym
+
+-- Workout pentru Ionuț (hernie de disc → kineto)
+INSERT INTO workout (name, user_id, duration_minutes, type_id, level_id, split_id, location_id, section)
+VALUES
+  ('Recuperare Spate', 2, 20, 2, 1, 5, 3, 'kineto'); -- Centru recuperare
+
+-- Workout pentru Maria (artroză genunchi)
+INSERT INTO workout (name, user_id, duration_minutes, type_id, level_id, split_id, location_id, section)
+VALUES
+  ('Genunchi Mobilitate', 3, 25, 3, 1, 7, 5, 'fizio'); -- Terapie fizică
+
+-- Workout pentru Vali (lombară)
+INSERT INTO workout (name, user_id, duration_minutes, type_id, level_id, split_id, location_id, section)
+VALUES
+  ('Spate Mobil', 4, 20, 2, 1, 6, 4, 'kineto'); -- Spital
+
+-- Ana a făcut deja o sesiune
+INSERT INTO workout_session (workout_id, user_id, started_at, completed_at)
+VALUES (1, 1, NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days' + INTERVAL '30 minutes');
+
+-- Ionuț în curs
+INSERT INTO workout_session (workout_id, user_id, started_at)
+VALUES (2, 2, NOW() - INTERVAL '1 hour');
+
+-- Maria a finalizat deja 2 sesiuni
+INSERT INTO workout_session (workout_id, user_id, started_at, completed_at)
+VALUES 
+  (3, 3, NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days' + INTERVAL '25 minutes'),
+  (3, 3, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day' + INTERVAL '25 minutes');
+
+-- Vali nu a început sesiunea încă
+INSERT INTO workout_session (workout_id, user_id)
+VALUES (4, 4);
