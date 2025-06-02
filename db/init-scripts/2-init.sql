@@ -1,5 +1,4 @@
 -- generate workout
--- 1. Funcție pentru extragerea exercițiilor
 CREATE OR REPLACE FUNCTION get_exercises_by_groups(p_groups TEXT[])
 RETURNS TABLE(id INT, name TEXT, description TEXT, link TEXT)
 AS $$
@@ -19,7 +18,40 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 2. Procedură pentru salvare
+CREATE OR REPLACE FUNCTION get_exercises_filtered(
+    p_groups TEXT[],
+    p_level_id INT,
+    p_duration INT,
+    p_type_id INT
+)
+RETURNS TABLE (
+    id INT,
+    name TEXT,
+    description TEXT,
+    link TEXT,
+    dificulty INT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    e.id::INT,
+    e.name::TEXT,
+    e.description::TEXT,
+    e.link::TEXT,
+    e.dificulty::INT
+  FROM exercise e
+  JOIN exercise_muscle_group emg ON e.id = emg.exercise_id
+  JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
+  JOIN muscle_group mg ON mg.id = ms.principal_group
+  WHERE mg.name = ANY(p_groups)
+    AND (p_level_id IS NULL OR e.dificulty <= p_level_id)
+    AND (p_type_id IS NULL OR e.type_id = p_type_id)
+  GROUP BY e.id, e.name, e.description, e.link, e.dificulty
+  ORDER BY RANDOM()
+  LIMIT GREATEST(p_duration / 10, 1);
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE PROCEDURE save_generated_workout(
     p_name TEXT,
     p_duration INT,
