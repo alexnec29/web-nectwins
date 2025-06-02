@@ -115,67 +115,67 @@ VALUES
 -- 10. Populare tabela exercise_muscle_group (legături exercițiu – subgrupă)
 -- ===============================================
 
--- 10.1. Legăm „Împins la bancă orizontal” (id=1) la subgrupele Piept Superior (1) și Triceps (12)
+-- 10.1. „Împins la bancă orizontal” (id=1) → Piept Superior (1), Triceps (15)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (1, 1),  -- 1: 'Piept Superior'
-  (1, 12); -- 12: 'Triceps'
+  (1, 1),  -- Piept Superior
+  (1, 15); -- Triceps
 
--- 10.2. „Flotări clasice” (id=2) la subgrupele Piept Inferior(2), Deltoid Anterior(10), Triceps(12)
+-- 10.2. „Flotări clasice” (id=2) → Piept Inferior (2), Deltoid Anterior (11), Triceps (15)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (2, 2),  -- Piept Inferior
-  (2, 10), -- Deltoid Anterior
-  (2, 12); -- Triceps
+  (2, 11), -- Deltoid Anterior
+  (2, 15); -- Triceps
 
--- 10.3. „Tracțiuni la bară fixă” (id=3) la subgrupele Dorsali(4), Biceps(13)
+-- 10.3. „Tracțiuni la bară fixă” (id=3) → Dorsali (4), Biceps (14)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (3, 4),  -- Dorsali
-  (3, 13); -- Biceps
+  (3, 14); -- Biceps
 
--- 10.4. „Ramat cu haltera din aplecat” (id=4) la subgrupele Dorsali(4), Trapéz(5), Biceps(13)
+-- 10.4. „Ramat cu haltera din aplecat” (id=4) → Dorsali (4), Trapéz (5), Biceps (14)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (4, 4),  -- Dorsali
   (4, 5),  -- Trapéz
-  (4, 13); -- Biceps
+  (4, 14); -- Biceps
 
--- 10.5. „Genuflexiuni cu bară” (id=5) la subgrupele Cvadricepși(7), Fesieri(8), Femurali(9)
+-- 10.5. „Genuflexiuni cu bară” (id=5) → Cvadricepși (7), Fesieri (8), Femurali (9)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (5, 7),  -- Cvadricepși
   (5, 8),  -- Fesieri
   (5, 9);  -- Femurali
 
--- 10.6. „Fandări cu gantere” (id=6) la subgrupele Cvadricepși(7), Fesieri(8)
+-- 10.6. „Fandări cu gantere” (id=6) → Cvadricepși (7), Fesieri (8)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (6, 7),  -- Cvadricepși
   (6, 8);  -- Fesieri
 
--- 10.7. „Presa militară cu haltera” (id=7) la subgrupele Deltoid Anterior(10), Triceps(12)
+-- 10.7. „Presa militară cu haltera” (id=7) → Deltoid Anterior (11), Triceps (15)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (7, 10), -- Deltoid Anterior
-  (7, 12); -- Triceps
+  (7, 11), -- Deltoid Anterior
+  (7, 15); -- Triceps
 
--- 10.8. „Ridicări laterale cu gantere” (id=8) la subgrupa Deltoid Lateral(11)
+-- 10.8. „Ridicări laterale cu gantere” (id=8) → Deltoid Lateral (12)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (8, 11); -- Deltoid Lateral
+  (8, 12); -- Deltoid Lateral
 
--- 10.9. „Flexii biceps cu haltera” (id=9) la subgrupa Biceps(13)
+-- 10.9. „Flexii biceps cu haltera” (id=9) → Biceps (14)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (9, 13); -- Biceps
+  (9, 14); -- Biceps
 
--- 10.10. „Extensii triceps la scripete” (id=10) la subgrupa Triceps(12)
+-- 10.10. „Extensii triceps la scripete” (id=10) → Triceps (15)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (10, 12); -- Triceps
+  (10, 15); -- Triceps
 
--- 10.11. „Alergare pe bandă” (id=11) la subgrupe Cardio generale – nu e nevoie de legătură cu subgrupă, omitem
+-- 10.11. „Alergare pe bandă” (id=11) → Cardio general – fără asociere musculară, se omite
 
--- 10.12. „Podul gluteal” (id=12) la subgrupa Fesieri(8)
+-- 10.12. „Podul gluteal” (id=12) → Fesieri (8)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (12, 8);  -- Fesieri
+  (12, 8); -- Fesieri
 
--- 10.13. „Planșă pe antebrațe” (id=13) la subgrupe Antebraț(14), Abdomen/Core (nu există ca subgrupă, lăsăm pentru testare doar Antebraț)
+-- 10.13. „Planșă pe antebrațe” (id=13) → Antebraț (16)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (13, 14); -- Antebraț
+  (13, 16); -- Antebraț
 
--- 10.14. „Stretching spate inferior” (id=14) la subgrupele Romboizi(6), Dorsali(4)
+-- 10.14. „Stretching spate inferior” (id=14) → Romboizi (6), Dorsali (4)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (14, 6),  -- Romboizi
   (14, 4);  -- Dorsali
@@ -250,45 +250,48 @@ INSERT INTO split_type (name) VALUES
    'Exercițiu pentru corectarea posturii scapulare.',
    2, 2, TRUE, FALSE, 'https://youtu.be/remedieri_scapulare');
 
-   -- Recuperare Genunchi (Picioare: id 3)
+-- Recuperare Genunchi (exerciții pentru Cvadricepși – id 7)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (15, 7),  -- Întinderi pentru genunchi - Cvadricepși
-  (16, 7);  -- Ridicări picior întins - Cvadricepși
+  (15, 7),  -- Întinderi pentru genunchi → Cvadricepși
+  (16, 7);  -- Ridicări picior întins → Cvadricepși
 
--- Recuperare Umăr (Umeri: id 4)
+-- Recuperare Umăr (exerciții pentru Deltoid Anterior – id 11)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (17, 10), -- Rotiri de umăr cu banda elastică - Deltoid Anterior
-  (18, 10); -- Ridicări frontale cu gantere ușoare - Deltoid Anterior
+  (17, 11), -- Rotiri de umăr cu banda elastică → Deltoid Anterior
+  (18, 11); -- Ridicări frontale cu gantere ușoare → Deltoid Anterior
 
--- Recuperare Spate (Spate: id 2)
+-- Recuperare Spate (Romboizi – id 6, Dorsali – id 4)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (19, 6),  -- Extensii lombare - Romboizi
-  (20, 4);  -- Ridicări în pronație - Dorsali
+  (19, 6),  -- Extensii lombare → Romboizi
+  (20, 4);  -- Ridicări în pronație → Dorsali
 
--- Mobilitate Generală (Piept(1), Spate(2), Umeri(4), Brațe(5), Picioare(3))
+-- Mobilitate Generală (implică mai multe grupe: Piept, Spate, Umeri, Brațe, Picioare)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (21, 6),  -- Rotiri de trunchi - Romboizi (Spate)
-  (21, 1),  -- Rotiri de trunchi - Piept Superior
-  (21, 10), -- Rotiri de trunchi - Deltoid Anterior
-  (21, 13), -- Rotiri de trunchi - Biceps (Brațe)
-  (21, 7), -- Rotiri de trunchi - Cvadricepși (Picioare)
-  (22, 7);  -- Genuflexiuni lente - Cvadricepși
+  (21, 6),  -- Rotiri de trunchi → Romboizi (Spate)
+  (21, 1),  -- Rotiri de trunchi → Piept Superior
+  (21, 11), -- Rotiri de trunchi → Deltoid Anterior
+  (21, 14), -- Rotiri de trunchi → Biceps (Brațe)
+  (21, 7);  -- Rotiri de trunchi → Cvadricepși (Picioare)
 
--- Mobilitate Membre (Brațe(5), Picioare(3))
+-- Mobilitate Generală – Genuflexiuni lente (doar Cvadricepși – id 7)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (23, 13), -- Cercuri cu brațele - Biceps
-  (23, 12), -- Cercuri cu brațele - Triceps
-  (24, 14); -- Ridicări pe vârfuri - Antebraț (gambe nu e definit, deci antebraț pentru flexibilitate)
+  (22, 7); -- Genuflexiuni lente → Cvadricepși
 
--- Intarire Trunchi (Piept(1), Spate(2), Umeri(4))
+-- Mobilitate Membre (Brațe și Picioare)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (25, 14), -- Plank cu menținere - Antebraț (core nu există)
-  (26, 8);  -- Ridicări de bazin - Fesieri
+  (23, 14), -- Cercuri cu brațele → Biceps
+  (23, 15), -- Cercuri cu brațele → Triceps
+  (24, 10); -- Ridicări pe vârfuri → Gambele
 
--- Intarire Postura (Spate(2), Umeri(4), Piept(1))
+-- Întărire Trunchi (core, fesieri)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (27, 11), -- Ridicări laterale cu gantere - Deltoid Lateral
-  (28, 6);  -- Remedieri scapulare - Romboizi
+  (25, 16), -- Plank cu menținere → Antebraț (în lipsa unui subgrup "Core")
+  (26, 8);  -- Ridicări de bazin → Fesieri
+
+-- Întărire Postură (Umeri, Spate)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (27, 12), -- Ridicări laterale cu gantere → Deltoid Lateral
+  (28, 6);  -- Remedieri scapulare → Romboizi
 
   --fizio
   INSERT INTO split_type (name) VALUES
@@ -329,13 +332,35 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
    'Mobilitate articulație șold, realizată în picioare sau sprijinit.',
    1, 3, TRUE, FALSE, 'https://youtu.be/mobilitate_sold');
 
+-- 1. Genunchi – Cvadricepși (id 7)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
-  (31, 7),   -- Flexii genunchi în șezut - Cvadricepși
-  (32, 10),  -- Rotiri umeri cu gantere - Deltoid Anterior
-  (33, 9),   -- Întindere ischio în decubit dorsal - Femurali
-  (34, 9),   -- Ridicări gambe pe treaptă - Femurali/Gambe (eventual Gambe: 9 sau 15 dacă există)
-  (34, 10),  -- Gambe (presupun că Gambe are id 15 la subgrupe, în funcție de schema ta)
-  (35, 7),   -- Exercițiu izometric cvadricepși - Cvadricepși
-  (36, 14),  -- Plank lateral - Antebraț / Core (dacă ai subgrupă Core, legi acolo)
-  (37, 15),  -- Întinderi tendon ahilean - Gambe
-  (38, 8);   -- Exercițiu mobilitate șold - Fesieri
+  (31, 7);   -- Flexii genunchi în șezut → Cvadricepși
+
+-- 2. Umăr – Deltoid Anterior (id 11)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (32, 11);  -- Rotiri umeri cu gantere → Deltoid Anterior
+
+-- 3. Posterior coapsă – Femurali (id 9)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (33, 9);   -- Întindere ischio în decubit dorsal → Femurali
+
+-- 4. Gambe – Gambele (id 10) și Femurali (id 9) (activare multiplă)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (34, 9),   -- Ridicări gambe pe treaptă → Femurali
+  (34, 10);  -- Ridicări gambe pe treaptă → Gambele
+
+-- 5. Cvadricepși – Izometric (id 7)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (35, 7);   -- Exercițiu izometric pentru coapsa frontală → Cvadricepși
+
+-- 6. Core lateral – folosim Antebraț (id 16) în lipsa unui subgrup "Core"
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (36, 16);  -- Plank lateral → Antebraț
+
+-- 7. Tendon Ahilean – Gambele (id 10)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (37, 10);  -- Întinderi pentru tendonul ahilean → Gambele
+
+-- 8. Șold – Fesieri (id 8)
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (38, 8);   -- Exercițiu de mobilitate pentru șold → Fesieri
