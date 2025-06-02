@@ -54,28 +54,25 @@ $mins  = (int)($_POST['duration'] ?? 60);
 $level = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
 $locId = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
 
-function getExercisesByGroupsAndDifficulty(PDO $pdo, array $muscles, ?int $dificulty): array
+function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $duration): array
 {
-    if (empty($muscles)) {
-        $muscles = ['dummy'];
-    }
-    $placeholders = implode(',', array_fill(0, count($muscles), '?'));
-    if ($dificulty !== null) {
-        $sql = "SELECT * FROM exercise WHERE type_id = 1 AND dificulty <= :dificulty";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['dificulty' => $dificulty]);
-    } else {
-        $sql = "SELECT * FROM exercise WHERE type_id = 1";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-    }
+    if (empty($groups)) return [];
+
+    $stmt = $pdo->prepare("SELECT * FROM get_exercises_filtered(:groups, :level_id, :duration, :type_id)");
+    $stmt->execute([
+        'groups'   => '{' . implode(',', array_map(fn($g) => '"' . $g . '"', $groups)) . '}',
+        'level_id' => $levelId,
+        'duration' => $duration,
+        'type_id'  => 1 // tipul de antrenament - gym
+    ]);
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 $ex = [];
 $msg = '';
-if (isset($opt[$split][$part])) {
-    $ex = getExercisesByGroupsAndDifficulty($pdo, $opt[$split][$part], $level);
+if ($act === 'generate' && isset($opt[$split][$part])) {
+    $ex = getFilteredExercises($pdo, $opt[$split][$part], $level, $mins);
 }
 
 if ($act === 'save' && $ex) {
