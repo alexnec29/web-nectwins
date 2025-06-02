@@ -65,8 +65,20 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
             <label for="greutate">Greutate (kg):</label>
             <input type="number" name="greutate" value="<?= $userProfile['greutate'] ?? '' ?>" required>
 
-            <label for="conditie">Condiții medicale:</label>
-            <input type="text" name="conditie" value="<?= htmlspecialchars($userProfile['conditie'] ?? '') ?>">
+            <label>Condiții medicale:</label>
+            <div class="checkbox-group">
+                <?php
+                $conditions = $pdo->query("SELECT id, name FROM health_condition ORDER BY name")->fetchAll();
+                $userConditions = $pdo->prepare("SELECT condition_id FROM user_health_condition WHERE user_id = ?");
+                $userConditions->execute([$userId]);
+                $userConditionIds = array_column($userConditions->fetchAll(), 'condition_id');
+
+                foreach ($conditions as $cond) {
+                    $isChecked = in_array($cond['id'], $userConditionIds) ? 'checked' : '';
+                    echo "<label><input type='checkbox' name='conditii_sanatate[]' value='{$cond['id']}' $isChecked> {$cond['name']}</label><br>";
+                }
+                ?>
+            </div>
 
             <button type="submit">Salvează modificările</button>
         </form>
