@@ -257,8 +257,8 @@ INSERT INTO split_subtype_muscle_group (split_subtype_id, muscle_group_id) VALUE
     (SELECT id FROM split_subtype WHERE name = 'full-body'
       AND split_id = (SELECT id FROM split_type WHERE name = 'Full Body')),
     (SELECT id FROM muscle_group WHERE name = 'Picioare')
-  );
-
+  )
+  ON CONFLICT DO NOTHING;
 --------------------------------------------------------------------------------
 -- 6. Locații de antrenament (location)
 --------------------------------------------------------------------------------

@@ -13,8 +13,8 @@ $pdo = new PDO(
 );
 
 $trainingLevels = $pdo->query("SELECT id,name FROM training_level ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
-$locations      = $pdo->query("SELECT id,name FROM location ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
-$splits         = $pdo->query("SELECT id,name FROM split_type ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
+$locations      = $pdo->query("SELECT id,name FROM location WHERE Trim(section) = 'gym' ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
+$splits         = $pdo->query("SELECT id,name FROM split_type where id <= 4 ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
 $groups         = $pdo->query("SELECT name FROM muscle_group ORDER BY id")->fetchAll(PDO::FETCH_COLUMN);
 
 $slugify = fn($name) => strtolower(preg_replace('/[^a-z]+/i', '-', $name));
@@ -25,34 +25,24 @@ foreach ($splits as $s) {
 
 $g = fn($n) => current(array_filter($groups, fn($x) => strtolower($x) == strtolower($n))) ?? $n;
 
-$opt = [
-    "push-pull-legs" => [
-        "push" => [$g('Piept'), $g('Umeri'), $g('Brațe')],
-        "pull" => [$g('Spate'), $g('Brațe')],
-        "legs" => [$g('Picioare')]
-    ],
-    "upper-lower" => [
-        "upper" => [$g('Piept'), $g('Spate'), $g('Umeri'), $g('Brațe')],
-        "lower" => [$g('Picioare')]
-    ],
-    "bro-split" => [
-        "chest"     => [$g('Piept')],
-        "back"      => [$g('Spate')],
-        "arms"      => [$g('Brațe')],
-        "legs"      => [$g('Picioare')],
-        "shoulders" => [$g('Umeri')]
-    ],
-    "full-body" => [
-        "full-body" => [$g('Piept'), $g('Umeri'), $g('Brațe'), $g('Picioare'), $g('Spate')]
-    ]
-];
-
 $act   = $_POST['action']         ?? '';
 $split = $_POST['tipAntrenament'] ?? 'push-pull-legs';
 $part  = $_POST['muscleGroup']    ?? '';
 $mins  = (int)($_POST['duration'] ?? 60);
 $level = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
 $locId = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
+$splitId = $slug2id[$split] ?? null;
+$subtypes = [];
+if ($splitId) {
+    $stmt = $pdo->prepare("
+        SELECT id, name 
+          FROM split_subtype 
+         WHERE split_id = :sid 
+         ORDER BY id
+    ");
+    $stmt->execute(['sid' => $splitId]);
+    $subtypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $duration): array
 {
@@ -124,18 +114,24 @@ if ($act === 'save' && $ex) {
     <form method="POST">
         <label>Split:</label>
         <select name="tipAntrenament" onchange="this.form.submit()">
-            <?php foreach ($opt as $k => $_): ?>
-                <option value="<?= $k ?>" <?= $k === $split ? 'selected' : '' ?>>
-                    <?= ucwords(str_replace('-', ' ', $k)) ?>
+            <?php foreach ($splits as $s):
+                $slug = $slugify($s['name']);
+            ?>
+                <option
+                    value="<?= htmlspecialchars($slug) ?>"
+                    <?= ($slug === $split) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($s['name']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
 
         <label>Grupă:</label>
         <select name="muscleGroup">
-            <?php foreach ($opt[$split] as $k => $_): ?>
-                <option value="<?= $k ?>" <?= $k === $part ? 'selected' : '' ?>>
-                    <?= ucfirst($k) ?>
+            <?php foreach ($subtypes as $st): ?>
+                <option
+                    value="<?= $st['id'] ?>"
+                    <?= ($st['id'] === $part) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($st['name']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
