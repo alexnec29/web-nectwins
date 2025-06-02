@@ -54,21 +54,29 @@ $mins  = (int)($_POST['duration'] ?? 60);
 $level = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
 $locId = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
 
-function getExercises(PDO $pdo, array $muscles): array
+function getExercisesByGroupsAndDifficulty(PDO $pdo, array $muscles, ?int $dificulty): array
 {
-    if (!$muscles) return [];
-    $sql = "SELECT * FROM get_exercises_by_groups(:groups)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['groups' => '{' . implode(',', array_map(fn($x) => '"' . $x . '"', $muscles)) . '}']);
+    if (empty($muscles)) {
+        $muscles = ['dummy'];
+    }
+    $placeholders = implode(',', array_fill(0, count($muscles), '?'));
+    if ($dificulty !== null) {
+        $sql = "SELECT * FROM exercise WHERE type_id = 1 AND dificulty <= :dificulty";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['dificulty' => $dificulty]);
+    } else {
+        $sql = "SELECT * FROM exercise WHERE type_id = 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+    }
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 $ex = [];
 $msg = '';
 if (isset($opt[$split][$part])) {
-    $ex = getExercises($pdo, $opt[$split][$part]);
+    $ex = getExercisesByGroupsAndDifficulty($pdo, $opt[$split][$part], $level);
 }
-
 
 if ($act === 'save' && $ex) {
     $splitId = $slug2id[$split] ?? null;

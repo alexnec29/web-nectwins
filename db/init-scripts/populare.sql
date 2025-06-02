@@ -1,10 +1,3 @@
--- 8.1. Tabela users (câteva utilizatori fictivi)
-INSERT INTO users (username, password, email, nume, varsta, gen, inaltime, greutate, conditie)
-VALUES
-  ('alexandru', 'pwd_hashed_1', 'alex@example.com', 'Alex Popescu', 28, 'M', 180, 75, 'Bună formă'),
-  ('maria',     'pwd_hashed_2', 'maria@example.com',   'Maria Ionescu', 32, 'F', 165, 60, 'Ușoară scolioză'),
-  ('andrei',    'pwd_hashed_3', 'andrei@example.com',  'Andrei Georgescu', 45, 'M', 175, 80, 'Reabilitare ACL');
-
 -- 8.2. Tabela muscle_group și muscle_subgroup
 INSERT INTO muscle_group (name) VALUES
   ('Piept'),
@@ -38,11 +31,9 @@ INSERT INTO muscle_subgroup (name, principal_group) VALUES
 
 -- 8.3. Tabela training_type (tipul de exercițiu)
 INSERT INTO training_type (name) VALUES
-  ('Forță'),
-  ('Cardio'),
-  ('Mobilitate'),
-  ('Stretching'),
-  ('Reabilitare');
+  ('Gym'),
+  ('Kinetoterapie'),
+  ('Fizioterapie'),
 
 -- 8.4. Tabela training_level (nivel de dificultate)
 INSERT INTO training_level (name) VALUES
@@ -109,16 +100,16 @@ VALUES
   -- Exerciții de Cardio / Mobilitate / Reabilitare
   ('Alergare pe bandă',
    'Cardio ușor / încălzire.',
-   1, 2, FALSE, TRUE, NULL),
+   1, 1, FALSE, TRUE, NULL),
   ('Podul gluteal',
    'Mobilitate și activare fesieri.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/podul_gluteal'),
+   1, 1, TRUE, FALSE, 'https://youtu.be/podul_gluteal'),
   ('Planșă pe antebrațe',
    'Exercițiu pentru core și stabilitate, potrivit și pentru reabilitare.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/planșa_antebrate'),
+   1, 1, TRUE, FALSE, 'https://youtu.be/planșa_antebrate'),
   ('Stretching spate inferior',
    'Exercițiu de stretching pentru regiunea lombară.',
-   NULL, 4, TRUE, FALSE, 'https://youtu.be/stretch_lombar');
+   NULL, 1, TRUE, FALSE, 'https://youtu.be/stretch_lombar');
 
 -- ===============================================
 -- 10. Populare tabela exercise_muscle_group (legături exercițiu – subgrupă)
@@ -189,54 +180,6 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (14, 6),  -- Romboizi
   (14, 4);  -- Dorsali
 
--- ============================
--- 11. Populare tabela workout
--- ============================
--- Exemplu 1: Workout pentru user_id=1 (Alex) - sală normală
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
-VALUES
-  (1, 'Piept & Triceps - Forță',  50, 1, 2, 2, 1, 'gym');
-
--- Exemplu 2: Workout pentru user_id=2 (Maria) - mobilitate acasă
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
-VALUES
-  (2, 'Mobilitate Spate & Core', 30, 3, 1, 1, 2, 'gym');
-
--- Exemplu 3: Workout pentru user_id=3 (Andrei) - reabilitare la kineto
-INSERT INTO workout (user_id, name, duration_minutes, type_id, level_id, split_id, location_id, section)
-VALUES
-  (3, 'Reabilitare ACL - Ziua 1', 40, 5, 1, NULL, 3, 'kineto');
--- =============================================
--- 12. Populare tabela workout_exercise (conținut)
--- =============================================
-
--- 12.1. „Piept & Triceps - Forță” (id=1) – user_id=1
-INSERT INTO workout_exercise (workout_id, exercise_id, order_in_workout, sets, reps) VALUES
-  -- Exercițiu: Împins la bancă orizontal (id=1)
-  (1, 1, 1, 4, 8),
-  -- Exercițiu: Flotări clasice (id=2)
-  (1, 2, 2, 3, 12),
-  -- Exercițiu: Extensii triceps la scripete (id=10)
-  (1, 10, 3, 3, 15);
-
--- 12.2. „Mobilitate Spate & Core” (id=2) – user_id=2
-INSERT INTO workout_exercise (workout_id, exercise_id, order_in_workout, sets, reps) VALUES
-  -- Exercițiu: Podul gluteal (id=12)
-  (2, 12, 1, 3, 12),
-  -- Exercițiu: Planșă pe antebrațe (id=13) – ținut 30s considerăm reps=30
-  (2, 13, 2, 3, 30),
-  -- Exercițiu: Stretching spate inferior (id=14)
-  (2, 14, 3, 2, 20);
-
--- 12.3. „Reabilitare ACL - Ziua 1” (id=3) – user_id=3
-INSERT INTO workout_exercise (workout_id, exercise_id, order_in_workout, sets, reps) VALUES
-  -- Exercițiu: Genuflexiuni cu bară (id=5) – exercițiu modificat pentru reabilitare, repetări ușoare
-  (3, 5, 1, 3, 10),
-  -- Exercițiu: Fandări cu gantere (id=6)
-  (3, 6, 2, 3, 8),
-  -- Exercițiu: Planșă pe antebrațe (id=13) – core stabilizare
-  (3, 13, 3, 3, 20);
-
 -- kineto
 INSERT INTO split_type (name) VALUES
   ('Recuperare'),
@@ -247,65 +190,65 @@ INSERT INTO split_type (name) VALUES
   -- Recuperare Genunchi (Picioare)
   ('Întinderi pentru genunchi',
    'Exercițiu de întindere ușoară pentru genunchi și mușchii picioarelor.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/intinderi_genunchi'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/intinderi_genunchi'),
 
   ('Ridicări picior întins',
    'Activare mușchi cvadricepși cu piciorul întins, recomandat în recuperare.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_picior_intins'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/ridicari_picior_intins'),
 
   -- Recuperare Umăr (Umeri)
   ('Rotiri de umăr cu banda elastică',
    'Mobilitate și reabilitare pentru articulația umărului cu banda elastică.',
-   1, 5, TRUE, TRUE, 'https://youtu.be/rotiri_umar'),
+   1, 2, TRUE, TRUE, 'https://youtu.be/rotiri_umar'),
 
   ('Ridicări frontale cu gantere ușoare',
    'Întărire ușoară a deltoidului anterior.',
-   2, 5, FALSE, TRUE, 'https://youtu.be/ridicari_frontale'),
+   2, 2, FALSE, TRUE, 'https://youtu.be/ridicari_frontale'),
 
   -- Recuperare Spate (Spate)
   ('Extensii lombare',
    'Mobilitate și întărire pentru zona lombară.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/extensii_lombare'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/extensii_lombare'),
 
   ('Ridicări în pronație',
    'Activare mușchi spate pentru reabilitare.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_pronatie'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/ridicari_pronatie'),
 
   -- Mobilitate Generală
   ('Rotiri de trunchi',
    'Exercițiu de mobilitate pentru coloana vertebrală și trunchi.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/rotiri_trunchi'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/rotiri_trunchi'),
 
   ('Genuflexiuni lente',
    'Genuflexiuni controlate pentru mobilitate și flexibilitate.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/genuflexiuni_lente'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/genuflexiuni_lente'),
 
   -- Mobilitate Membre
   ('Cercuri cu brațele',
    'Mobilitate pentru umeri și brațe.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/cercuri_brațe'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/cercuri_brațe'),
 
   ('Ridicări pe vârfuri',
    'Mobilitate pentru glezne și gambe.',
-   1, 3, TRUE, FALSE, 'https://youtu.be/ridicari_varfuri'),
+   1, 2, TRUE, FALSE, 'https://youtu.be/ridicari_varfuri'),
 
   -- Intarire Trunchi
   ('Plank cu menținere',
    'Exercițiu de întărire a trunchiului și core-ului.',
-   2, 1, TRUE, FALSE, 'https://youtu.be/plank'),
+   2, 2, TRUE, FALSE, 'https://youtu.be/plank'),
 
   ('Ridicări de bazin',
    'Întărire pentru fesieri și spate inferior.',
-   2, 1, TRUE, FALSE, 'https://youtu.be/ridicari_bazin'),
+   2, 2, TRUE, FALSE, 'https://youtu.be/ridicari_bazin'),
 
   -- Intarire Postura
   ('Ridicări laterale cu gantere',
    'Întărire deltoizi laterali pentru postură corectă.',
-   2, 1, FALSE, TRUE, 'https://youtu.be/ridicari_laterale'),
+   2, 2, FALSE, TRUE, 'https://youtu.be/ridicari_laterale'),
 
   ('Remedieri scapulare',
    'Exercițiu pentru corectarea posturii scapulare.',
-   2, 1, TRUE, FALSE, 'https://youtu.be/remedieri_scapulare');
+   2, 2, TRUE, FALSE, 'https://youtu.be/remedieri_scapulare');
 
    -- Recuperare Genunchi (Picioare: id 3)
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
@@ -357,31 +300,31 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   INSERT INTO exercise (name, description, dificulty, type_id, is_bodyweight, equipment_needed, link) VALUES
   ('Flexii genunchi în șezut',
    'Întindere și mobilitate pentru genunchi, efectuată în șezut.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/flexii_genunchi_sezut'),
+   1, 3, TRUE, FALSE, 'https://youtu.be/flexii_genunchi_sezut'),
 
   ('Rotiri umeri cu gantere ușoare',
    'Mobilitate și întărire ușoară pentru umăr, cu gantere mici.',
-   1, 5, FALSE, TRUE, 'https://youtu.be/rotiri_umeri_ganter'),
+   1, 3, FALSE, TRUE, 'https://youtu.be/rotiri_umeri_ganter'),
 
   ('Întindere ischio în decubit dorsal',
    'Stretching pentru femurali, realizat în poziție culcat pe spate.',
-   1, 4, TRUE, FALSE, 'https://youtu.be/intindere_ischio_culcat'),
+   1, 3, TRUE, FALSE, 'https://youtu.be/intindere_ischio_culcat'),
 
   ('Ridicări gambe pe treaptă',
    'Întărire și mobilitate pentru gambe, cu suport pe treaptă.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_gambe_treapta'),
+   1, 3, TRUE, FALSE, 'https://youtu.be/ridicari_gambe_treapta'),
 
   ('Exercițiu izometric pentru coapsa frontală',
    'Contractare izometrică a cvadricepșilor fără mișcare articulară.',
-   1, 5, TRUE, FALSE, 'https://youtu.be/izometric_cvadriceps'),
+   1, 3, TRUE, FALSE, 'https://youtu.be/izometric_cvadriceps'),
 
   ('Plank lateral',
    'Exercițiu pentru stabilitatea core și tonifiere laterală a trunchiului.',
-   2, 1, TRUE, FALSE, 'https://youtu.be/plank_lateral'),
+   2, 3, TRUE, FALSE, 'https://youtu.be/plank_lateral'),
 
   ('Întinderi pentru tendonul ahilean',
    'Stretching pentru tendonul Ahilean și gambe.',
-   1, 4, TRUE, FALSE, 'https://youtu.be/intinderi_tendon_ahilean'),
+   1, 3, TRUE, FALSE, 'https://youtu.be/intinderi_tendon_ahilean'),
 
   ('Exercițiu de mobilitate pentru șold',
    'Mobilitate articulație șold, realizată în picioare sau sprijinit.',
