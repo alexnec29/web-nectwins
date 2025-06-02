@@ -71,7 +71,7 @@ function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $durat
 
 $ex = [];
 $msg = '';
-if ($act === 'generate' && isset($opt[$split][$part])) {
+if (in_array($act, ['generate', 'save']) && isset($opt[$split][$part])) {
     $ex = getFilteredExercises($pdo, $opt[$split][$part], $level, $mins);
 }
 
