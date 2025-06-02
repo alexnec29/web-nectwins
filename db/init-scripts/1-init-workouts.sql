@@ -19,8 +19,7 @@ create table users (
    varsta   int,
    gen      varchar(20),
    inaltime int,
-   greutate int,
-   conditie text
+   greutate int
 );
 
 create table muscle_group (
@@ -50,9 +49,32 @@ CREATE TABLE split_type (
    name varchar(50)  NOT NULL UNIQUE
 );
 
+-- Legatura dintre split_type si sectiune (gym, kineto, fizio etc.)
+CREATE TABLE section_split (
+    id SERIAL PRIMARY KEY,
+    section VARCHAR(20) NOT NULL,
+    split_id INTEGER NOT NULL REFERENCES split_type(id) ON DELETE CASCADE,
+    UNIQUE (section, split_id)
+);
+
+CREATE TABLE split_subtype (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    split_id INTEGER NOT NULL REFERENCES split_type(id) ON DELETE CASCADE,
+    UNIQUE (name, split_id)
+);
+
+CREATE TABLE split_subtype_muscle_group (
+    id SERIAL PRIMARY KEY,
+    split_subtype_id INTEGER NOT NULL REFERENCES split_subtype(id) ON DELETE CASCADE,
+    muscle_group_id INTEGER NOT NULL REFERENCES muscle_group(id) ON DELETE CASCADE,
+    UNIQUE (split_subtype_id, muscle_group_id)
+);
+
 CREATE TABLE location (
    id   serial       PRIMARY KEY,
-   name varchar(50)  NOT NULL UNIQUE
+   name varchar(50)  NOT NULL UNIQUE,
+   section VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE exercise (
@@ -66,10 +88,43 @@ CREATE TABLE exercise (
    link             varchar(100)
 );
 
+CREATE TABLE exercise_location (
+    exercise_id INTEGER REFERENCES exercise(id) ON DELETE CASCADE,
+    location_id INTEGER REFERENCES location(id) ON DELETE CASCADE,
+    PRIMARY KEY (exercise_id, location_id)
+);
+
 CREATE TABLE exercise_muscle_group (
    exercise_id        integer REFERENCES exercise(id)         ON DELETE CASCADE,
    muscle_subgroup_id integer REFERENCES muscle_subgroup(id) ON DELETE CASCADE,
    PRIMARY KEY (exercise_id, muscle_subgroup_id)
+);
+
+-- Adăugăm tabela pentru probleme de sănătate
+CREATE TABLE health_condition (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Legătura many-to-many între user și probleme de sănătate
+CREATE TABLE user_health_condition (
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    condition_id INTEGER REFERENCES health_condition(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, condition_id)
+);
+
+-- Legătura many-to-many între exerciții și probleme de sănătate
+CREATE TABLE exercise_health_condition (
+    exercise_id INTEGER REFERENCES exercise(id) ON DELETE CASCADE,
+    condition_id INTEGER REFERENCES health_condition(id) ON DELETE CASCADE,
+    PRIMARY KEY (exercise_id, condition_id)
+);
+
+-- Adăugăm tabelă pentru legătura many-to-many între exerciții și secțiuni (gym, kineto, fizio)
+CREATE TABLE exercise_section (
+    exercise_id INTEGER REFERENCES exercise(id) ON DELETE CASCADE,
+    section VARCHAR(20) NOT NULL,
+    PRIMARY KEY (exercise_id, section)
 );
 
 CREATE TABLE workout (
@@ -105,3 +160,7 @@ CREATE TABLE workout_session (
     completed_at TIMESTAMP,
     completed_count INTEGER DEFAULT 0
 );
+
+-- NOTĂ PENTRU LOGICĂ:
+-- Dacă un utilizator nu are nicio condiție de sănătate => i se vor afișa toate exercițiile (fără filtru pe health_condition).
+-- Dacă un utilizator are condiții de sănătate => i se vor afișa DOAR exercițiile asociate explicit condițiilor respective.
