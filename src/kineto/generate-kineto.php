@@ -38,68 +38,79 @@ $kinetoOptions = [
 ];
 
 $act              = $_POST['action'] ?? '';
-$selectedProgram  = $_POST['tipProgram'] ?? 'recuperare';
-$selectedZone     = $_POST['zonaVizata'] ?? '';
-$selectedDuration = (int)($_POST['duration'] ?? 60);
-$selectedNivel    = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
-$selectedLocation = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
+$selectedProgram  = $_POST['tipProgram']  ?? 'recuperare';
+$selectedZone     = $_POST['zonaVizata']  ?? '';
+$selectedDuration = ctype_digit((string)($_POST['duration'] ?? '')) ? (int)$_POST['duration'] : 60;
+$selectedNivel    = ctype_digit((string)($_POST['nivel']    ?? '')) ? (int)$_POST['nivel']    : null;
+$selectedLocation = ctype_digit((string)($_POST['location'] ?? '')) ? (int)$_POST['location'] : null;
 
-$msg = '';
-$exercises = [];
-
-function getExercises(PDO $pdo, array $muscles): array
+function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $duration): array
 {
-    if (empty($muscles)) return [];
-    $stmt = $pdo->prepare("SELECT * FROM get_exercises_by_groups(:groups)");
-    $stmt->execute(['groups' => '{' . implode(',', array_map(fn($x) => "\"$x\"", $muscles)) . '}']);
+    if (empty($groups)) return [];
+
+    $stmt = $pdo->prepare("
+        SELECT * 
+          FROM get_exercises_filtered(:groups, :level_id, :duration, :type_id)
+    ");
+    $stmt->execute([
+        'groups'   => '{' . implode(',', array_map(fn($g) => '"' . $g . '"', $groups)) . '}',
+        'level_id' => $levelId,
+        'duration' => $duration,
+        'type_id'  => 2
+    ]);
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function isValidForm($program, $zone, $nivel, $location, $opts): bool
-{
-    return isset($opts[$program], $opts[$program][$zone]) && $nivel && $location;
+$exercises = [];
+$msg       = '';
+
+if ($act === 'generate' && isset($kinetoOptions[$selectedProgram][$selectedZone])) {
+    $exercises = getFilteredExercises(
+        $pdo,
+        $kinetoOptions[$selectedProgram][$selectedZone],
+        $selectedNivel,
+        $selectedDuration
+    );
 }
 
-// Generare / salvare
-if ($act === 'generate' || $act === 'save') {
-    if (isValidForm($selectedProgram, $selectedZone, $selectedNivel, $selectedLocation, $kinetoOptions)) {
-        $muscleGroups = $kinetoOptions[$selectedProgram][$selectedZone];
-        $exercises = getExercises($pdo, $muscleGroups);
-    }
-}
-
-if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNivel, $selectedLocation, $kinetoOptions)) {
+if ($act === 'save') {
     $splitId = $slug2id[$selectedProgram] ?? null;
-    if (!$splitId || empty($exercises)) {
-        $msg = '❌ Date incomplete pentru salvare.';
+
+    if (!$splitId || !$selectedLocation) {
+        $msg = '❌ Split sau locație invalidă. Split: '
+            . htmlspecialchars($selectedProgram)
+            . ' → ' . ($splitId ?? 'null');
+    } elseif (!isset($_POST['exerciseIds']) || !is_array($_POST['exerciseIds']) || count($_POST['exerciseIds']) === 0) {
+        $msg = '❌ Nu există exerciții de salvat.';
     } else {
         try {
-            $stmt = $pdo->prepare("CALL save_generated_workout(
+            $exerciseIdsArray = array_map('intval', $_POST['exerciseIds']);
+            $exerciseArray    = '{' . implode(',', $exerciseIdsArray) . '}';
+
+            $sql = "CALL save_generated_workout(
                 :name, :duration, :type_id, :level_id, :split_id, :location_id, :user_id, :exercise_ids, :section
-            )");
+            )";
+            $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                'name'         => 'Kineto ' . ucfirst($selectedProgram) . ' ' . date('d.m H:i'),
+                'name'         => 'Custom ' . date('d.m H:i'),
                 'duration'     => $selectedDuration,
                 'type_id'      => 2,
                 'level_id'     => $selectedNivel,
                 'split_id'     => $splitId,
                 'location_id'  => $selectedLocation,
                 'user_id'      => $_SESSION['user_id'],
-                'exercise_ids' => '{' . implode(',', array_column($exercises, 'id')) . '}',
+                'exercise_ids' => $exerciseArray,
                 'section'      => 'kineto'
             ]);
-            $msg = '✅ Salvat! Vezi în lista de programe.';
-            $exercises = [];
+
+            $msg = '✅ Salvat! Vezi în lista de antrenamente.';
         } catch (Throwable $e) {
-            $msg = '❌ Eroare la salvare: ' . $e->getMessage();
+            $msg = '❌ ' . $e->getMessage();
         }
     }
-} elseif ($act === 'generate' && empty($exercises)) {
-    $msg = '❌ Nicio potrivire la exerciții pentru selecția dată.';
 }
 ?>
-
-<!-- HTML -->
 
 <!DOCTYPE html>
 <html lang="ro">
@@ -121,21 +132,32 @@ if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNiv
         <label>Program:</label>
         <select name="tipProgram" onchange="this.form.submit()">
             <?php foreach ($kinetoOptions as $k => $v): ?>
-                <option value="<?= $k ?>" <?= $k === $selectedProgram ? 'selected' : '' ?>><?= ucfirst($k) ?></option>
+                <option value="<?= htmlspecialchars($k) ?>"
+                    <?= ($k === $selectedProgram) ? 'selected' : '' ?>>
+                    <?= ucfirst(htmlspecialchars($k)) ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
         <label>Zonă vizată:</label>
         <select name="zonaVizata">
-            <?php foreach ($kinetoOptions[$selectedProgram] as $k => $_): ?>
-                <option value="<?= $k ?>" <?= $k === $selectedZone ? 'selected' : '' ?>><?= ucfirst($k) ?></option>
+            <?php
+            $zones = $kinetoOptions[$selectedProgram] ?? [];
+            foreach ($zones as $zoneKey => $_): ?>
+                <option value="<?= htmlspecialchars($zoneKey) ?>"
+                    <?= ($zoneKey === $selectedZone) ? 'selected' : '' ?>>
+                    <?= ucfirst(htmlspecialchars($zoneKey)) ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
         <label>Durată (min):</label>
         <select name="duration">
             <?php foreach ([30, 60, 90, 120, 150] as $d): ?>
-                <option value="<?= $d ?>" <?= $d == $selectedDuration ? 'selected' : '' ?>><?= $d ?></option>
+                <option value="<?= $d ?>"
+                    <?= ($d === $selectedDuration) ? 'selected' : '' ?>>
+                    <?= $d ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
@@ -143,7 +165,10 @@ if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNiv
         <select name="nivel">
             <option value="">--</option>
             <?php foreach ($trainingLevels as $l): ?>
-                <option value="<?= $l['id'] ?>" <?= $l['id'] == $selectedNivel ? 'selected' : '' ?>><?= $l['name'] ?></option>
+                <option value="<?= $l['id'] ?>"
+                    <?= ($l['id'] === $selectedNivel) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($l['name']) ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
@@ -151,7 +176,10 @@ if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNiv
         <select name="location" required>
             <option value="">--</option>
             <?php foreach ($locations as $l): ?>
-                <option value="<?= $l['id'] ?>" <?= $l['id'] == $selectedLocation ? 'selected' : '' ?>><?= ucfirst($l['name']) ?></option>
+                <option value="<?= $l['id'] ?>"
+                    <?= ($l['id'] === $selectedLocation) ? 'selected' : '' ?>>
+                    <?= ucfirst(htmlspecialchars($l['name'])) ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
@@ -159,7 +187,7 @@ if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNiv
     </form>
 
     <?php if ($msg): ?>
-        <p style="margin: 1rem 0;"><?= $msg ?></p>
+        <p style="margin:1rem 0;"><?= htmlspecialchars($msg) ?></p>
     <?php endif; ?>
 
     <?php if ($act === 'generate' && !empty($exercises)): ?>
@@ -174,10 +202,18 @@ if ($act === 'save' && isValidForm($selectedProgram, $selectedZone, $selectedNiv
                 </div>
             <?php endforeach; ?>
         </section>
+
         <form method="POST">
-            <?php foreach ($_POST as $k => $v): ?>
-                <input type="hidden" name="<?= htmlspecialchars($k) ?>" value="<?= htmlspecialchars($v) ?>">
+            <input type="hidden" name="tipProgram" value="<?= htmlspecialchars($selectedProgram) ?>">
+            <input type="hidden" name="zonaVizata" value="<?= htmlspecialchars($selectedZone) ?>">
+            <input type="hidden" name="duration" value="<?= htmlspecialchars($selectedDuration) ?>">
+            <input type="hidden" name="nivel" value="<?= htmlspecialchars((string)$selectedNivel) ?>">
+            <input type="hidden" name="location" value="<?= htmlspecialchars((string)$selectedLocation) ?>">
+
+            <?php foreach ($exercises as $e): ?>
+                <input type="hidden" name="exerciseIds[]" value="<?= (int)$e['id'] ?>">
             <?php endforeach; ?>
+
             <button name="action" value="save">💾 Salvează</button>
         </form>
     <?php endif; ?>
