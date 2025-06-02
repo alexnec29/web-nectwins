@@ -33,7 +33,7 @@ INSERT INTO muscle_subgroup (name, principal_group) VALUES
 INSERT INTO training_type (name) VALUES
   ('Gym'),
   ('Kinetoterapie'),
-  ('Fizioterapie'),
+  ('Fizioterapie');
 
 -- 8.4. Tabela training_level (nivel de dificultate)
 INSERT INTO training_level (name) VALUES
@@ -271,8 +271,7 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (21, 1),  -- Rotiri de trunchi - Piept Superior
   (21, 10), -- Rotiri de trunchi - Deltoid Anterior
   (21, 13), -- Rotiri de trunchi - Biceps (Brațe)
-  (21, 7);  -- Rotiri de trunchi - Cvadricepși (Picioare)
-
+  (21, 7), -- Rotiri de trunchi - Cvadricepși (Picioare)
   (22, 7);  -- Genuflexiuni lente - Cvadricepși
 
 -- Mobilitate Membre (Brațe(5), Picioare(3))
@@ -335,7 +334,7 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (32, 10),  -- Rotiri umeri cu gantere - Deltoid Anterior
   (33, 9),   -- Întindere ischio în decubit dorsal - Femurali
   (34, 9),   -- Ridicări gambe pe treaptă - Femurali/Gambe (eventual Gambe: 9 sau 15 dacă există)
-  (34, 15),  -- Gambe (presupun că Gambe are id 15 la subgrupe, în funcție de schema ta)
+  (34, 10),  -- Gambe (presupun că Gambe are id 15 la subgrupe, în funcție de schema ta)
   (35, 7),   -- Exercițiu izometric cvadricepși - Cvadricepși
   (36, 14),  -- Plank lateral - Antebraț / Core (dacă ai subgrupă Core, legi acolo)
   (37, 15),  -- Întinderi tendon ahilean - Gambe
