@@ -347,3 +347,53 @@ INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
 INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
   (27, 11), -- Ridicări laterale cu gantere - Deltoid Lateral
   (28, 6);  -- Remedieri scapulare - Romboizi
+
+  --fizio
+  INSERT INTO split_type (name) VALUES
+  ('recuperare post-operatorie'),
+  ('reeducare neuromusculara'),
+  ('dureri cronice');
+
+  INSERT INTO exercise (name, description, dificulty, type_id, is_bodyweight, equipment_needed, link) VALUES
+  ('Flexii genunchi în șezut',
+   'Întindere și mobilitate pentru genunchi, efectuată în șezut.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/flexii_genunchi_sezut'),
+
+  ('Rotiri umeri cu gantere ușoare',
+   'Mobilitate și întărire ușoară pentru umăr, cu gantere mici.',
+   1, 5, FALSE, TRUE, 'https://youtu.be/rotiri_umeri_ganter'),
+
+  ('Întindere ischio în decubit dorsal',
+   'Stretching pentru femurali, realizat în poziție culcat pe spate.',
+   1, 4, TRUE, FALSE, 'https://youtu.be/intindere_ischio_culcat'),
+
+  ('Ridicări gambe pe treaptă',
+   'Întărire și mobilitate pentru gambe, cu suport pe treaptă.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/ridicari_gambe_treapta'),
+
+  ('Exercițiu izometric pentru coapsa frontală',
+   'Contractare izometrică a cvadricepșilor fără mișcare articulară.',
+   1, 5, TRUE, FALSE, 'https://youtu.be/izometric_cvadriceps'),
+
+  ('Plank lateral',
+   'Exercițiu pentru stabilitatea core și tonifiere laterală a trunchiului.',
+   2, 1, TRUE, FALSE, 'https://youtu.be/plank_lateral'),
+
+  ('Întinderi pentru tendonul ahilean',
+   'Stretching pentru tendonul Ahilean și gambe.',
+   1, 4, TRUE, FALSE, 'https://youtu.be/intinderi_tendon_ahilean'),
+
+  ('Exercițiu de mobilitate pentru șold',
+   'Mobilitate articulație șold, realizată în picioare sau sprijinit.',
+   1, 3, TRUE, FALSE, 'https://youtu.be/mobilitate_sold');
+
+INSERT INTO exercise_muscle_group (exercise_id, muscle_subgroup_id) VALUES
+  (31, 7),   -- Flexii genunchi în șezut - Cvadricepși
+  (32, 10),  -- Rotiri umeri cu gantere - Deltoid Anterior
+  (33, 9),   -- Întindere ischio în decubit dorsal - Femurali
+  (34, 9),   -- Ridicări gambe pe treaptă - Femurali/Gambe (eventual Gambe: 9 sau 15 dacă există)
+  (34, 15),  -- Gambe (presupun că Gambe are id 15 la subgrupe, în funcție de schema ta)
+  (35, 7),   -- Exercițiu izometric cvadricepși - Cvadricepși
+  (36, 14),  -- Plank lateral - Antebraț / Core (dacă ai subgrupă Core, legi acolo)
+  (37, 15),  -- Întinderi tendon ahilean - Gambe
+  (38, 8);   -- Exercițiu mobilitate șold - Fesieri

@@ -69,6 +69,7 @@ if (isset($opt[$split][$part])) {
     $ex = getExercises($pdo, $opt[$split][$part]);
 }
 
+
 if ($act === 'save' && $ex) {
     $splitId = $slug2id[$split] ?? null;
     if (!$splitId || !$locId) {

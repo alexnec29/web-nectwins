@@ -1,24 +1,41 @@
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
-    header("Location: ../login.php");
+if (!isset($_SESSION["user_id"])) {
+    header("Location: login.php");
     exit();
 }
 
-// Mock: total sesiuni + nivel + vârstă + tip + durată totală
-$users = [
-    ["nume" => "Cristina Vasilescu", "sesiuni" => 21, "nivel" => "Avansat", "varsta" => "36–45", "tip" => "Fizioterapie", "durata" => 960],
-    ["nume" => "Iulian Gheorghe", "sesiuni" => 18, "nivel" => "Mediu", "varsta" => "26–35", "tip" => "Fizioterapie", "durata" => 750],
-    ["nume" => "Adina Popescu", "sesiuni" => 16, "nivel" => "Începător", "varsta" => "18–25", "tip" => "Fizioterapie", "durata" => 690],
-    ["nume" => "Tudor Ene", "sesiuni" => 14, "nivel" => "Mediu", "varsta" => "26–35", "tip" => "Fizioterapie", "durata" => 630],
-];
+$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
+// ───── Colectăm datele pentru leaderboard ─────
+$rows = $pdo->query("SELECT * FROM get_leaderboard_data('fizio')")->fetchAll(PDO::FETCH_ASSOC);
+
+// Grupăm pe nivel și pe grupe de vârstă
+$by_level = [];
+$by_age = [];
+foreach ($rows as &$r) {
+    $r['durata'] = round($r['durata']);
+    $r['grupa_varsta'] = match (true) {
+        $r['varsta'] < 18      => "<18",
+        $r['varsta'] <= 25     => "18–25",
+        $r['varsta'] <= 35     => "26–35",
+        $r['varsta'] <= 50     => "36–50",
+        default                => ">50"
+    };
+    $by_level[$r['nivel'] ?? 'Necunoscut'][] = $r;
+    $by_age[$r['grupa_varsta']][] = $r;
+}
+unset($r);
 ?>
+
 <!DOCTYPE html>
 <html lang="ro">
 
 <head>
     <meta charset="UTF-8">
-    <title>Clasamente Fizioterapie | FitFlow</title>
+    <title>Clasamente Fizio | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/leaderboard.css">
 </head>
@@ -26,7 +43,7 @@ $users = [
 <body>
 
     <nav>
-        <h1>Clasamente Fizioterapie</h1>
+        <h1>Clasamente Bodybuilding</h1>
         <a class="buton-inapoi" href="principal-fizio.php">Înapoi</a>
     </nav>
 
@@ -41,12 +58,10 @@ $users = [
                 </tr>
             </thead>
             <tbody>
-                <?php
-                usort($users, fn($a, $b) => $b['sesiuni'] - $a['sesiuni']);
-                foreach ($users as $i => $u): ?>
+                <?php foreach ($rows as $i => $u): ?>
                     <tr>
                         <td>#<?= $i + 1 ?></td>
-                        <td><?= $u['nume'] ?></td>
+                        <td><?= htmlspecialchars($u['nume']) ?></td>
                         <td><?= $u['sesiuni'] ?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -54,30 +69,22 @@ $users = [
         </table>
 
         <h2>Top pe Nivel</h2>
-        <?php
-        $niveluri = array_unique(array_column($users, 'nivel'));
-        foreach ($niveluri as $nivel): ?>
-            <h3><?= ucfirst($nivel) ?></h3>
+        <?php foreach ($by_level as $nivel => $users): ?>
+            <h3><?= htmlspecialchars($nivel) ?></h3>
             <ul>
-                <?php foreach ($users as $u):
-                    if ($u['nivel'] === $nivel): ?>
-                        <li><?= $u['nume'] ?> – <?= $u['sesiuni'] ?> sesiuni</li>
-                <?php endif;
-                endforeach; ?>
+                <?php foreach ($users as $u): ?>
+                    <li><?= htmlspecialchars($u['nume']) ?> – <?= $u['sesiuni'] ?> sesiuni</li>
+                <?php endforeach; ?>
             </ul>
         <?php endforeach; ?>
 
         <h2>Top pe Clasă de Vârstă</h2>
-        <?php
-        $varste = array_unique(array_column($users, 'varsta'));
-        foreach ($varste as $grupa): ?>
+        <?php foreach ($by_age as $grupa => $users): ?>
             <h3>Vârstă <?= $grupa ?></h3>
             <ul>
-                <?php foreach ($users as $u):
-                    if ($u['varsta'] === $grupa): ?>
-                        <li><?= $u['nume'] ?> – <?= $u['sesiuni'] ?> sesiuni</li>
-                <?php endif;
-                endforeach; ?>
+                <?php foreach ($users as $u): ?>
+                    <li><?= htmlspecialchars($u['nume']) ?> – <?= $u['sesiuni'] ?> sesiuni</li>
+                <?php endforeach; ?>
             </ul>
         <?php endforeach; ?>
 
@@ -92,20 +99,19 @@ $users = [
             </thead>
             <tbody>
                 <?php
-                usort($users, fn($a, $b) => $b['durata'] - $a['durata']);
-                foreach ($users as $i => $u): ?>
+                usort($rows, fn($a, $b) => $b['durata'] <=> $a['durata']);
+                foreach ($rows as $i => $u): ?>
                     <tr>
                         <td>#<?= $i + 1 ?></td>
-                        <td><?= $u['nume'] ?></td>
+                        <td><?= htmlspecialchars($u['nume']) ?></td>
                         <td><?= $u['durata'] ?> min</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-
         <div class="export-links">
-            <a href="leaderboard-fizio.json">Export JSON</a>
-            <a href="leaderboard-fizio.pdf">Export PDF</a>
+            <a href="leaderboard-fizio.json.php" target="_blank">Export JSON</a>
+            <a href="leaderboard-fizio.pdf.php" target="_blank">Export PDF</a>
         </div>
     </div>
 
