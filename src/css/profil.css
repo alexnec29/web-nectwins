@@ -136,3 +136,56 @@
   .dropdown-content a:hover {
     background-color: #2b2b2e;
   }
+
+  .checkbox-group {
+    margin-bottom: 1.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em; /* mai puțin spațiu între rânduri */
+    padding: 1em;
+    background-color: #2b2b2e;
+    border: 1px solid #444;
+    border-radius: 8px;
+  }
+  
+  .checkbox-group label {
+    display: flex;
+    align-items: center; /* aliniere verticală perfectă */
+    font-size: 0.95rem; /* mai compact */
+    color: #d3e0f0;
+    cursor: pointer;
+    gap: 0.5em;
+    margin: 0;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #1f1f21;
+    position: relative;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+  }
+  
+  .checkbox-group input[type="checkbox"]:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .checkbox-group input[type="checkbox"]::before {
+    content: "✓";
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    left: 3px;
+    top: -1px;
+    font-size: 14px;
+    display: none;
+  }
+  
+  .checkbox-group input[type="checkbox"]:checked::before {
+    display: block;
+  }

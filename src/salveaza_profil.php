@@ -9,18 +9,37 @@ if (!isset($_SESSION["user_id"])) {
 
 $userId = $_SESSION["user_id"];
 
-// Preluăm datele din form
-$nume = $_POST["nume"];
-$varsta = $_POST["varsta"];
-$gen = $_POST["gen"];
+$nume     = $_POST["nume"];
+$varsta   = $_POST["varsta"];
+$gen      = $_POST["gen"];
 $inaltime = $_POST["inaltime"];
 $greutate = $_POST["greutate"];
-$conditie = $_POST["conditie"];
+$conditii = $_POST["conditii_sanatate"] ?? [];
 
-$stmt = $pdo->prepare("UPDATE users SET nume = ?, varsta = ?, gen = ?, inaltime = ?, greutate = ?, conditie = ?
-                       WHERE id = ?");
-$stmt->execute([$nume, $varsta, $gen, $inaltime, $greutate, $conditie, $userId]);
+$pdo->beginTransaction();
 
-// Redirect spre pagina principală după salvare
-header("Location: /gym/principal-gym.php");
-exit();
+try {
+    $stmt = $pdo->prepare("
+        UPDATE users 
+        SET nume = ?, varsta = ?, gen = ?, inaltime = ?, greutate = ? 
+        WHERE id = ?
+    ");
+    $stmt->execute([$nume, $varsta, $gen, $inaltime, $greutate, $userId]);
+
+    $pdo->prepare("DELETE FROM user_health_condition WHERE user_id = ?")->execute([$userId]);
+
+    $stmtCond = $pdo->prepare("INSERT INTO user_health_condition(user_id, condition_id) VALUES (?, ?)");
+    foreach ($conditii as $condId) {
+        $stmtCond->execute([$userId, $condId]);
+    }
+
+    $pdo->commit();
+
+    header("Location: /gym/principal-gym.php");
+    exit();
+
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo "Eroare la salvare: " . $e->getMessage();
+}
+?>
