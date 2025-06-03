@@ -974,14 +974,56 @@ INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
 --------------------------------------------------------------------------------
 -- 9. Legături exercițiu ↔️ locație ↔️ secțiune (exercise_location se poate omite dacă folosim doar exercise_section)
 --------------------------------------------------------------------------------
--- Având deja exercise_section, nu e neapărat nevoie de exercise_location.
--- Dacă totuși se dorește filtru separat pe locație (ex: „Sală” vs „Acasă”), se poate face:
--- Exemplu:
--- INSERT INTO exercise_location (exercise_id, location_id) VALUES
---   ((SELECT id FROM exercise WHERE name = 'Bench Press'), (SELECT id FROM location WHERE name = 'Sală')),
---   ((SELECT id FROM exercise WHERE name = 'Back Squat'), (SELECT id FROM location WHERE name = 'Sală')),
---   ((SELECT id FROM exercise WHERE name = 'Plank'), (SELECT id FROM location WHERE name = 'Acasă')),
---   ((SELECT id FROM exercise WHERE name = 'Plank cu menținere'), (SELECT id FROM location WHERE name = 'Acasă'));
+-- Gym: Sală + Acasă
+INSERT INTO exercise_location (exercise_id, location_id)
+SELECT es.exercise_id, l.id
+FROM exercise_section es
+JOIN location l ON l.section = 'gym' AND l.name IN ('Sală', 'Acasă')
+WHERE es.section = 'gym'
+ON CONFLICT DO NOTHING;
+
+-- Kinetoterapie: Centru recuperare + Spital
+INSERT INTO exercise_location (exercise_id, location_id)
+SELECT es.exercise_id, l.id
+FROM exercise_section es
+JOIN location l ON l.section = 'kinetoterapie' AND l.name IN ('Centru recuperare', 'Spital')
+WHERE es.section = 'kinetoterapie'
+ON CONFLICT DO NOTHING;
+
+-- Fizioterapie: Terapie fizică + Ambulator
+INSERT INTO exercise_location (exercise_id, location_id)
+SELECT es.exercise_id, l.id
+FROM exercise_section es
+JOIN location l ON l.section = 'fizioterapie' AND l.name IN ('Terapie fizică', 'Ambulator')
+WHERE es.section = 'fizioterapie'
+ON CONFLICT DO NOTHING;
+
+-- Piept, Spate, Picioare, Umeri, Brațe => 'gym'
+INSERT INTO exercise_section (exercise_id, section)
+SELECT DISTINCT e.id, 'gym'
+FROM exercise e
+JOIN exercise_muscle_group emg ON emg.exercise_id = e.id
+JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
+JOIN muscle_group mg ON mg.id = ms.principal_group
+WHERE mg.name IN ('Piept', 'Spate', 'Picioare', 'Umeri', 'Brațe')
+ON CONFLICT DO NOTHING;
+
+-- Fesieri, Femurali, Cvadricepși, Gambele, Abdomen => 'kinetoterapie'
+INSERT INTO exercise_section (exercise_id, section)
+SELECT DISTINCT e.id, 'kinetoterapie'
+FROM exercise e
+JOIN exercise_muscle_group emg ON emg.exercise_id = e.id
+JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
+WHERE ms.name IN ('Fesieri', 'Femurali (ischio)', 'Cvadricepși', 'Gambele', 'Abdomen')
+ON CONFLICT DO NOTHING;
+
+-- Exerciții izometrice / mobilitate / stretching => 'fizioterapie'
+-- identificăm după nume
+INSERT INTO exercise_section (exercise_id, section)
+SELECT e.id, 'fizioterapie'
+FROM exercise e
+WHERE LOWER(name) SIMILAR TO '%(întindere|izometric|mobilitate|stretching)%'
+ON CONFLICT DO NOTHING;
 
 --------------------------------------------------------------------------------
 -- 10. Workout-uri (workout) și Workout Sessions (workout_session)

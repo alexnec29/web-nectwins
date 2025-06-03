@@ -5,6 +5,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$userId = (int)$_SESSION['user_id'];
+
 $pdo = new PDO(
     "pgsql:host=db;port=5432;dbname=wow_db",
     'root',
@@ -44,16 +46,19 @@ if ($splitId) {
     $subtypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $duration): array
+function getFilteredExercises(PDO $pdo, int $userId, array $groups, ?int $levelId, int $duration, int $typeId, int $locationId): array
 {
     if (empty($groups)) return [];
 
-    $stmt = $pdo->prepare("SELECT * FROM get_exercises_filtered(:groups, :level_id, :duration, :type_id)");
+    $sql = "SELECT * FROM get_exercises_filtered(:user_id, :groups, :level_id, :duration, :type_id, :location_id)";
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        'groups'   => '{' . implode(',', array_map(fn($g) => '"' . $g . '"', $groups)) . '}',
-        'level_id' => $levelId,
-        'duration' => $duration,
-        'type_id'  => 1 // tipul de antrenament - gym
+        'user_id'     => $userId,
+        'groups'      => '{' . implode(',', array_map(fn($g) => '"' . $g . '"', $groups)) . '}',
+        'level_id'    => $levelId,
+        'duration'    => $duration,
+        'type_id'     => $typeId,
+        'location_id' => $locationId
     ]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -61,8 +66,27 @@ function getFilteredExercises(PDO $pdo, array $groups, ?int $levelId, int $durat
 
 $ex = [];
 $msg = '';
+$opt = [];
+foreach ($splits as $s) {
+    $slug = $slugify($s['name']);
+    $stmt = $pdo->prepare("
+        SELECT ssm.split_subtype_id, mg.name
+        FROM split_subtype_muscle_group ssm
+        JOIN muscle_group mg ON mg.id = ssm.muscle_group_id
+        JOIN split_subtype ss ON ss.id = ssm.split_subtype_id
+        WHERE ss.split_id = :sid
+    ");
+    $stmt->execute(['sid' => $s['id']]);
+    $raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($raw as $row) {
+        $opt[$slug][$row['split_subtype_id']][] = $row['name'];
+    }
+}
+$part = ctype_digit($_POST['muscleGroup'] ?? '') ? (int)$_POST['muscleGroup'] : null;
 if (in_array($act, ['generate', 'save']) && isset($opt[$split][$part])) {
-    $ex = getFilteredExercises($pdo, $opt[$split][$part], $level, $mins);
+    $groupsSelected = $opt[$split][$part] ?? [];
+    $ex = getFilteredExercises($pdo, $userId, $groupsSelected, $level, $mins, 1, $locId);
 }
 
 if ($act === 'save' && $ex) {

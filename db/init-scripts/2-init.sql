@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION get_exercises_filtered(
     p_groups TEXT[],
     p_level_id INT,
     p_duration INT,
-    p_type_id INT,        -- folosit drept 'section'
+    p_type_id INT,
     p_location_id INT
 )
 RETURNS TABLE (
@@ -16,31 +16,38 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT DISTINCT e.id, e.name, e.description, e.link, e.dificulty
-  FROM exercise e
+  SELECT * FROM (
+    SELECT DISTINCT
+        e.id,
+        e.name::TEXT,
+        e.description::TEXT,
+        e.link::TEXT,
+        e.dificulty
+    FROM exercise e
 
-  -- grupare muschi
-  JOIN exercise_muscle_group emg ON e.id = emg.exercise_id
-  JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
-  JOIN muscle_group mg ON mg.id = ms.principal_group
+    -- grupare muschi
+    JOIN exercise_muscle_group emg ON e.id = emg.exercise_id
+    JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
+    JOIN muscle_group mg ON mg.id = ms.principal_group
 
-  -- legătura cu secțiunea (p_type_id = id în training_type → 'gym', 'kineto' etc.)
-  JOIN exercise_section es ON es.exercise_id = e.id
-  JOIN training_type tt ON tt.id = p_type_id AND es.section = tt.name
+    -- secțiune (case-insensitive fix)
+    JOIN exercise_section es ON es.exercise_id = e.id
+    JOIN training_type tt ON tt.id = p_type_id AND LOWER(es.section) = LOWER(tt.name)
 
-  -- locație
-  JOIN exercise_location el ON el.exercise_id = e.id AND el.location_id = p_location_id
+    -- locație
+    JOIN exercise_location el ON el.exercise_id = e.id AND el.location_id = p_location_id
 
-  -- sănătate
-  LEFT JOIN exercise_health_condition ehc ON ehc.exercise_id = e.id
-  LEFT JOIN user_health_condition uhc ON uhc.user_id = p_user_id AND uhc.condition_id = ehc.condition_id
+    -- sănătate
+    LEFT JOIN exercise_health_condition ehc ON ehc.exercise_id = e.id
+    LEFT JOIN user_health_condition uhc ON uhc.user_id = p_user_id AND uhc.condition_id = ehc.condition_id
 
-  WHERE mg.name = ANY(p_groups)
-    AND (p_level_id IS NULL OR e.dificulty <= p_level_id)
-    AND (
-        (SELECT COUNT(*) FROM user_health_condition WHERE user_id = p_user_id) = 0
-        OR uhc.user_id IS NOT NULL
-    )
+    WHERE mg.name = ANY(p_groups)
+      AND (p_level_id IS NULL OR e.dificulty <= p_level_id)
+      AND (
+          (SELECT COUNT(*) FROM user_health_condition WHERE user_id = p_user_id) = 0
+          OR uhc.user_id IS NOT NULL
+      )
+  ) sub
   ORDER BY RANDOM()
   LIMIT GREATEST(p_duration / 10, 1);
 END;
