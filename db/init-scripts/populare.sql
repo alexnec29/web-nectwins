@@ -940,8 +940,7 @@ INSERT INTO exercise_section (exercise_id, section) VALUES
 -- Hernie de disc (id = 1)
 INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
   ((SELECT id FROM exercise WHERE name = 'Deadlift'),            (SELECT id FROM health_condition WHERE name = 'Hernie de disc')),
-  ((SELECT id FROM exercise WHERE name = 'Extensii lombare'),    (SELECT id FROM health_condition WHERE name = 'Hernie de disc')),
-  ((SELECT id FROM exercise WHERE name = 'Stretching pentru spate inferior'), (SELECT id FROM health_condition WHERE name = 'Hernie de disc'));
+  ((SELECT id FROM exercise WHERE name = 'Extensii lombare'),    (SELECT id FROM health_condition WHERE name = 'Hernie de disc'));
 
 -- Durere lombară (id = 2)
 INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
@@ -964,7 +963,6 @@ INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
 -- Diabet (id = 5) – exerciții cu impact moderat, cardio ușor
 INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
   ((SELECT id FROM exercise WHERE name = 'Plank'),                         (SELECT id FROM health_condition WHERE name = 'Diabet')),
-  ((SELECT id FROM exercise WHERE name = 'Podul gluteal'),                 (SELECT id FROM health_condition WHERE name = 'Diabet')),
   ((SELECT id FROM exercise WHERE name = 'Cercuri cu brațele'),            (SELECT id FROM health_condition WHERE name = 'Diabet'));
 
 -- Hipertensiune (id = 6) – exerciții cu intensitate controlată
