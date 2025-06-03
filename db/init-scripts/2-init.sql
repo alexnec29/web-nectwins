@@ -37,15 +37,13 @@ BEGIN
     -- locație
     JOIN exercise_location el ON el.exercise_id = e.id AND el.location_id = p_location_id
 
-    -- sănătate
-    LEFT JOIN exercise_health_condition ehc ON ehc.exercise_id = e.id
-    LEFT JOIN user_health_condition uhc ON uhc.user_id = p_user_id AND uhc.condition_id = ehc.condition_id
-
     WHERE mg.name = ANY(p_groups)
       AND (p_level_id IS NULL OR e.dificulty <= p_level_id)
-      AND (
-          (SELECT COUNT(*) FROM user_health_condition WHERE user_id = p_user_id) = 0
-          OR uhc.user_id IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM user_health_condition uhc
+          JOIN exercise_health_condition ehc ON uhc.condition_id = ehc.condition_id
+          WHERE uhc.user_id = p_user_id AND ehc.exercise_id = e.id
       )
   ) sub
   ORDER BY RANDOM()
