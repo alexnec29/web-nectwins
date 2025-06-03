@@ -974,56 +974,64 @@ INSERT INTO exercise_health_condition (exercise_id, condition_id) VALUES
 --------------------------------------------------------------------------------
 -- 9. Legături exercițiu ↔️ locație ↔️ secțiune (exercise_location se poate omite dacă folosim doar exercise_section)
 --------------------------------------------------------------------------------
--- Gym: Sală + Acasă
-INSERT INTO exercise_location (exercise_id, location_id)
-SELECT es.exercise_id, l.id
-FROM exercise_section es
-JOIN location l ON l.section = 'gym' AND l.name IN ('Sală', 'Acasă')
-WHERE es.section = 'gym'
-ON CONFLICT DO NOTHING;
+-- Exerciții doar la Sală
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  ((SELECT id FROM exercise WHERE name = 'Bench Press'), 1),
+  ((SELECT id FROM exercise WHERE name = 'Deadlift'), 1),
+  ((SELECT id FROM exercise WHERE name = 'Back Squat'), 1);
 
--- Kinetoterapie: Centru recuperare + Spital
-INSERT INTO exercise_location (exercise_id, location_id)
-SELECT es.exercise_id, l.id
-FROM exercise_section es
-JOIN location l ON l.section = 'kinetoterapie' AND l.name IN ('Centru recuperare', 'Spital')
-WHERE es.section = 'kinetoterapie'
-ON CONFLICT DO NOTHING;
+-- Exerciții doar Acasă
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  ((SELECT id FROM exercise WHERE name = 'Plank'), 2);
 
--- Fizioterapie: Terapie fizică + Ambulator
-INSERT INTO exercise_location (exercise_id, location_id)
-SELECT es.exercise_id, l.id
-FROM exercise_section es
-JOIN location l ON l.section = 'fizioterapie' AND l.name IN ('Terapie fizică', 'Ambulator')
-WHERE es.section = 'fizioterapie'
-ON CONFLICT DO NOTHING;
+-- Exerciții disponibile în ambele locații
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  ((SELECT id FROM exercise WHERE name = 'Plank cu menținere'), 1),
+  ((SELECT id FROM exercise WHERE name = 'Plank cu menținere'), 2),
+  ((SELECT id FROM exercise WHERE name = 'Flexii genunchi în șezut'), 1),
+  ((SELECT id FROM exercise WHERE name = 'Flexii genunchi în șezut'), 2),
+  ((SELECT id FROM exercise WHERE name = 'Ridicări pe vârfuri'), 1),
+  ((SELECT id FROM exercise WHERE name = 'Ridicări pe vârfuri'), 2);
 
--- Piept, Spate, Picioare, Umeri, Brațe => 'gym'
-INSERT INTO exercise_section (exercise_id, section)
-SELECT DISTINCT e.id, 'gym'
-FROM exercise e
-JOIN exercise_muscle_group emg ON emg.exercise_id = e.id
-JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
-JOIN muscle_group mg ON mg.id = ms.principal_group
-WHERE mg.name IN ('Piept', 'Spate', 'Picioare', 'Umeri', 'Brațe')
-ON CONFLICT DO NOTHING;
+  -- Acasă (id = 1)
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  (3, 1),   -- Dumbbell Row
+  (4, 1),   -- Dumbbell Biceps Curl
+  (5, 1),   -- Triceps Dips
+  (6, 1),   -- Overhead Press
+  (20, 1),  -- Ridicări de bazin
+  (21, 1),  -- Ridicări laterale cu gantere
+  (28, 1),  -- Plank lateral
+  (30, 1);  -- Mobilitate șold
 
--- Fesieri, Femurali, Cvadricepși, Gambele, Abdomen => 'kinetoterapie'
-INSERT INTO exercise_section (exercise_id, section)
-SELECT DISTINCT e.id, 'kinetoterapie'
-FROM exercise e
-JOIN exercise_muscle_group emg ON emg.exercise_id = e.id
-JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
-WHERE ms.name IN ('Fesieri', 'Femurali (ischio)', 'Cvadricepși', 'Gambele', 'Abdomen')
-ON CONFLICT DO NOTHING;
+-- Sală (id = 2)
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  (3, 2),   -- Dumbbell Row (disponibil în ambele)
+  (4, 2),   -- Dumbbell Biceps Curl (disponibil în ambele)
+  (6, 2),   -- Overhead Press
+  (22, 2),  -- Remedieri scapulare
+  (24, 2),  -- Rotiri umeri cu gantere ușoare
+  (26, 2),  -- Ridicări gambe pe treaptă
+  (27, 2);  -- Izometric coapsă
 
--- Exerciții izometrice / mobilitate / stretching => 'fizioterapie'
--- identificăm după nume
-INSERT INTO exercise_section (exercise_id, section)
-SELECT e.id, 'fizioterapie'
-FROM exercise e
-WHERE LOWER(name) SIMILAR TO '%(întindere|izometric|mobilitate|stretching)%'
-ON CONFLICT DO NOTHING;
+-- Centru recuperare (id = 3)
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  (9, 3),   -- Întinderi genunchi
+  (10, 3),  -- Ridicări picior întins
+  (11, 3),  -- Rotiri umăr cu bandă
+  (12, 3),  -- Ridicări frontale
+  (13, 3),  -- Extensii lombare
+  (14, 3),  -- Ridicări în pronație
+  (15, 3),  -- Rotiri trunchi
+  (16, 3),  -- Genuflexiuni lente
+  (17, 3);  -- Cercuri brațe
+
+-- Terapie fizică (id = 5)
+INSERT INTO exercise_location (exercise_id, location_id) VALUES
+  (25, 5),  -- Întindere ischio dorsal
+  (29, 5);  -- Întinderi tendon ahilean
+
+
 
 --------------------------------------------------------------------------------
 -- 10. Workout-uri (workout) și Workout Sessions (workout_session)
