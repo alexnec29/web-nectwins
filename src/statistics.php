@@ -71,7 +71,7 @@ $exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 
 
 <div class="rss-section">
     <h3>Fluxul tău RSS</h3>
-    <a href="rss-<?= $section ?>.php" class="rss-link" target="_blank">📥 RSS <?= ucfirst($section) ?></a>
+    <a href="rss.php?section=<?= $section ?>" class="rss-link" target="_blank">📥 RSS <?= ucfirst($section) ?></a>
 </div>
 </body>
 </html>
