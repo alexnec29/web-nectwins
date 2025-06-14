@@ -62,7 +62,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <nav>
         <h1>Programele mele de fizioterapie</h1>
-        <a class="buton-inapoi" href="principal-fizio.php">Înapoi</a>
+        <a class="buton-inapoi" href="../principal.php?section=fizio">Înapoi</a>
     </nav>
 
     <div class="workouts-list">

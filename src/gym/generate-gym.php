@@ -141,7 +141,7 @@ if ($act === 'save' && $ex) {
 
 <body>
     <nav>
-        <h1>Generează antrenament</h1><a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
+        <h1>Generează antrenament</h1><a class="buton-inapoi" href="../principal.php?section=gym">Înapoi</a>
     </nav>
 
     <form method="POST">

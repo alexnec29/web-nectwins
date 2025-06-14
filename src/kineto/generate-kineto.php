@@ -122,7 +122,7 @@ if ($act === 'save') {
 <body>
     <nav>
         <h1>Generează program kinetoterapie</h1>
-        <a class="buton-inapoi" href="principal-kineto.php">Înapoi</a>
+        <a class="buton-inapoi" href="../principal.php?section=kineto">Înapoi</a>
     </nav>
 
     <form method="POST">

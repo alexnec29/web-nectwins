@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <nav>
         <h1>Adaugă Exercițiu</h1>
-        <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
+        <a class="buton-inapoi" href="principal.php">Înapoi</a>
     </nav>
 
     <form method="post">

@@ -44,7 +44,7 @@ unset($r);
 
     <nav>
         <h1>Clasamente Bodybuilding</h1>
-        <a class="buton-inapoi" href="principal-fizio.php">Înapoi</a>
+        <a class="buton-inapoi" href="../principal.php?section=fizio">Înapoi</a>
     </nav>
 
     <div class="leaderboard-container">

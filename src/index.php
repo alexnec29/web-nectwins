@@ -3,7 +3,7 @@ session_start();
 
 // Dacă utilizatorul este logat (are username în sesiune) → principal.php
 if (isset($_SESSION['username'])) {
-  header('Location: gym/principal-gym.php');
+  header('Location: principal.php');
   exit();
 }
 
