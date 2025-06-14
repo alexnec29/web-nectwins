@@ -11,7 +11,7 @@ $section = (isset($_GET['section']) && in_array($_GET['section'], $allowed_secti
 
 // Linkuri către paginile respective
 $generate_url = "/{$section}/generate-{$section}.php";
-$workouts_url = "/{$section}/workouts-{$section}.php";
+$workouts_url = "workouts.php?section={$section}";
 $statistics_url = "statistics.php?section={$section}";
 $leaderboard_url = "leaderboard.php?section={$section}";
 ?>
