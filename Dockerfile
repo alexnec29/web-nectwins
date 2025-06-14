@@ -1,14 +1,28 @@
 ﻿# Foloseşte Apache + PHP 8.1
 FROM php:8.1-apache
 
-# Instalăm extensiile mysqli și pdo_pgsql (pentru MySQL și PostgreSQL)
-RUN apt-get update && apt-get install -y libpq-dev \
-    && docker-php-ext-install mysqli pdo_pgsql
+# Instalăm extensiile și utilitarele necesare
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    git \
+    unzip \
+    curl \
+    && docker-php-ext-install mysqli pdo_pgsql \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copiază tot conţinutul directorului în document root Apache
+# Setăm directorul de lucru
+WORKDIR /var/www/html
+
+# Instalăm Composer global
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copiem fișierele proiectului
 COPY src/ /var/www/html/
 
-# Pune drepturile corecte pe fişiere
+# Instalăm dependențele (după ce avem tot codul)
+RUN composer install
+
+# Permisiuni corecte
 RUN chown -R www-data:www-data /var/www/html
 
 # Expune portul 80

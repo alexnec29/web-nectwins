@@ -186,3 +186,19 @@ footer a:hover {
 .dropdown-content a:hover {
     background-color: #2b2b2e;
 }
+
+.admin-button {
+    background-color: #202023;
+    color: gold;
+    font-weight: bold;
+    padding: 0.6em 1em;
+    border-radius: 8px;
+    margin-left: 1em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+  
+.admin-button:hover {
+    background-color: #2a2a2d;
+    color: #ffd700;
+}

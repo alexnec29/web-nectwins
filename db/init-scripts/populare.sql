@@ -72,6 +72,16 @@ INSERT INTO users (username, password, email, nume, varsta, gen, inaltime, greut
   ('maria_fit',        'mfit',         'maria.fit@gmail.com',    'Maria Ionescu',      45, 'F', 170, 70),
   ('vali_recuperare',  'recval',       'vali@recuperare.ro',     'Vali Petrescu',      52, 'M', 172, 85);
 
+--SUPERADMIN--
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+INSERT INTO users (username, password, email, rol)
+VALUES (
+  'superadmin',
+  encode(digest('parola123', 'sha256'), 'hex'),
+  'admin@fitflow.com',
+  3
+);
+
 -- Asocieri user → health_condition
 -- Ionuț (id = 2) → Hernie de disc (id = 1)
 INSERT INTO user_health_condition (user_id, condition_id) VALUES
@@ -259,6 +269,7 @@ INSERT INTO split_subtype_muscle_group (split_subtype_id, muscle_group_id) VALUE
     (SELECT id FROM muscle_group WHERE name = 'Picioare')
   )
   ON CONFLICT DO NOTHING;
+
 --------------------------------------------------------------------------------
 -- 6. Locații de antrenament (location)
 --------------------------------------------------------------------------------
@@ -1143,6 +1154,63 @@ INSERT INTO workout_session (workout_id, user_id) VALUES
     (SELECT id FROM workout WHERE name = 'Intarire Spate'),
     (SELECT id FROM users WHERE username = 'vali_recuperare')
   );
+
+-------Pentru Generate Gym------------
+INSERT INTO section_split (section, split_id) VALUES
+  ('gym', 1),
+  ('gym', 2),
+  ('gym', 3),
+  ('gym', 4)
+ON CONFLICT DO NOTHING;
+
+
+-- split_subtype pentru kinetoterapie și fizioterapie
+INSERT INTO split_subtype (name, split_id) VALUES
+  -- Recuperare Spate (split_type_id = 5)
+  ('mobilitate spate', (SELECT id FROM split_type WHERE name = 'Recuperare Spate')),
+  ('intarire spate',   (SELECT id FROM split_type WHERE name = 'Recuperare Spate')),
+
+  -- Mobilitate Genunchi (split_type_id = 6)
+  ('flexie genunchi',  (SELECT id FROM split_type WHERE name = 'Mobilitate Genunchi')),
+  ('extensie genunchi',(SELECT id FROM split_type WHERE name = 'Mobilitate Genunchi')),
+
+  -- Intarire Spate (split_type_id = 7)
+  ('intarire muschii spate', (SELECT id FROM split_type WHERE name = 'Intarire Spate')),
+  ('mobilitate muschii spate', (SELECT id FROM split_type WHERE name = 'Intarire Spate'))
+ON CONFLICT DO NOTHING;
+
+-- 5.3. split_subtype_muscle_group pentru kinetoterapie și fizioterapie
+INSERT INTO split_subtype_muscle_group (split_subtype_id, muscle_group_id) VALUES
+  -- Recuperare Spate (split_id = 5)
+  (
+    (SELECT id FROM split_subtype WHERE name = 'mobilitate spate' AND split_id = (SELECT id FROM split_type WHERE name = 'Recuperare Spate')),
+    (SELECT id FROM muscle_group WHERE name = 'Spate')
+  ),
+  (
+    (SELECT id FROM split_subtype WHERE name = 'intarire spate' AND split_id = (SELECT id FROM split_type WHERE name = 'Recuperare Spate')),
+    (SELECT id FROM muscle_group WHERE name = 'Spate')
+  ),
+
+  -- Mobilitate Genunchi (split_id = 6)
+  (
+    (SELECT id FROM split_subtype WHERE name = 'flexie genunchi' AND split_id = (SELECT id FROM split_type WHERE name = 'Mobilitate Genunchi')),
+    (SELECT id FROM muscle_group WHERE name = 'Picioare')
+  ),
+  (
+    (SELECT id FROM split_subtype WHERE name = 'extensie genunchi' AND split_id = (SELECT id FROM split_type WHERE name = 'Mobilitate Genunchi')),
+    (SELECT id FROM muscle_group WHERE name = 'Picioare')
+  ),
+
+  -- Intarire Spate (split_id = 7)
+  (
+    (SELECT id FROM split_subtype WHERE name = 'intarire muschii spate' AND split_id = (SELECT id FROM split_type WHERE name = 'Intarire Spate')),
+    (SELECT id FROM muscle_group WHERE name = 'Spate')
+  ),
+  (
+    (SELECT id FROM split_subtype WHERE name = 'mobilitate muschii spate' AND split_id = (SELECT id FROM split_type WHERE name = 'Intarire Spate')),
+    (SELECT id FROM muscle_group WHERE name = 'Spate')
+  )
+ON CONFLICT DO NOTHING;
 
 --------------------------------------------------------------------------------
 -- END Script de populare

@@ -1,5 +1,6 @@
 <?php
 session_start();
+$role = $_SESSION['role'] ?? 1;
 
 if (!isset($_SESSION["username"])) {
     header("Location: ./../login.php");
@@ -10,7 +11,7 @@ $allowed_sections = ["gym", "kineto", "fizio"];
 $section = (isset($_GET['section']) && in_array($_GET['section'], $allowed_sections)) ? $_GET['section'] : "gym";
 
 // Linkuri către paginile respective
-$generate_url = "/{$section}/generate-{$section}.php";
+$generate_url = "generate.php?section={$section}";
 $workouts_url = "workouts.php?section={$section}";
 $statistics_url = "statistics.php?section={$section}";
 $leaderboard_url = "leaderboard.php?section={$section}";
@@ -44,10 +45,14 @@ $leaderboard_url = "leaderboard.php?section={$section}";
             <span class="nav-tooltip">Fizioterapie</span>
         </button>
 
-        <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
-            <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
-            <span class="nav-tooltip">Adaugă Exercițiu</span>
-        </button>
+        <?php if ($role == 3): ?>
+            <a href="superadmin.php" class="admin-button">👑 Superadmin</a>
+        <?php endif; ?>
+
+
+        <?php if ($role >= 2): ?>
+            <a href="admin.php" class="admin-button">🛠️ Admin</a>
+        <?php endif; ?>
 
         <div class="nav-user">
             <div class="dropdown">
