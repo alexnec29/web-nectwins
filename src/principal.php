@@ -22,6 +22,7 @@ $leaderboard_url = "/{$section}/leaderboard-{$section}.php";
 <head>
     <meta charset="UTF-8">
     <title>Principal | FitFlow</title>
+    <title>Principal | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/principal.css?v=<?php echo time(); ?>">
 </head>
@@ -42,6 +43,12 @@ $leaderboard_url = "/{$section}/leaderboard-{$section}.php";
             <img src="/assets/fizio.png" alt="fizioterapie">
             <span class="nav-tooltip">Fizioterapie</span>
         </button>
+
+        <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
+            <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
+            <span class="nav-tooltip">Adaugă Exercițiu</span>
+        </button>
+
 
         <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
             <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
