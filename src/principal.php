@@ -49,12 +49,6 @@ $leaderboard_url = "/{$section}/leaderboard-{$section}.php";
             <span class="nav-tooltip">Adaugă Exercițiu</span>
         </button>
 
-
-        <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
-            <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
-            <span class="nav-tooltip">Adaugă Exercițiu</span>
-        </button>
-
         <div class="nav-user">
             <div class="dropdown">
                 <button class="dropbtn">
