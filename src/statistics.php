@@ -42,24 +42,30 @@ $exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 
 
     <h3>🔸 Distribuția pe subgrupe musculare</h3>
     <?php if ($subgroupRows): ?>
-        <ul>
+        <div class="top-exercises">
             <?php foreach ($subgroupRows as $r): ?>
-                <li><?= htmlspecialchars($r['name']) ?>: <?= $r['cnt'] ?> sesiuni</li>
+                <div class="exercise-card">
+                    <div class="exercise-name"><?= htmlspecialchars($r['name']) ?></div>
+                    <div class="exercise-count"><?= $r['cnt'] ?>x</div>
+                </div>
             <?php endforeach; ?>
-        </ul>
+        </div>
     <?php else: ?>
-        <p>Nicio distribuție disponibilă.</p>
+        <p class="empty-state">Nicio distribuție disponibilă.</p>
     <?php endif; ?>
 
     <h3>🔹 Cele mai folosite exerciții</h3>
     <?php if ($exerciseRows): ?>
-        <ol>
+        <div class="top-exercises">
             <?php foreach ($exerciseRows as $r): ?>
-                <li><?= htmlspecialchars($r['name']) ?> — <?= $r['uses'] ?> apariții</li>
+                <div class="exercise-card">
+                    <div class="exercise-name"><?= htmlspecialchars($r['name']) ?></div>
+                    <div class="exercise-count"><?= $r['uses'] ?>x</div>
+                </div>
             <?php endforeach; ?>
-        </ol>
+        </div>
     <?php else: ?>
-        <p>Fără exerciții înregistrate.</p>
+        <p class="empty-state">Fără exerciții înregistrate.</p>
     <?php endif; ?>
 </div>
 
