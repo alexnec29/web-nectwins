@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
       $user = $stmt->fetch();
       $_SESSION["username"] = $user["username"];
       $_SESSION["user_id"] = $user["id"];
+      $_SESSION["role"] = $user["rol"];
     
       // Verificăm dacă userul și-a completat profilul
       if (empty($user["nume"]) || empty($user["varsta"]) || empty($user["gen"])) {

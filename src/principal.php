@@ -1,5 +1,6 @@
 <?php
 session_start();
+$role = $_SESSION['role'] ?? 1;
 
 if (!isset($_SESSION["username"])) {
     header("Location: ./../login.php");
@@ -44,10 +45,9 @@ $leaderboard_url = "leaderboard.php?section={$section}";
             <span class="nav-tooltip">Fizioterapie</span>
         </button>
 
-        <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
-            <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
-            <span class="nav-tooltip">Adaugă Exercițiu</span>
-        </button>
+        <?php if ($role == 3): ?>
+            <a href="superadmin.php" class="admin-button">👑 Superadmin</a>
+        <?php endif; ?>
 
         <div class="nav-user">
             <div class="dropdown">
