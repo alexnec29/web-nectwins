@@ -238,16 +238,38 @@ BEGIN
       u.username::TEXT,
       u.nume::TEXT,
       u.varsta::INT,
-      COUNT(ws.id)::INT AS sesiuni,
-      COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT AS durata,
-      tl.name::TEXT AS nivel
+      COUNT(ws.id)::INT,
+      COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT,
+      NULL::TEXT
+  FROM users u
+  JOIN workout_session ws ON ws.user_id = u.id
+  JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
+  WHERE ws.completed_at IS NOT NULL
+  GROUP BY u.id, u.username, u.nume, u.varsta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_leaderboard_by_level(p_section TEXT)
+RETURNS TABLE (
+    user_id INT,
+    nume TEXT,
+    nivel TEXT,
+    sesiuni INT
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+      u.id::INT,
+      u.nume::TEXT,
+      tl.name::TEXT,
+      COUNT(ws.id)::INT
   FROM users u
   JOIN workout_session ws ON ws.user_id = u.id
   JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
   LEFT JOIN training_level tl ON tl.id = w.level_id
   WHERE ws.completed_at IS NOT NULL
-  GROUP BY u.id, u.username, u.nume, u.varsta, tl.name
-  ORDER BY sesiuni DESC;
+  GROUP BY u.id, u.nume, tl.name;
 END;
 $$ LANGUAGE plpgsql;
 
