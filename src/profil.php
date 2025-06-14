@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // conține conexiunea PDO
+require 'db.php';
 
 if (!isset($_SESSION["username"], $_SESSION["user_id"])) {
     header("Location: login.php");
@@ -12,17 +12,19 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$userId]);
 $userProfile = $stmt->fetch();
 
-// Verificăm dacă profilul e completat
 $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) || empty($userProfile['gen']);
 ?>
 
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>Profilul meu | FitFlow</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/profil.css">
 </head>
+
 <body>
 
     <nav>
@@ -85,4 +87,5 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
     </div>
 
 </body>
+
 </html>

@@ -1,0 +1,105 @@
+nav {
+    background: #28282B;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #0b0b0c;
+}
+
+nav h1 {
+    color: #4885d4;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+nav .buton-inapoi {
+    text-decoration: none;
+    display: inline-block;
+    background: #202023;
+    color: #98acc5;
+    border: 1.6px solid #000;
+    padding: 0.6em 1.2em;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+nav .buton-inapoi:hover {
+    background: #2b2b2e;
+    color: #5691df;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+form {
+    max-width: 400px;
+    margin: 2em auto;
+    background: #28282B;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #4885d4;
+}
+
+form input[type="text"],
+form input[type="url"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 0.6em;
+    margin-bottom: 1.5em;
+    background: #4b4b4b;
+    color: #98acc5;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+form input[type="text"],
+form textarea {
+    width: 100%;
+    max-width: 100%;
+    resize: vertical;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.checkbox-group label {
+    display: block;
+    margin-bottom: 0.7em;
+    font-size: 1rem;
+    color: #4885d4;
+}
+
+form input[type="checkbox"] {
+    margin-right: 0.5em;
+    transform: scale(1.1);
+}
+
+form button[type="submit"] {
+    width: 100%;
+    background: #28a745;
+    color: whitesmoke;
+    border: none;
+    border-radius: 6px;
+    padding: 0.8em;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+form button[type="submit"]:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}

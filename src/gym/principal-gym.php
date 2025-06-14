@@ -12,7 +12,7 @@ if (!isset($_SESSION["username"])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Login | FitFlow</title>
+    <title>Principal | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/principal.css">
 </head>
@@ -20,7 +20,8 @@ if (!isset($_SESSION["username"])) {
 <body>
     <nav>
         <h1>Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h1>
-        <button type="button" class="gym buton-apasat">
+
+        <button type="button" class="gym buton-apasat" onclick="window.location.href='/gym/principal-gym.php'">
             <img src="/assets/gym.png" alt="gym">
             <span class="nav-tooltip">Bodybuilding</span>
         </button>
@@ -32,6 +33,12 @@ if (!isset($_SESSION["username"])) {
             <img src="/assets/fizio.png" alt="fizioterapie">
             <span class="nav-tooltip">Fizioterapie</span>
         </button>
+
+        <button type="button" class="dropbtn" onclick="window.location.href='add-exercise.php'">
+            <img src="/assets/plus.png" alt="Adaugă exercițiu" style="height: 24px; vertical-align: middle;">
+            <span class="nav-tooltip">Adaugă Exercițiu</span>
+        </button>
+
         <div class="nav-user">
             <div class="dropdown">
                 <button class="dropbtn">
@@ -57,14 +64,14 @@ if (!isset($_SESSION["username"])) {
         <div class="card">
             <button class="card-button" onclick="window.location.href='workouts-gym.php'">
                 <p>Antrenamentele mele</p>
-                <img src="/assets/workouts-gym.png" alt="Generate Workout">
+                <img src="/assets/workouts-gym.png" alt="Workouts">
             </button>
         </div>
 
         <div class="card">
             <button class="card-button" onclick="window.location.href='statistics-gym.php'">
                 <p>Statistici</p>
-                <img src="/assets/statistics-gym.png" alt="Generate Workout">
+                <img src="/assets/statistics-gym.png" alt="Statistics">
             </button>
         </div>
 
