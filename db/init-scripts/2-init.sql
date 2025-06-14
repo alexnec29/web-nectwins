@@ -238,13 +238,14 @@ BEGIN
       u.username::TEXT,
       u.nume::TEXT,
       u.varsta::INT,
-      COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL)::INT AS sesiuni,
+      COUNT(ws.id)::INT AS sesiuni,
       COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT AS durata,
       MAX(tl.name)::TEXT AS nivel
   FROM users u
   LEFT JOIN workout_session ws ON ws.user_id = u.id
-  LEFT JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
+  LEFT JOIN workout w ON w.id = ws.workout_id
   LEFT JOIN training_level tl ON tl.id = w.level_id
+  WHERE w.section = p_section AND ws.completed_at IS NOT NULL
   GROUP BY u.id;
 END;
 $$ LANGUAGE plpgsql;
