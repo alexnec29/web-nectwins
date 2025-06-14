@@ -183,17 +183,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT)
+CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT, p_section TEXT)
 RETURNS TABLE(name TEXT, cnt INT)
 AS $$
 BEGIN
   RETURN QUERY
   SELECT msg.name::TEXT, COUNT(DISTINCT ws.id)::INT
   FROM workout_session ws
-  JOIN workout_exercise we ON we.workout_id = ws.workout_id
+  JOIN workout w ON w.id = ws.workout_id
+  JOIN workout_exercise we ON we.workout_id = w.id
   JOIN exercise_muscle_group emg ON emg.exercise_id = we.exercise_id
   JOIN muscle_subgroup msg ON msg.id = emg.muscle_subgroup_id
-  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  WHERE ws.user_id = p_user_id 
+    AND ws.completed_at IS NOT NULL
+    AND w.section = p_section
   GROUP BY msg.name
   ORDER BY cnt DESC;
 END;
@@ -213,21 +216,6 @@ BEGIN
   GROUP BY e.name
   ORDER BY uses DESC
   LIMIT p_limit;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION get_training_type_stats(p_user_id INT)
-RETURNS TABLE(name TEXT, cnt INT)
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT tt.name::TEXT, COUNT(DISTINCT ws.id)::INT
-  FROM workout_session ws
-  JOIN workout w ON ws.workout_id = w.id
-  JOIN training_type tt ON tt.id = w.type_id
-  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
-  GROUP BY tt.name
-  ORDER BY cnt DESC;
 END;
 $$ LANGUAGE plpgsql;
 
