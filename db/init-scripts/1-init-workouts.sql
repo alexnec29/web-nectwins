@@ -137,7 +137,7 @@ CREATE TABLE workout (
    level_id         INTEGER      REFERENCES training_level(id),
    split_id         INTEGER      REFERENCES split_type(id),
    location_id      INTEGER      REFERENCES location(id),
-   section          VARCHAR(10)  NOT NULL,
+   section          VARCHAR(20)  NOT NULL,
    created_at       TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
    started_at       TIMESTAMP,
    completed_at     TIMESTAMP,
