@@ -1,0 +1,78 @@
+nav {
+    background-color: rgba(40, 40, 43, 0.95);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav h1 {
+    color: #4885d4;
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .back-btn {
+    background-color: #202023;
+    color: #98acc5;
+    border: 1.5px solid black;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .back-btn:hover {
+    background-color: #2b2b2e;
+    color: #5691df;
+    transform: translateY(-2px);
+  }
+  
+  .admin-panel {
+    max-width: 800px;
+    margin: 2em auto;
+    background: #1f1f1f;
+    padding: 2em;
+    border-radius: 10px;
+    color: #e0e0e0;
+  }
+  
+  .admin-panel h2 {
+    color: #4aa2ff;
+    margin-bottom: 1em;
+  }
+  
+  .user-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    background: #2b2b2b;
+    border-radius: 8px;
+    margin-bottom: 1em;
+  }
+  
+  .user-row span {
+    flex: 1;
+  }
+  
+  .promote-btn,
+  .demote-btn {
+    background-color: #333;
+    color: white;
+    padding: 0.4em 1em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .promote-btn:hover {
+    background-color: #3c6;
+  }
+  
+  .demote-btn:hover {
+    background-color: #c33;
+  }
+  
