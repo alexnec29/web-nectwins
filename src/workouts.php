@@ -67,7 +67,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
       <p>Durată: <?= (int)$w['duration_minutes'] ?> min</p>
 
       <?php if ($w['started_at']): ?>
-        <p style="color:gold">🕒 În curs de desfășurare...</p>
+        <p class="in-progress-badge">🕒 În curs de desfășurare...</p>
       <?php else: ?>
         <form method="POST">
           <input type="hidden" name="wid" value="<?= $w['id'] ?>">
