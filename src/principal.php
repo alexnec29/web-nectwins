@@ -11,7 +11,7 @@ $allowed_sections = ["gym", "kineto", "fizio"];
 $section = (isset($_GET['section']) && in_array($_GET['section'], $allowed_sections)) ? $_GET['section'] : "gym";
 
 // Linkuri către paginile respective
-$generate_url = "/{$section}/generate-{$section}.php";
+$generate_url = "generate.php?section={$section}";
 $workouts_url = "workouts.php?section={$section}";
 $statistics_url = "statistics.php?section={$section}";
 $leaderboard_url = "leaderboard.php?section={$section}";
