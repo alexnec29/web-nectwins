@@ -16,8 +16,8 @@ $section = $_GET['section'] ?? 'gym';
 
 if (!$wid || !is_numeric($wid)) die("Link invalid.");
 
-$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ?");
-$stmt->execute([$wid, $section]);
+$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ? AND user_id = ?");
+$stmt->execute([$wid, $section, $uid]);
 $workout = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$workout) die("Workout inexistent.");
 
