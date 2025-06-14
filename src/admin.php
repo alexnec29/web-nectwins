@@ -19,7 +19,7 @@ if (!isset($_SESSION["username"]) || !isset($_SESSION["role"]) || $_SESSION["rol
 
     <nav>
         <h1>Panou Administrativ</h1>
-        <a href="/gym/principal-gym.php" class="nav-link">Înapoi</a>
+        <a href="principal.php" class="nav-link">Înapoi</a>
     </nav>
 
     <main class="admin-dashboard">
