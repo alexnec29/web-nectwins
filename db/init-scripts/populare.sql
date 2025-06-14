@@ -6,6 +6,16 @@
 --  - Ștergerea (DROP) nu este inclusă aici, ci doar popularea cu date de referință.
 --------------------------------------------------------------------------------
 
+--SUPERADMIN--
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+INSERT INTO users (username, password, email, rol)
+VALUES (
+  'superadmin',
+  encode(digest('parola123', 'sha256'), 'hex'),
+  'admin@fitflow.com',
+  3
+);
+
 --------------------------------------------------------------------------------
 -- 1. Grupe musculare (muscle_group) și Subgrupe musculare (muscle_subgroup)
 --------------------------------------------------------------------------------
