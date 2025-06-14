@@ -49,6 +49,11 @@ $leaderboard_url = "leaderboard.php?section={$section}";
             <a href="superadmin.php" class="admin-button">👑 Superadmin</a>
         <?php endif; ?>
 
+
+        <?php if ($role >= 2): ?>
+            <a href="admin.php" class="admin-button">🛠️ Admin</a>
+        <?php endif; ?>
+
         <div class="nav-user">
             <div class="dropdown">
                 <button class="dropbtn">
