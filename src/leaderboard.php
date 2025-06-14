@@ -144,8 +144,8 @@ foreach ($rows as $r) {
     <?php endif; ?>
 
     <div class="export-links">
-        <a href="leaderboard-<?= $section ?>.json.php" target="_blank">Export JSON</a>
-        <a href="leaderboard-<?= $section ?>.pdf.php" target="_blank">Export PDF</a>
+        <a href="leaderboard.json.php?section=<?= $section ?>" target="_blank">Export JSON</a>
+        <a href="leaderboard.pdf.php?section=<?= $section ?>" target="_blank">Export PDF</a>
     </div>
 </div>
 
