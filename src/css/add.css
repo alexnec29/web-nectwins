@@ -34,10 +34,10 @@ nav .buton-inapoi:hover {
 }
 
 form {
-    max-width: 400px;
+    max-width: 900px;
     margin: 2em auto;
     background: #28282B;
-    padding: 2em;
+    padding: 2em 3em;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }

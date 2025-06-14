@@ -10,7 +10,7 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 ]);
 
 $uid = $_SESSION['user_id'];
-$section = 'gym';
+$section = $_GET['section'] ?? 'gym';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wid'])) {
     $wid = (int)$_POST['wid'];
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wid'])) {
         $sid = 0;
         $stmt->execute();
 
-        header("Location: workout.php?wid=$wid&sid=$sid");
+        header("Location: workout.php?section=$section&wid=$wid&sid=$sid");
         exit;
     }
 }
@@ -57,7 +57,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
 <body>
 <nav>
   <h1>Antrenamentele mele</h1>
-  <a class="buton-inapoi" href="../principal.php?section=gym">Înapoi</a>
+  <a class="buton-inapoi" href="../principal.php?section=<?= $section ?>">Înapoi</a>
 </nav>
 
 <div class="workouts-list">
@@ -67,7 +67,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
       <p>Durată: <?= (int)$w['duration_minutes'] ?> min</p>
 
       <?php if ($w['started_at']): ?>
-        <p style="color:gold">🕒 În curs de desfășurare...</p>
+        <p class="in-progress-badge">🕒 În curs de desfășurare...</p>
       <?php else: ?>
         <form method="POST">
           <input type="hidden" name="wid" value="<?= $w['id'] ?>">
@@ -75,7 +75,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
         </form>
       <?php endif; ?>
 
-      <a class="buton-inapoi" href="workout.php?wid=<?= $w['id'] ?>">📄 Detalii</a>
+      <a class="buton-inapoi" href="workout.php?section=<?= $section ?>&wid=<?= $w['id'] ?>">📄 Detalii</a>
     </div>
   <?php endforeach; ?>
 </div>

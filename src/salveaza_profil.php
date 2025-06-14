@@ -35,7 +35,7 @@ try {
 
     $pdo->commit();
 
-    header("Location: /gym/principal-gym.php");
+    header("Location: principal.php");
     exit();
 
 } catch (Exception $e) {

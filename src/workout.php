@@ -12,12 +12,12 @@ $pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
 $uid = $_SESSION['user_id'];
 $wid = $_GET['wid'] ?? null;
 $sid = $_GET['sid'] ?? null;
-$section = 'gym';
+$section = $_GET['section'] ?? 'gym';
 
 if (!$wid || !is_numeric($wid)) die("Link invalid.");
 
-$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ?");
-$stmt->execute([$wid, $section]);
+$stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ? AND user_id = ?");
+$stmt->execute([$wid, $section, $uid]);
 $workout = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$workout) die("Workout inexistent.");
 
@@ -26,7 +26,7 @@ if (!$sid || !is_numeric($sid)) {
     $stmt->execute(['uid' => $uid, 'wid' => $wid]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($session) {
-        header("Location: workout.php?wid=$wid&sid=" . $session['id']);
+        header("Location: workout.php?section=$section&wid=$wid&sid=" . $session['id']);
         exit;
     } else {
         $session = null;
@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $session) {
     } elseif (isset($_POST['cancel'])) {
         $stmt = $pdo->prepare("CALL cancel_workout_session(:sid, :uid)");
         $stmt->execute(['sid' => $session['id'], 'uid' => $uid]);
-        header("Location: workouts-gym.php");
+        header("Location: workouts.php?section=$section");
         exit;
     }
-    header("Location: workout.php?wid=$wid&sid=" . $session['id']);
+    header("Location: workout.php?section=$section&wid=$wid&sid=" . $session['id']);
     exit;
 }
 
@@ -68,7 +68,7 @@ $exercises = $ex->fetchAll(PDO::FETCH_ASSOC);
 <body>
 <nav>
   <h1><?= htmlspecialchars($workout['name']) ?></h1>
-  <a href="workouts-gym.php" class="back-btn">Înapoi</a>
+  <a href="workouts.php?section=<?= $section ?>" class="back-btn">Înapoi</a>
 </nav>
 
 <div class="container">

@@ -183,17 +183,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT)
+CREATE OR REPLACE FUNCTION get_muscle_subgroup_stats(p_user_id INT, p_section TEXT)
 RETURNS TABLE(name TEXT, cnt INT)
 AS $$
 BEGIN
   RETURN QUERY
   SELECT msg.name::TEXT, COUNT(DISTINCT ws.id)::INT
   FROM workout_session ws
-  JOIN workout_exercise we ON we.workout_id = ws.workout_id
+  JOIN workout w ON w.id = ws.workout_id
+  JOIN workout_exercise we ON we.workout_id = w.id
   JOIN exercise_muscle_group emg ON emg.exercise_id = we.exercise_id
   JOIN muscle_subgroup msg ON msg.id = emg.muscle_subgroup_id
-  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
+  WHERE ws.user_id = p_user_id 
+    AND ws.completed_at IS NOT NULL
+    AND w.section = p_section
   GROUP BY msg.name
   ORDER BY cnt DESC;
 END;
@@ -216,31 +219,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_training_type_stats(p_user_id INT)
-RETURNS TABLE(name TEXT, cnt INT)
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT tt.name::TEXT, COUNT(DISTINCT ws.id)::INT
-  FROM workout_session ws
-  JOIN workout w ON ws.workout_id = w.id
-  JOIN training_type tt ON tt.id = w.type_id
-  WHERE ws.user_id = p_user_id AND ws.completed_at IS NOT NULL
-  GROUP BY tt.name
-  ORDER BY cnt DESC;
-END;
-$$ LANGUAGE plpgsql;
-
 -- leaderboard
 CREATE OR REPLACE FUNCTION get_leaderboard_data(p_section TEXT)
 RETURNS TABLE (
-    user_id     INT,
-    username    TEXT,
-    nume        TEXT,
-    varsta      INT,
-    sesiuni     INT,
-    durata      INT,
-    nivel       TEXT
+    user_id   INT,
+    username  TEXT,
+    nume      TEXT,
+    varsta    INT,
+    sesiuni   INT,
+    durata    INT,
+    nivel     TEXT
 )
 AS $$
 BEGIN
@@ -250,14 +238,38 @@ BEGIN
       u.username::TEXT,
       u.nume::TEXT,
       u.varsta::INT,
-      COUNT(ws.id) FILTER (WHERE ws.completed_at IS NOT NULL)::INT AS sesiuni,
-      COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT AS durata,
-      MAX(tl.name)::TEXT AS nivel
+      COUNT(ws.id)::INT,
+      COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT,
+      NULL::TEXT
   FROM users u
-  LEFT JOIN workout_session ws ON ws.user_id = u.id
-  LEFT JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
+  JOIN workout_session ws ON ws.user_id = u.id
+  JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
+  WHERE ws.completed_at IS NOT NULL
+  GROUP BY u.id, u.username, u.nume, u.varsta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_leaderboard_by_level(p_section TEXT)
+RETURNS TABLE (
+    user_id INT,
+    nume TEXT,
+    nivel TEXT,
+    sesiuni INT
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+      u.id::INT,
+      u.nume::TEXT,
+      tl.name::TEXT,
+      COUNT(ws.id)::INT
+  FROM users u
+  JOIN workout_session ws ON ws.user_id = u.id
+  JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
   LEFT JOIN training_level tl ON tl.id = w.level_id
-  GROUP BY u.id;
+  WHERE ws.completed_at IS NOT NULL
+  GROUP BY u.id, u.nume, tl.name;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -296,3 +308,47 @@ CREATE TRIGGER trg_set_started_at
 BEFORE INSERT ON workout_session
 FOR EACH ROW
 EXECUTE FUNCTION trg_autofill_started_at();
+
+----------------------------------------ADMIN----------------------------------------
+CREATE OR REPLACE PROCEDURE add_exercise(
+    p_name TEXT,
+    p_description TEXT,
+    p_link TEXT,
+    p_difficulty INT,
+    p_type_id INT,
+    p_is_bodyweight BOOLEAN,
+    p_equipment_needed BOOLEAN,
+    p_subgroup_ids INT[],
+    p_location_ids INT[],
+    p_sections TEXT[]
+)
+AS $$
+DECLARE
+    new_id INT;
+    sub_id INT;
+    loc_id INT;
+    sec TEXT;
+BEGIN
+    INSERT INTO exercise(name, description, link, dificulty, type_id, is_bodyweight, equipment_needed)
+    VALUES (p_name, p_description, p_link, p_difficulty, p_type_id, p_is_bodyweight, p_equipment_needed)
+    RETURNING id INTO new_id;
+
+    FOREACH sub_id IN ARRAY p_subgroup_ids
+    LOOP
+        INSERT INTO exercise_muscle_group(exercise_id, muscle_subgroup_id)
+        VALUES (new_id, sub_id);
+    END LOOP;
+
+    FOREACH loc_id IN ARRAY p_location_ids
+    LOOP
+        INSERT INTO exercise_location(exercise_id, location_id)
+        VALUES (new_id, loc_id);
+    END LOOP;
+
+    FOREACH sec IN ARRAY p_sections
+    LOOP
+        INSERT INTO exercise_section(exercise_id, section)
+        VALUES (new_id, sec);
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
