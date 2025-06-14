@@ -86,7 +86,16 @@ foreach ($splits as $s) {
 $part = ctype_digit($_POST['muscleGroup'] ?? '') ? (int)$_POST['muscleGroup'] : null;
 if (in_array($act, ['generate', 'save']) && isset($opt[$split][$part])) {
     $groupsSelected = $opt[$split][$part] ?? [];
-    $ex = getFilteredExercises($pdo, $userId, $groupsSelected, $level, $mins, 1, $locId);
+    try {
+        $ex = getFilteredExercises($pdo, $userId, $groupsSelected, $level, $mins, 1, $locId);
+    } catch (PDOException $e) {
+        if (str_contains($e->getMessage(), 'P2001')) {
+            $msg = '❌ Nu s-au găsit exerciții potrivite.';
+        } else {
+            $msg = '❌ Eroare: ' . $e->getMessage();
+        }
+        $ex = [];
+    }    
 }
 
 if ($act === 'save' && $ex) {

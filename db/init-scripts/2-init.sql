@@ -14,9 +14,11 @@ RETURNS TABLE (
     link TEXT,
     dificulty INT
 ) AS $$
+DECLARE
+    v_count INT;
 BEGIN
   RETURN QUERY
-  SELECT * FROM (
+  WITH filtered AS (
     SELECT DISTINCT
         e.id,
         e.name::TEXT,
@@ -24,32 +26,32 @@ BEGIN
         e.link::TEXT,
         e.dificulty
     FROM exercise e
-
-    -- grupare muschi
     JOIN exercise_muscle_group emg ON e.id = emg.exercise_id
     JOIN muscle_subgroup ms ON ms.id = emg.muscle_subgroup_id
     JOIN muscle_group mg ON mg.id = ms.principal_group
-
-    -- secțiune (case-insensitive fix)
     JOIN exercise_section es ON es.exercise_id = e.id
     JOIN training_type tt ON tt.id = p_type_id AND LOWER(es.section) = LOWER(tt.name)
-
-    -- locație
     JOIN exercise_location el ON el.exercise_id = e.id AND el.location_id = p_location_id
-
-    -- sănătate
-    LEFT JOIN exercise_health_condition ehc ON ehc.exercise_id = e.id
-    LEFT JOIN user_health_condition uhc ON uhc.user_id = p_user_id AND uhc.condition_id = ehc.condition_id
-
     WHERE mg.name = ANY(p_groups)
       AND (p_level_id IS NULL OR e.dificulty <= p_level_id)
-      AND (
-          (SELECT COUNT(*) FROM user_health_condition WHERE user_id = p_user_id) = 0
-          OR uhc.user_id IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM user_health_condition uhc
+          JOIN exercise_health_condition ehc ON uhc.condition_id = ehc.condition_id
+          WHERE uhc.user_id = p_user_id AND ehc.exercise_id = e.id
       )
-  ) sub
-  ORDER BY RANDOM()
-  LIMIT GREATEST(p_duration / 10, 1);
+  ),
+  limited AS (
+    SELECT * FROM filtered
+    ORDER BY RANDOM()
+    LIMIT GREATEST(p_duration / 10, 1)
+  )
+  SELECT * FROM limited;
+
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  IF v_count = 0 THEN
+    RAISE EXCEPTION 'Nu s-au găsit exerciții pentru cerințele specificate.' USING ERRCODE = 'P2001';
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
