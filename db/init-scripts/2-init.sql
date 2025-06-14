@@ -222,13 +222,13 @@ $$ LANGUAGE plpgsql;
 -- leaderboard
 CREATE OR REPLACE FUNCTION get_leaderboard_data(p_section TEXT)
 RETURNS TABLE (
-    user_id     INT,
-    username    TEXT,
-    nume        TEXT,
-    varsta      INT,
-    sesiuni     INT,
-    durata      INT,
-    nivel       TEXT
+    user_id   INT,
+    username  TEXT,
+    nume      TEXT,
+    varsta    INT,
+    sesiuni   INT,
+    durata    INT,
+    nivel     TEXT
 )
 AS $$
 BEGIN
@@ -240,13 +240,14 @@ BEGIN
       u.varsta::INT,
       COUNT(ws.id)::INT AS sesiuni,
       COALESCE(SUM(EXTRACT(EPOCH FROM (ws.completed_at - ws.started_at))/60), 0)::INT AS durata,
-      MAX(tl.name)::TEXT AS nivel
+      tl.name::TEXT AS nivel
   FROM users u
-  LEFT JOIN workout_session ws ON ws.user_id = u.id
-  LEFT JOIN workout w ON w.id = ws.workout_id
+  JOIN workout_session ws ON ws.user_id = u.id
+  JOIN workout w ON w.id = ws.workout_id AND w.section = p_section
   LEFT JOIN training_level tl ON tl.id = w.level_id
-  WHERE w.section = p_section AND ws.completed_at IS NOT NULL
-  GROUP BY u.id;
+  WHERE ws.completed_at IS NOT NULL
+  GROUP BY u.id, u.username, u.nume, u.varsta, tl.name
+  ORDER BY sesiuni DESC;
 END;
 $$ LANGUAGE plpgsql;
 
