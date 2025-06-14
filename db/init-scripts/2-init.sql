@@ -296,3 +296,47 @@ CREATE TRIGGER trg_set_started_at
 BEFORE INSERT ON workout_session
 FOR EACH ROW
 EXECUTE FUNCTION trg_autofill_started_at();
+
+----------------------------------------ADMIN----------------------------------------
+CREATE OR REPLACE PROCEDURE add_exercise(
+    p_name TEXT,
+    p_description TEXT,
+    p_link TEXT,
+    p_difficulty INT,
+    p_type_id INT,
+    p_is_bodyweight BOOLEAN,
+    p_equipment_needed BOOLEAN,
+    p_subgroup_ids INT[],
+    p_location_ids INT[],
+    p_sections TEXT[]
+)
+AS $$
+DECLARE
+    new_id INT;
+    sub_id INT;
+    loc_id INT;
+    sec TEXT;
+BEGIN
+    INSERT INTO exercise(name, description, link, dificulty, type_id, is_bodyweight, equipment_needed)
+    VALUES (p_name, p_description, p_link, p_difficulty, p_type_id, p_is_bodyweight, p_equipment_needed)
+    RETURNING id INTO new_id;
+
+    FOREACH sub_id IN ARRAY p_subgroup_ids
+    LOOP
+        INSERT INTO exercise_muscle_group(exercise_id, muscle_subgroup_id)
+        VALUES (new_id, sub_id);
+    END LOOP;
+
+    FOREACH loc_id IN ARRAY p_location_ids
+    LOOP
+        INSERT INTO exercise_location(exercise_id, location_id)
+        VALUES (new_id, loc_id);
+    END LOOP;
+
+    FOREACH sec IN ARRAY p_sections
+    LOOP
+        INSERT INTO exercise_section(exercise_id, section)
+        VALUES (new_id, sec);
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
