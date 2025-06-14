@@ -57,7 +57,7 @@ $rows = $workouts->fetchAll(PDO::FETCH_ASSOC);
 <body>
 <nav>
   <h1>Antrenamentele mele</h1>
-  <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
+  <a class="buton-inapoi" href="../principal.php?section=gym">Înapoi</a>
 </nav>
 
 <div class="workouts-list">

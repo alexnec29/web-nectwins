@@ -30,7 +30,7 @@ $typeRows      = $pdo->query("SELECT * FROM get_training_type_stats($uid)")->fet
 <body>
 <nav>
     <h1>Statistici</h1>
-    <a class="buton-inapoi" href="principal-gym.php">Înapoi</a>
+    <a class="buton-inapoi" href="../principal.php?section=gym">Înapoi</a>
 </nav>
 
 <div class="stats-container">
