@@ -37,7 +37,7 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
                         <span>Profil ▼</span>
                     </button>
                     <div class="dropdown-content">
-                        <a href="/gym/principal-gym.php">Înapoi</a>
+                        <a href="/principal.php">Înapoi</a>
                         <a href="/logout.php">Logout</a>
                     </div>
                 </div>

@@ -10,11 +10,10 @@ if (!isset($_SESSION["username"])) {
 $allowed_sections = ["gym", "kineto", "fizio"];
 $section = (isset($_GET['section']) && in_array($_GET['section'], $allowed_sections)) ? $_GET['section'] : "gym";
 
-// Linkuri către paginile respective
-$generate_url = "generate.php?section={$section}";
-$workouts_url = "workouts.php?section={$section}";
-$statistics_url = "statistics.php?section={$section}";
-$leaderboard_url = "leaderboard.php?section={$section}";
+$generate_url = "./optiuni/generate.php?section={$section}";
+$workouts_url = "./optiuni/workouts.php?section={$section}";
+$statistics_url = "./optiuni/statistics.php?section={$section}";
+$leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
 ?>
 
 <!DOCTYPE html>
@@ -46,12 +45,12 @@ $leaderboard_url = "leaderboard.php?section={$section}";
         </button>
 
         <?php if ($role == 3): ?>
-            <a href="superadmin.php" class="admin-button">👑 Superadmin</a>
+            <a href="./admin/superadmin.php" class="admin-button">👑 Superadmin</a>
         <?php endif; ?>
 
 
         <?php if ($role >= 2): ?>
-            <a href="admin.php" class="admin-button">🛠️ Admin</a>
+            <a href="./admin/admin.php" class="admin-button">🛠️ Admin</a>
         <?php endif; ?>
 
         <div class="nav-user">
@@ -60,8 +59,8 @@ $leaderboard_url = "leaderboard.php?section={$section}";
                     <img src="/assets/user.png" alt="Profil" style="height: 24px; vertical-align: middle;">
                 </button>
                 <div class="dropdown-content">
-                    <a href="/profil.php">Vezi/Editează profil</a>
-                    <a href="/logout.php">Logout</a>
+                    <a href="profil.php">Vezi/Editează profil</a>
+                    <a href="logout.php">Logout</a>
                 </div>
             </div>
         </div>

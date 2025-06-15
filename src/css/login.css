@@ -48,3 +48,14 @@ input[type="password"] {
   color: #fff;
   border: 1.5px solid black;
 }
+
+.error-message {
+  background: #4d1e1e;
+  color: #f44336;
+  border: 1px solid #d32f2f;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 500;
+}

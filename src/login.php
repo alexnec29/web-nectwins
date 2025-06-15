@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+$error = null; // Inițializăm variabila pentru eroare
+
 if (isset($_SESSION["username"])) {
   header("Location: index.php");
   exit();
@@ -23,17 +25,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
       $_SESSION["username"] = $user["username"];
       $_SESSION["user_id"] = $user["id"];
       $_SESSION["role"] = $user["rol"];
-    
-      // Verificăm dacă userul și-a completat profilul
+
       if (empty($user["nume"]) || empty($user["varsta"]) || empty($user["gen"])) {
         header("Location: profil.php");
       } else {
         header("Location: index.php");
       }
       exit();
+    } else {
+      $error = "Username sau parolă incorectă!";
     }
   } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    $error = "Eroare de conexiune: " . $e->getMessage();
   }
 }
 ?>
@@ -51,7 +54,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($
 <body>
   <div class="login-card">
     <h2>Login</h2>
-    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
+    <?php if (isset($error)): ?>
+      <div class="error-message">
+        <?= htmlspecialchars($error) ?>
+      </div>
+    <?php endif; ?>
     <form method="POST">
       <input type="text" name="username" placeholder="Username" required>
       <input type="password" name="password" placeholder="Password" required>
