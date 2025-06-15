@@ -103,3 +103,133 @@ form button[type="submit"]:hover {
     background: #218838;
     transform: translateY(-2px);
 }
+
+fieldset {
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #202023;
+}
+
+legend {
+    font-weight: bold;
+    color: #5691df;
+}
+
+.muscle-group-block {
+    margin-bottom: 1em;
+}
+
+.checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.checkbox-grid label {
+    flex: 1 1 calc(50% - 1em);
+    white-space: nowrap;
+    color: #98acc5;
+}
+
+table {
+    width: 100%;
+    max-width: 900px;
+    margin: 2em auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #28282B;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+table thead {
+    background: #202023;
+}
+
+table thead th {
+    color: #5691df;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.8em 1em;
+    text-align: left;
+    border-bottom: 1px solid #0b0b0c;
+}
+
+table tbody tr {
+    transition: background 0.2s ease;
+}
+
+table tbody tr:nth-child(even) {
+    background: #323235;
+}
+
+table tbody tr:hover {
+    background: #2b2b2e;
+}
+
+table tbody td {
+    color: #98acc5;
+    padding: 0.8em 1em;
+    border-bottom: 1px solid #0b0b0c;
+}
+
+table tbody td:last-child {
+    border-bottom: none;
+}
+
+.delete-button {
+    background: #dc3545;
+    color: whitesmoke;
+    border: none;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.delete-button:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 1.5em;
+    }
+
+    td {
+        padding-left: 50%;
+        text-align: right;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1em;
+        width: calc(50% - 2em);
+        white-space: nowrap;
+        font-weight: 600;
+        color: #4885d4;
+        text-align: left;
+    }
+}
