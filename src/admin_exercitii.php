@@ -96,7 +96,7 @@ $allExercises = $pdo->query(
 <body>
     <nav>
         <h1>Adaugă Exercițiu</h1>
-        <a class="buton-inapoi" href="principal.php">&Icirc;napoi</a>
+        <a class="buton-inapoi" href="admin.php">Înapoi</a>
     </nav>
 
     <form method="post">

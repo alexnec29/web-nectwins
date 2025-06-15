@@ -48,7 +48,7 @@ $conditions = $pdo->query("SELECT id, name FROM health_condition ORDER BY name")
 <body>
     <nav>
         <h1>Gestionare Condiții Medicale</h1>
-        <a class="buton-inapoi" href="principal.php">Înapoi</a>
+        <a class="buton-inapoi" href="admin.php">Înapoi</a>
     </nav>
 
     <form method="post">

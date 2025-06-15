@@ -48,7 +48,7 @@ $levels = $pdo->query("SELECT id, name FROM training_level ORDER BY id")->fetchA
 <body>
     <nav>
         <h1>Gestionare Niveluri de Antrenament</h1>
-        <a class="buton-inapoi" href="principal.php">Înapoi</a>
+        <a class="buton-inapoi" href="admin.php">Înapoi</a>
     </nav>
 
     <form method="post">

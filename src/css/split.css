@@ -1,0 +1,411 @@
+nav {
+    background: #28282B;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #0b0b0c;
+}
+
+nav h1 {
+    color: #4885d4;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+nav .buton-inapoi {
+    text-decoration: none;
+    display: inline-block;
+    background: #202023;
+    color: #98acc5;
+    border: 1.6px solid #000;
+    padding: 0.6em 1.2em;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+nav .buton-inapoi:hover {
+    background: #2b2b2e;
+    color: #5691df;
+    transform: translateY(-2px);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-section {
+    background: #28282B;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.form-section h2 {
+    color: #4885d4;
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: end;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #4885d4;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background: #4b4b4b;
+    color: #98acc5;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: 2px solid #5691df;
+    background: #525252;
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 10px;
+}
+
+.section-gym {
+    background: #007bff;
+    color: white;
+}
+
+.section-kinetoterapie {
+    background: #28a745;
+    color: white;
+}
+
+.section-fizioterapie {
+    background: #dc3545;
+    color: white;
+}
+
+.days-container {
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    background: #202023;
+}
+
+.days-container h3 {
+    color: #5691df;
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.day-item {
+    background: #323235;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.day-header input {
+    flex: 1;
+    margin-right: 15px;
+    padding: 8px;
+    background: #4b4b4b;
+    color: #98acc5;
+    border: 1px solid #666;
+    border-radius: 4px;
+}
+
+.day-header input:focus {
+    outline: 2px solid #5691df;
+    background: #525252;
+}
+
+.remove-day {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.remove-day:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.muscle-groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.muscle-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: #4b4b4b;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.muscle-group-checkbox:hover {
+    background: #525252;
+}
+
+.muscle-group-checkbox input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    transform: scale(1.1);
+}
+
+.muscle-group-checkbox label {
+    margin: 0;
+    color: #98acc5;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #1e7e34;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    transform: translateY(-2px);
+}
+
+.splits-list {
+    background: #28282B;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.splits-list h2 {
+    padding: 20px;
+    margin: 0;
+    background: #202023;
+    border-bottom: 1px solid #444;
+    color: #4885d4;
+    font-size: 1.5rem;
+}
+
+.split-item {
+    border-bottom: 1px solid #444;
+    padding: 20px;
+    transition: background 0.2s ease;
+}
+
+.split-item:last-child {
+    border-bottom: none;
+}
+
+.split-item:hover {
+    background: #2b2b2e;
+}
+
+.split-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.split-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #5691df;
+    display: flex;
+    align-items: center;
+}
+
+.split-days {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.split-day {
+    background: #323235;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    transition: background 0.2s ease;
+}
+
+.split-day:hover {
+    background: #3a3a3d;
+}
+
+.split-day-name {
+    font-weight: bold;
+    color: #4885d4;
+    margin-bottom: 8px;
+    text-transform: capitalize;
+    font-size: 1.1rem;
+}
+
+.split-day-muscles {
+    font-size: 14px;
+    color: #98acc5;
+    line-height: 1.4;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: #1e4d30;
+    color: #4caf50;
+    border: 1px solid #2e7d32;
+}
+
+.alert-error {
+    background: #4d1e1e;
+    color: #f44336;
+    border: 1px solid #d32f2f;
+}
+
+.splits-list div[style*="text-align: center"] {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    nav {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .muscle-groups-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .split-days {
+        grid-template-columns: 1fr;
+    }
+
+    .split-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: 20px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .split-item {
+        padding: 15px;
+    }
+}

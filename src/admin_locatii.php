@@ -50,7 +50,7 @@ $sections = ['gym', 'kineto', 'fizio'];
 <body>
     <nav>
         <h1>Gestionare Locații</h1>
-        <a class="buton-inapoi" href="principal.php">Înapoi</a>
+        <a class="buton-inapoi" href="admin.php">Înapoi</a>
     </nav>
 
     <form method="post">
