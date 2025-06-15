@@ -23,13 +23,9 @@ services:
       - "8080:80"
     depends_on:
       - db
-    entrypoint: ["/entrypoint.sh"]
     volumes:
       - ./src:/var/www/html
       - ./assets:/var/www/html/assets
-      - ./entrypoint.sh:/entrypoint.sh
 
 volumes:
   db_data:
-
-
