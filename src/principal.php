@@ -60,6 +60,8 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
                 </button>
                 <div class="dropdown-content">
                     <a href="profil.php">Vezi/Editează profil</a>
+                    <a href="change-password.php">Schimba parola</a>
+                    <a href="delete-account.php">Sterge cont</a>
                     <a href="logout.php">Logout</a>
                 </div>
             </div>
