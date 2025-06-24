@@ -200,7 +200,8 @@ $allExercises = $pdo->query(
                     <td><?= htmlspecialchars($ex['difficulty']) ?></td>
                     <td><?= $ex['is_bodyweight'] ? 'Da' : 'Nu' ?></td>
                     <td><?= $ex['equipment_needed'] ? 'Da' : 'Nu' ?></td>
-                    <td>
+                    <td class="actions">
+                        <a href="edit_exercise.php?id=<?= $ex['id'] ?>" class="delete-button">Editează</a>
                         <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi acest exercițiu?');">
                             <input type="hidden" name="delete_id" value="<?= $ex['id'] ?>">
                             <button type="submit" class="delete-button">Șterge</button>
