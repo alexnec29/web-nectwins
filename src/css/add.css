@@ -203,7 +203,66 @@ table tbody td:last-child {
     transform: translateY(-1px);
 }
 
+.actions {
+    display: flex;
+    gap: 0.4em;
+    align-items: center;
+    justify-content: center;
+}
+
+.actions a,
+.actions button {
+    display: inline-block;
+    padding: 0.45em 0.9em;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    min-width: 90px;
+    text-align: center;
+    line-height: 1.2;
+    transition: all 0.2s ease-in-out;
+}
+
+.actions a {
+    background-color: #3b82f6;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.actions button {
+    background-color: #22c55e;
+    color: #ffffff;
+}
+
+.actions button:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+}
+
+.actions form {
+    margin: 0;
+    padding: 0;
+    display: contents;
+}
+
 @media (max-width: 600px) {
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions a,
+    .actions button {
+        width: 100%;
+        min-width: unset;
+    }
 
     table,
     thead,
@@ -240,12 +299,6 @@ table tbody td:last-child {
         color: #4885d4;
         text-align: left;
     }
-}
-
-.actions {
-    display: inline-flex;
-    gap: 0.5em;
-    align-items: center;
 }
 
 a.delete-button {
