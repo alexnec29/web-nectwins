@@ -16,6 +16,7 @@ if (!in_array($section, $allowedSections)) {
     $section = 'gym';
 }
 
+// Preluăm datele statistice din funcții/proceduri
 $totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid, '$section')")->fetchColumn();
 $totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid, '$section')")->fetchColumn();
 $subgroupRows  = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid, '$section')")->fetchAll(PDO::FETCH_ASSOC);
@@ -33,15 +34,15 @@ $exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 
 
 <body>
     <nav>
-        <h1>Statistici - <?= ucfirst($section) ?></h1>
-        <a class="buton-inapoi" href="../principal.php?section=<?= $section ?>">Înapoi</a>
+        <h1>Statistici - <?= htmlspecialchars(ucfirst($section)) ?></h1>
+        <a class="buton-inapoi" href="../principal.php?section=<?= urlencode($section) ?>">Înapoi</a>
     </nav>
 
     <div class="stats-container">
         <h2>Total antrenamente efectuate: <?= $totalWorkouts ?></h2>
         <h2>Durata totală: <?= $totalMinutes ?> minute</h2>
 
-        <h3>🔸 Distribuția pe subgrupe musculare</h3>
+        <h3>Distribuția pe subgrupe musculare</h3>
         <?php if ($subgroupRows): ?>
             <div class="top-exercises">
                 <?php foreach ($subgroupRows as $r): ?>
@@ -55,7 +56,7 @@ $exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 
             <p class="empty-state">Nicio distribuție disponibilă.</p>
         <?php endif; ?>
 
-        <h3>🔹 Cele mai folosite exerciții</h3>
+        <h3>Cele mai folosite exerciții</h3>
         <?php if ($exerciseRows): ?>
             <div class="top-exercises">
                 <?php foreach ($exerciseRows as $r): ?>
@@ -72,7 +73,7 @@ $exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 
 
     <div class="rss-section">
         <h3>Fluxul tău RSS</h3>
-        <a href="rss.php?section=<?= $section ?>" class="rss-link" target="_blank">📥 RSS <?= ucfirst($section) ?></a>
+        <a href="rss.php?section=<?= urlencode($section) ?>" class="rss-link" target="_blank">📥 RSS <?= htmlspecialchars(ucfirst($section)) ?></a>
     </div>
 </body>
 
