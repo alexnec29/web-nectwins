@@ -60,8 +60,6 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
                 </button>
                 <div class="dropdown-content">
                     <a href="profil.php">Vezi/Editează profil</a>
-                    <a href="change-password.php">Schimba parola</a>
-                    <a href="delete-account.php">Sterge cont</a>
                     <a href="logout.php">Logout</a>
                 </div>
             </div>
@@ -99,8 +97,8 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
     </div>
 
     <footer>
-        <p>Contactează-ne: <a href="mailto:support@workoutgen.app">support@workoutgen.app</a> | Telefon: +40 735 123 456</p>
-        <p>&copy; <?php echo date('Y'); ?> Workout Generator. Toate drepturile rezervate.</p>
+        <p>Contactează-ne: <a href="https://www.youtube.com/watch?v=40ybhROL9xM&t=0s">Nec@Twins.app</a> | Telefon: +40 735 123 456</p>
+        <p>&copy; <?php echo date('Y'); ?> NecTwins Feral Workout Generator. Toate drepturile rezervate.</p>
     </footer>
 </body>
 
