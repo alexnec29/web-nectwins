@@ -97,7 +97,7 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
     </div>
 
     <footer>
-        <p>Contactează-ne: <a href="https://www.youtube.com/watch?v=40ybhROL9xM&t=0s">Nec@Twins.app</a> | Telefon: +40 735 123 456</p>
+        <p>Contactează-ne: <a href="https://www.youtube.com/watch?v=40ybhROL9xM&t=200s">Nec@Twins.app</a> | Telefon: +40 735 123 456</p>
         <p>&copy; <?php echo date('Y'); ?> NecTwins Feral Workout Generator. Toate drepturile rezervate.</p>
     </footer>
 </body>
