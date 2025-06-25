@@ -93,7 +93,7 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
         <div class="card">
             <button class="card-button" onclick="window.location.href='<?php echo $leaderboard_url; ?>'">
                 <p>Clasament</p>
-                <img src="/assets/leaderboard-<?php echo $section; ?>.png" alt="Leaderboard">
+                <img src="/assets/clasament-<?php echo $section; ?>.png" alt="Leaderboard">
             </button>
         </div>
     </div>
