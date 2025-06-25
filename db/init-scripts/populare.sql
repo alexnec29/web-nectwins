@@ -106,6 +106,12 @@ INSERT INTO training_type (name) VALUES
   ('Kinetoterapie'),
   ('Fizioterapie');
 
+-- Variante simple (vor eșua dacă deja există duplicat):
+INSERT INTO training_goal(name) VALUES
+  ('Forță'),
+  ('Enduranță'),
+  ('Hipertrofie');
+  
 -- 4.2. training_level
 INSERT INTO training_level (name) VALUES
   ('Începător'),
