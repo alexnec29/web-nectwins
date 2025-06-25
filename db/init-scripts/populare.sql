@@ -280,20 +280,29 @@ INSERT INTO split_subtype_muscle_group (split_subtype_id, muscle_group_id) VALUE
 -- 6. Locații de antrenament (location)
 --------------------------------------------------------------------------------
 
--- 6.1. Gym
-INSERT INTO location (name, section) VALUES
-  ('Acasă', 'gym'),
-  ('Sală', 'gym');
+-- Mai întâi adaugi locațiile în tabela `location` (fără section acum)
+INSERT INTO location (name) VALUES
+  ('Acasă'),
+  ('Sală'),
+  ('Centru recuperare'),
+  ('Spital'),
+  ('Terapie fizică'),
+  ('Ambulator');
 
--- 6.2. Kinetoterapie
-INSERT INTO location (name, section) VALUES
-  ('Centru recuperare', 'kinetoterapie'),
-  ('Spital', 'kinetoterapie');
+-- Apoi le asociezi cu una sau mai multe secțiuni în tabela nouă `location_section`
+-- Presupunem că ID-urile sunt atribuite în ordinea inserării (1..6)
+INSERT INTO location_section (location_id, section) VALUES
+  (1, 'gym'),
+  (1, 'kineto'),
+  (1, 'fizio'),  -- Acasă merge pentru toate
 
--- 6.3. Fizioterapie
-INSERT INTO location (name, section) VALUES
-  ('Terapie fizică', 'fizioterapie'),
-  ('Ambulator', 'fizioterapie');
+  (2, 'gym'),
+
+  (3, 'kineto'),
+  (4, 'kineto'),
+
+  (5, 'fizio'),
+  (6, 'fizio');
 
 --------------------------------------------------------------------------------
 -- 7. Exerciții (exercise) și legături M-N: muscle_group, section, health_condition
