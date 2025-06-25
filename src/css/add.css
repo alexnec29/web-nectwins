@@ -252,6 +252,23 @@ table tbody td:last-child {
     display: contents;
 }
 
+.section-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+.section-edit form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.section-edit label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 @media (max-width: 600px) {
 
     .actions {

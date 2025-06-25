@@ -13,6 +13,8 @@ $pdo = new PDO(
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 );
 
+$sections = ['gym', 'kineto', 'fizio'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $delete_id = (int)$_POST['delete_id'];
     $pdo->prepare("DELETE FROM location WHERE id = :id")->execute([':id' => $delete_id]);
@@ -20,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && !isset($_POST['edit_id'])) {
     $name = trim($_POST['name']);
     $selectedSections = $_POST['sections'] ?? [];
 
@@ -42,15 +44,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_id'])) {
+    $editId = (int)$_POST['edit_id'];
+    $selectedSections = $_POST['sections'] ?? [];
+
+    $pdo->prepare("DELETE FROM location_section WHERE location_id = :id")->execute([':id' => $editId]);
+
+    $stmtInsert = $pdo->prepare("INSERT INTO location_section (location_id, section) VALUES (:loc_id, :section)");
+    foreach ($selectedSections as $section) {
+        $stmtInsert->execute([
+            ':loc_id' => $editId,
+            ':section' => $section
+        ]);
+    }
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
 $locations = $pdo->query("
-    SELECT l.id, l.name, 
-           STRING_AGG(ls.section, ', ' ORDER BY ls.section) as sections
+    SELECT l.id, l.name,
+           COALESCE(STRING_AGG('[' || ls.section || ']', ''), '') AS sections
     FROM location l
     LEFT JOIN location_section ls ON l.id = ls.location_id
     GROUP BY l.id, l.name
     ORDER BY l.name
 ")->fetchAll(PDO::FETCH_ASSOC);
-$sections = ['gym', 'kineto', 'fizio'];
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +108,7 @@ $sections = ['gym', 'kineto', 'fizio'];
             <tr>
                 <th>ID</th>
                 <th>Nume</th>
-                <th>Secțiune</th>
+                <th>Secțiuni</th>
                 <th>Acțiuni</th>
             </tr>
         </thead>
@@ -98,7 +117,21 @@ $sections = ['gym', 'kineto', 'fizio'];
             <tr>
                 <td><?= htmlspecialchars($loc['id']) ?></td>
                 <td><?= htmlspecialchars($loc['name']) ?></td>
-                <td><?= htmlspecialchars($loc['sections'] ?? '') ?></td>
+                <td>
+                    <div class="section-edit">
+                        <form method="post">
+                            <input type="hidden" name="edit_id" value="<?= $loc['id'] ?>">
+                            <?php foreach ($sections as $sec): ?>
+                                <label style="margin-right: 10px;">
+                                    <input type="checkbox" name="sections[]" value="<?= $sec ?>"
+                                        <?= (strpos($loc['sections'], "[$sec]") !== false) ? 'checked' : '' ?>>
+                                    <?= ucfirst($sec) ?>
+                                </label>
+                            <?php endforeach; ?>
+                            <button type="submit" class="save-button">Salvează</button>
+                        </form>
+                    </div>
+                </td>
                 <td>
                     <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi această locație?');">
                         <input type="hidden" name="delete_id" value="<?= $loc['id'] ?>">
