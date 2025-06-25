@@ -1,0 +1,147 @@
+nav {
+    background-color: #1a1a1d;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #111;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+nav h1 {
+    color: #4aa2ff;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.nav-link {
+    background-color: transparent;
+    color: #9db4d6;
+    border: 1.5px solid #444;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+    background-color: #2b2b2e;
+    color: #4aa2ff;
+    border-color: #4aa2ff;
+}
+
+main.admin-dashboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    justify-items: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 70px);
+    box-sizing: border-box;
+}
+
+.import-container {
+    background-color: #2b2b2e;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    margin-bottom: 1.5rem;
+}
+
+form {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.select-container {
+    margin-bottom: 1.5rem;
+}
+
+form label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #a5b6e0;
+}
+
+form select,
+form input[type="file"] {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #3a3a42;
+    color: #e0e8f8;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+form select:focus,
+form input[type="file"]:focus {
+    background-color: #4a4a5a;
+}
+
+form select {
+    border-bottom: 2px solid #4aa2ff;
+}
+
+form button {
+    padding: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #e0e8f8;
+    background: linear-gradient(135deg, #202023, #2b2b2e);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+    text-align: center;
+}
+
+form button:hover {
+    background: linear-gradient(135deg, #2b2b2e, #313135);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.alert {
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    max-width: 400px;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.alert-success {
+    background-color: #2e7d32;
+    color: #a5d6a7;
+    border: 1px solid #a5d6a7;
+}
+
+.alert-error {
+    background-color: #c62828;
+    color: #ef9a9a;
+    border: 1px solid #ef9a9a;
+}
+
+@media (max-width: 480px) {
+    main.admin-dashboard {
+        padding: 1rem;
+    }
+    form button {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+}
