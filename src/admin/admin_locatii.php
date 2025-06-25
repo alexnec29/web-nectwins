@@ -15,8 +15,6 @@ $pdo = new PDO(
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $delete_id = (int)$_POST['delete_id'];
-    $pdo->prepare("DELETE FROM exercise_location WHERE location_id = :id")->execute([':id' => $delete_id]);
-    $pdo->prepare("DELETE FROM workout WHERE location_id = :id")->execute([':id' => $delete_id]);
     $pdo->prepare("DELETE FROM location WHERE id = :id")->execute([':id' => $delete_id]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
@@ -24,16 +22,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
     $name = trim($_POST['name']);
-    $section = trim($_POST['section']);
-    if ($name !== '' && $section !== '') {
-        $stmt = $pdo->prepare("INSERT INTO location (name, section) VALUES (:name, :section)");
-        $stmt->execute([':name' => $name, ':section' => $section]);
+    $selectedSections = $_POST['sections'] ?? [];
+
+    if ($name !== '' && !empty($selectedSections)) {
+        $stmt = $pdo->prepare("INSERT INTO location (name) VALUES (:name) RETURNING id");
+        $stmt->execute([':name' => $name]);
+        $locationId = $stmt->fetchColumn();
+
+        $stmtSection = $pdo->prepare("INSERT INTO location_section (location_id, section) VALUES (:loc_id, :section)");
+        foreach ($selectedSections as $section) {
+            $stmtSection->execute([
+                ':loc_id' => $locationId,
+                ':section' => $section
+            ]);
+        }
+
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
 }
 
-$locations = $pdo->query("SELECT id, name, section FROM location ORDER BY section, name")->fetchAll(PDO::FETCH_ASSOC);
+$locations = $pdo->query("
+    SELECT l.id, l.name, 
+           STRING_AGG(ls.section, ', ' ORDER BY ls.section) as sections
+    FROM location l
+    LEFT JOIN location_section ls ON l.id = ls.location_id
+    GROUP BY l.id, l.name
+    ORDER BY l.name
+")->fetchAll(PDO::FETCH_ASSOC);
 $sections = ['gym', 'kineto', 'fizio'];
 ?>
 
@@ -57,13 +73,13 @@ $sections = ['gym', 'kineto', 'fizio'];
         <label for="name">Nume locație:</label>
         <input type="text" id="name" name="name" required>
 
-        <label for="section">Secțiune:</label>
-        <select id="section" name="section" required>
-            <option value="">Alege secțiunea</option>
-            <?php foreach ($sections as $sec): ?>
-                <option value="<?= $sec ?>"><?= ucfirst($sec) ?></option>
-            <?php endforeach; ?>
-        </select>
+        <label>Secțiuni:</label>
+        <?php foreach ($sections as $sec): ?>
+            <label>
+                <input type="checkbox" name="sections[]" value="<?= $sec ?>">
+                <?= ucfirst($sec) ?>
+            </label>
+        <?php endforeach; ?>
 
         <button type="submit">Salvează</button>
     </form>
@@ -78,19 +94,19 @@ $sections = ['gym', 'kineto', 'fizio'];
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($locations as $loc): ?>
-                <tr>
-                    <td><?= htmlspecialchars($loc['id']) ?></td>
-                    <td><?= htmlspecialchars($loc['name']) ?></td>
-                    <td><?= htmlspecialchars(ucfirst($loc['section'])) ?></td>
-                    <td>
-                        <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi această locație?');">
-                            <input type="hidden" name="delete_id" value="<?= $loc['id'] ?>">
-                            <button type="submit" class="delete-button">Șterge</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+        <?php foreach ($locations as $loc): ?>
+            <tr>
+                <td><?= htmlspecialchars($loc['id']) ?></td>
+                <td><?= htmlspecialchars($loc['name']) ?></td>
+                <td><?= htmlspecialchars($loc['sections'] ?? '') ?></td>
+                <td>
+                    <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi această locație?');">
+                        <input type="hidden" name="delete_id" value="<?= $loc['id'] ?>">
+                        <button type="submit" class="delete-button">Șterge</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </body>
