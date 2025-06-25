@@ -41,12 +41,13 @@ $trainingGoals = $pdo
     ->fetchAll(PDO::FETCH_ASSOC);
 
 $locationsStmt = $pdo->prepare("
-    SELECT id, name
-      FROM location
-     WHERE LOWER(TRIM(section)) = LOWER(:section)
-     ORDER BY id
+    SELECT l.id, l.name
+    FROM location l
+    JOIN location_section ls ON ls.location_id = l.id
+    WHERE LOWER(TRIM(ls.section)) = LOWER(:section)
+    ORDER BY l.name
 ");
-$locationsStmt->execute(['section' => $dbSection]);
+$locationsStmt->execute(['section' => $sectionKey]);
 $locations = $locationsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $splitsStmt = $pdo->prepare("
