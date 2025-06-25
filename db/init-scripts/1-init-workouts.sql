@@ -92,8 +92,13 @@ CREATE TABLE split_subtype_muscle_group (
 -- 7. Locații (Gym/Kineto/Fizio)
 CREATE TABLE location (
    id      SERIAL PRIMARY KEY,
-   name    VARCHAR(50) NOT NULL UNIQUE,
-   section VARCHAR(20) NOT NULL
+   name    VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE location_section (
+    location_id INTEGER REFERENCES location(id) ON DELETE CASCADE,
+    section     VARCHAR(20) NOT NULL,
+    PRIMARY KEY (location_id, section)
 );
 
 -- 8. Exerciții

@@ -29,6 +29,7 @@ if (!isset($_SESSION["username"]) || !isset($_SESSION["role"]) || $_SESSION["rol
         <button onclick="location.href='admin_conditii.php'">Manageriază condițiile medicale</button>
         <button onclick="location.href='admin_splituri.php'">Manageriază split-urile</button>
         <button onclick="location.href='admin_locatii.php'">Manageriază locațiile</button>
+        <button onclick="location.href='admin_upload.php'">Importă tabele</button>
     </main>
 
 </body>
