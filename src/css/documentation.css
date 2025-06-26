@@ -109,6 +109,31 @@ a:hover {
     border-radius: 8px;
 }
 
+.file-description {
+    background-color: rgba(20, 20, 20, 0.85);
+    padding: 1rem;
+    border-left: 4px solid #4b9eff;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.image-box img {
+    width: 100%;
+    max-width: 1000px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.security-item {
+    background-color: rgba(35, 35, 35, 0.85);
+    padding: 1rem;
+    border-left: 5px solid #ff8c42;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+}
+
 .footer {
     text-align: center;
     margin-top: 2rem;

@@ -22,6 +22,23 @@
                 <h2>CUPRINS</h2>
                 <ul>
                     <li><a href="#introducere">1. Introducere</a></li>
+                    <li><a href="#implementare">2. Implementare</a>
+                        <ul>
+                            <li><a href="#principal">2.1 Pagina Principală (principal.php)</a></li>
+                            <li><a href="#autentificare">2.2 Sistem de Autentificare (login.php)</a></li>
+                            <li><a href="#profil">2.3 Managementul Profilului (profil.php)</a></li>
+                            <li><a href="#generare">2.4 Generarea Antrenamentelor (generate.php)</a></li>
+                            <li><a href="#antrenamente">2.5 Managementul Antrenamentelor (workouts.php, workout.php)</a>
+                            </li>
+                            <li><a href="#statistici">2.6 Statistici și Clasamente (statistics.php, leaderboard.php)</a>
+                            </li>
+                            <li><a href="#admin">2.7 Panoul de Administrare (admin.php, superadmin.php)</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#baza-date">3. Baza de Date - Schema Logică</a></li>
+                    <li><a href="#securitate">4. Prevenirea Atacurilor</a></li>
+                    <li><a href="#arhitectura">5. Arhitectura Aplicației</a></li>
+                    <li><a href="#concluzie">6. Concluzie</a></li>
                 </ul>
             </div>
 
@@ -48,6 +65,182 @@
                         • Adaptare pentru condiții medicale specifice</p>
                 </div>
             </section>
+
+            <section id="implementare">
+                <h1>2. IMPLEMENTARE</h1>
+                <p>
+                    Implementarea proiectului FitFlow a fost realizată gradual, cu accent pe organizarea clară a fișierelor
+                     și separarea parțială a responsabilităților. Structura aplicației este una clasică, bazată pe fișiere 
+                     PHP care îmbină logică și prezentare, alături de resurse externe precum fișiere CSS și imagini, organizate pe foldere. 
+                     S-a urmărit o structurare coerentă care să permită ușor întreținerea și extinderea codului.
+                </p>
+
+                <div class="highlight-box">
+                    <h3>Frontend (HTML/CSS):</h3>
+                    <p>Interfața utilizatorului a fost dezvoltată în HTML, cu o structură separată pentru fiecare
+                        secțiune principală (Gym, Kinetoterapie, Fizioterapie). Fișierele CSS sunt organizate într-un folder dedicat,
+                        pentru a asigura un stil unitar și o personalizare eficientă a fiecărei pagini.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h3>Backend (PHP):</h3>
+                    <p>Aplicația utilizează PHP procedural, fără utilizarea unui framework. Structura proiectului este simplă, dar organizată pe directoare cu roluri clare:</p>
+                    <p>
+                        • <strong>Optiuni:</strong> fișiere PHP corespunzătoare fiecărei secțiuni principale, cu logică și interfață HTML integrate<br>
+                        • <strong>Admin:</strong> funcționalități pentru administrarea aplicației (gestiune utilizatori, baza de date, import csv/json, etc.)<br>
+                        • <strong>src/:</strong> conține funcții comune și logica pentru interacțiunea cu baza de date<br>
+                    </p>
+                </div>
+
+                <section id="principal">
+                    <h2>2.1 Pagina Principală (principal.php)</h2>
+                    <div class="file-description">
+                        <p>Reprezintă hub-ul central al aplicației, oferind navigarea între cele trei secțiuni
+                            principale.
+                            Utilizatorii pot selecta între Gym, Kinetoterapie și Fizioterapie, fiecare cu propriile
+                            funcționalități și antrenamente specifice. Pagina include navigarea către toate modulele
+                            importante: generarea antrenamentelor, managementul antrenamentelor personale, statistici
+                            și clasamente.</p>
+                    </div>
+                </section>
+
+                <section id="autentificare">
+                    <h2>2.2 Sistem de Autentificare (login.php)</h2>
+                    <div class="file-description">
+                        <p>Implementează sistemul de autentificare securizat cu validarea credențialelor folosind
+                            hash SHA-256. Sistemul gestionează sesiunile utilizatorilor și redirecționează automat
+                            utilizatorii noi către completarea profilului. Include mecanisme de protecție împotriva
+                            atacurilor de tip brute force și validarea robustă a datelor de intrare.</p>
+                    </div>
+                </section>
+
+                <section id="profil">
+                    <h2>2.3 Managementul Profilului (profil.php)</h2>
+                    <div class="file-description">
+                        <p>Permite utilizatorilor să-și gestioneze datele personale
+                            și condițiile medicale. Sistemul validează obligativitatea completării profilului pentru
+                            utilizatorii noi și oferă opțiuni pentru actualizarea continuă a informațiilor. Condițiile
+                            medicale sunt folosite pentru personalizarea antrenamentelor.</p>
+                    </div>
+                </section>
+
+                <section id="generare">
+                    <h2>2.4 Generarea Antrenamentelor (generate.php)</h2>
+                    <div class="file-description">
+                        <p>Modulul cel mai complex al aplicației, responsabil pentru generarea automată de antrenamente
+                            personalizate. Algoritmul ia în considerare spliturile de antrenament, grupele musculare,
+                            nivelul de dificultate, obiectivele de fitness, condițiile medicale și locația disponibilă.
+                            Utilizează funcții PLSQL specializate pentru filtrarea exercițiilor compatibile.</p>
+                    </div>
+                </section>
+
+                <section id="antrenamente">
+                    <h2>2.5 Managementul Antrenamentelor (workouts.php, workout.php)</h2>
+                    <div class="file-description">
+                        <p><strong>workouts.php:</strong> Oferă o vizualizare completă a antrenamentelor salvate,
+                            cu posibilitatea de inițiere a sesiunilor de antrenament. Utilizatorii pot vedea statusul
+                            antrenamentelor (în desfășurare, finalizate) și pot accesa detaliile fiecărui antrenament.
+                        </p>
+                        <p><strong>workout.php:</strong> Gestionează sesiunile individuale de antrenament, permițând
+                            utilizatorilor să marcheze antrenamentele ca finalizate sau să le anuleze. Include
+                            cronometrarea
+                            automată și înregistrarea progresului.</p>
+                    </div>
+                </section>
+
+                <section id="statistici">
+                    <h2>2.6 Statistici și Clasamente (statistics.php, leaderboard.php)</h2>
+                    <div class="file-description">
+                        <p><strong>statistics.php:</strong> Prezintă statistici personale detaliate: numărul total
+                            de antrenamente, durata cumulativă, distribuția pe grupe musculare și exercițiile cele mai
+                            folosite. Include și funcționalitate RSS pentru urmărirea progresului.</p>
+                        <p><strong>leaderboard.php:</strong> Implementează sistemul de clasamente competitive pe
+                            multiple criterii: numărul de sesiuni, durata totală, clasificări pe nivel și grupe de
+                            vârstă. Oferă motivație suplimentară prin comparația cu alți utilizatori.</p>
+                    </div>
+                </section>
+
+                <section id="admin">
+                    <h2>2.7 Panoul de Administrare (admin.php, superadmin.php)</h2>
+                    <div class="file-description">
+                        <p><strong>admin.php:</strong> Oferă acces la funcționalități de administrare pentru
+                            utilizatorii cu rol de Admin: managementul exercițiilor, condițiilor medicale, spliturilor
+                            și locațiilor. Include funcționalități de import pentru actualizarea în masă a datelor.</p>
+                        <p><strong>superadmin.php:</strong> Panoul de control pentru SuperAdmin, cu capacitatea
+                            de promovare/retrogradare a utilizatorilor între roluri. Implementează un sistem ierarhic
+                            de permisiuni cu protecții împotriva auto-modificării.</p>
+                    </div>
+                </section>
+            </section>
+
+            <section id="baza-date">
+                <h1>3. BAZA DE DATE - SCHEMA LOGICĂ</h1>
+                <p>
+                    Baza de date PostgreSQL este structurată pentru a suporta complexitatea sistemului de fitness,
+                    cu relații clare între entitățile principale și respectarea principiilor normalizării.
+                </p>
+
+                <div class="highlight-box image-box">
+                    <img src="assets/documentation/dbdiagram.png" alt="Schema logică a bazei de date FitFlow">
+                </div>
+            </section>
+
+            <section id="securitate">
+                <h1>🔒 4. PREVENIREA ATACURILOR</h1>
+
+                <div class="security-item">
+                    <h3>SQL Injection</h3>
+                    <p>Utilizarea exclusivă a prepared statements cu PDO pentru toate interacțiunile cu baza de date.
+                        Parametrii sunt bindați explicit, eliminând riscul injecției de cod SQL malițios.</p>
+                </div>
+
+                <div class="security-item">
+                    <h3>Autentificare Securizată</h3>
+                    <p>Hash-uirea parolelor folosind SHA-256, validarea robustă a credențialelor și
+                        managementul securizat al sesiunilor utilizatorilor.</p>
+                </div>
+
+                <div class="security-item">
+                    <h3>Controlul Accesului pe Bază de Roluri</h3>
+                    <p>Sistem de permisiuni ierarhizat (User, Admin, SuperAdmin), cu verificarea constantă a drepturilor
+                       de acces pentru fiecare solicitare și restricționarea accesului la rutele sensibile.</p>
+                </div>
+
+                <div class="security-item">
+                    <h3>Validarea Datelor Utilizatorilor</h3>
+                    <p>Toate datele introduse de utilizatori sunt validate pe partea de server, prin verificări stricte de tip, interval
+                       și reguli specifice de logică a aplicației, pentru a asigura integritatea și coerența informațiilor.</p>
+                </div>
+            </section>
+
+            <section id="arhitectura">
+                <h1>5. ARHITECTURA APLICAȚIEI</h1>
+                <div class="highlight-box">
+                    <p>Arhitectura FitFlow este organizată în straturi logice, pentru o mai bună separare a responsabilităților și o mentenanță facilă:</p>
+            
+                    <h3>Stratul de Prezentare</h3>
+                    <p>Interfețe dezvoltate în HTML și stilizate cu CSS personalizat. Structura este responsive și organizată pe secțiuni (Gym, Kinetoterapie, Fizioterapie).</p>
+            
+                    <h3>Stratul de Logică de Business</h3>
+                    <p>Cod PHP procedural care gestionează validarea datelor, procesele de autentificare, generarea antrenamentelor și regulile aplicației.</p>
+            
+                    <h3>Stratul de Date</h3>
+                    <p>Baza de date PostgreSQL, proiectată relațional, cu relații bine definite, constrângeri de integritate și interogări optimizate pentru performanță.</p>
+            
+                    <h3>Stratul de Infrastructură</h3>
+                    <p>Utilizarea sesiunilor PHP pentru autentificare și păstrarea stării utilizatorilor, configurarea serverului și măsuri de securitate pentru protejarea datelor.</p>
+                </div>
+            
+                <p><em>[Aici se va insera diagrama C4 pentru vizualizarea arhitecturii]</em></p>
+            </section>
+
+            <section id="concluzie">
+                <h1>6. CONCLUZIE</h1>
+                <p>
+                    FitFlow este o aplicație complet funcțională pentru managementul antrenamentelor, adaptabilă pentru diverse tipuri de utilizatori și obiective de fitness. Cu o structură logică, funcționalități relevante și o atenție deosebită pentru securitate, proiectul reprezintă o bază solidă pentru extinderi ulterioare. Printre direcțiile viitoare se pot include integrarea cu aplicații de monitorizare a sănătății sau un sistem de notificări personalizate.
+                </p>
+            </section>  
+        </div>
 
         <div class="footer">
             <p>© 2025 FitFlow - Documentație Tehnică</p>
