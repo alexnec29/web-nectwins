@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'db.php';
 
 $error = null; // Inițializăm variabila pentru eroare
 
@@ -10,9 +11,6 @@ if (isset($_SESSION["username"])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
   try {
-    $dsn = "pgsql:host=db;port=5432;dbname=wow_db";
-    $pdo = new PDO($dsn, "root", "root", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-
     $username = $_POST["username"];
     $password = $_POST["password"];
     $hashed = hash("sha256", $password);

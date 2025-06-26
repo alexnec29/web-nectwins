@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'db.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -11,9 +12,6 @@ $success = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $dsn = "pgsql:host=db;port=5432;dbname=wow_db";
-        $pdo = new PDO($dsn, "root", "root", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-
         $userId = $_SESSION['user_id'];
         $current = $_POST['current_password'] ?? '';
         $new = $_POST['new_password'] ?? '';
