@@ -6,12 +6,7 @@ if (!isset($_SESSION["user_id"])) {
     exit();
 }
 
-$pdo = new PDO(
-    "pgsql:host=db;port=5432;dbname=wow_db",
-    "root",
-    "root",
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+require './../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $delete_id = (int)$_POST['delete_id'];

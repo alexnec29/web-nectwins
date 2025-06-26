@@ -1,5 +1,7 @@
 <?php
 session_start();
+require './../db.php';
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -7,10 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = (int)$_SESSION['user_id'];
 $section = $_GET['section'] ?? 'gym';
-
-$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
 
 $sectionMap = [
     'gym'    => 'Gym',

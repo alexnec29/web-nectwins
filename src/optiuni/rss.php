@@ -15,9 +15,7 @@ if (!in_array($sectiune, $sectiuniValide, true)) {
     $sectiune = 'gym';
 }
 
-$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+require './../db.php';
 
 $sql = "
     SELECT w.id AS wid,

@@ -1,15 +1,12 @@
 <?php
 session_start();
+require './../db.php';
 
 if (!isset($_SESSION["user_id"])) {
     http_response_code(401);
     echo json_encode(["error" => "Not authenticated"]);
     exit;
 }
-
-$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
 
 $allowedSections = ['gym', 'kineto', 'fizio'];
 $section = $_GET['section'] ?? 'gym';
