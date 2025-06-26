@@ -22,7 +22,6 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
 <head>
     <meta charset="UTF-8">
     <title>Principal | FitFlow</title>
-    <title>Principal | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/principal.css?v=<?php echo time(); ?>">
 </head>
