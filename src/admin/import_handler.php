@@ -14,7 +14,6 @@ $allowedTables = [
     'training_goal', 'workout', 'workout_exercise', 'workout_session'
 ];
 
-// preia coloane si tipuri din tabela
 function getTableColumnsAndTypes(PDO $pdo, string $table): array {
     $stmt = $pdo->prepare("
         SELECT column_name, data_type, is_nullable
@@ -26,10 +25,9 @@ function getTableColumnsAndTypes(PDO $pdo, string $table): array {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// valideaza o valoare dupa tipul si nullable
 function validateValueByType($value, string $type, string $isNullable): bool {
     if ($value === null || $value === '') {
-        return $isNullable === 'YES'; // accepta null doar daca e permisa
+        return $isNullable === 'YES';
     }
     switch ($type) {
         case 'integer':
@@ -51,7 +49,7 @@ function validateValueByType($value, string $type, string $isNullable): bool {
         case 'timestamp with time zone':
             return strtotime($value) !== false;
         default:
-            return true; // alte tipuri le acceptam implicit
+            return true;
     }
 }
 
@@ -72,14 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
     try {
-        $pdo = new PDO(
-            "pgsql:host=db;port=5432;dbname=wow_db",
-            "root",
-            "root",
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
+        require './../db.php';
 
-        // preluam coloane si tipuri, ignoram id (auto increment)
         $columnsInfo = getTableColumnsAndTypes($pdo, $targetTable);
         if (!$columnsInfo) {
             throw new Exception("Tabela '$targetTable' nu există sau nu are coloane.");
@@ -87,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $columnsInfo = array_filter($columnsInfo, fn($col) => $col['column_name'] !== 'id');
         $expectedColumns = array_column($columnsInfo, 'column_name');
 
-        // cream un map pentru acces rapid dupa numele coloanei
         $columnsInfoMap = [];
         foreach ($columnsInfo as $colInfo) {
             $columnsInfoMap[$colInfo['column_name']] = $colInfo;
@@ -107,19 +98,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("fișierul csv este gol sau invalid.");
             }
 
-            // verificam coloanele obligatorii
             $missing = array_diff($expectedColumns, $header);
             if (count($missing) > 0) {
                 throw new Exception("lipsește coloana(e) obligatorie(e) în fișier: " . implode(", ", $missing));
             }
 
-            // pregatim insertul
             $columns = array_map(fn($col) => '"' . str_replace('"', '""', $col) . '"', $header);
             $placeholders = array_fill(0, count($columns), '?');
             $insertSql = "INSERT INTO \"$targetTable\" (" . implode(',', $columns) . ") VALUES (" . implode(',', $placeholders) . ")";
             $stmt = $pdo->prepare($insertSql);
 
-            $lineNum = 1; // pentru raportare erori
+            $lineNum = 1;
             while (($data = fgetcsv($handle)) !== false) {
                 $lineNum++;
                 if (count($data) !== count($header)) {
@@ -127,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     continue;
                 }
 
-                // validam fiecare coloana conform tipului
                 $validRow = true;
                 foreach ($data as $i => $value) {
                     $colName = $header[$i];
@@ -145,12 +133,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 if (!$validRow) continue;
 
-                // incercam inserarea
                 try {
                     $stmt->execute($data);
                     $count++;
                 } catch (PDOException $e) {
-                    if ($e->getCode() === '23505') { // duplicate
+                    if ($e->getCode() === '23505') {
                         $duplicates++;
                     } else {
                         $errors[] = "linia $lineNum: eroare la inserare - " . $e->getMessage();
@@ -191,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $values[] = $row[$col] ?? null;
                 }
 
-                // validare coloane
                 $validRow = true;
                 foreach ($values as $i => $value) {
                     $colName = $jsonColumns[$i];
