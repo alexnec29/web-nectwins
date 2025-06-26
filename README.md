@@ -1,4 +1,14 @@
 # Workout Web Generator - NecTwins
+
+Before running the program, you should add on the root folder an .env file that has the fields necesary for connecting to the database:
+```
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+```
+
 To run, use the command
 ```bash
 docker-compose up -d
