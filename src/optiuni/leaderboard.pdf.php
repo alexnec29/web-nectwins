@@ -8,12 +8,7 @@ if (!isset($_SESSION["user_id"])) {
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
-// 🔴 Linia de mai jos NU trebuie
-// use TCPDF;
-
-$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+require './../db.php';
 
 $allowedSections = ['gym', 'kineto', 'fizio'];
 $section = $_GET['section'] ?? 'gym';
@@ -47,12 +42,10 @@ foreach ($rows as $r) {
     $by_age[$grupa][] = $r;
 }
 
-// HEADERE PDF
 header("Content-Type: application/pdf");
 header("Content-Disposition: inline; filename=\"leaderboard-$section.pdf\"");
 
-// === CREARE PDF ===
-$pdf = new \TCPDF(); // ✅ Asta e forma corectă fără `use`
+$pdf = new \TCPDF();
 $pdf->SetCreator('FitFlow');
 $pdf->SetAuthor('FitFlow');
 $pdf->SetTitle("Leaderboard - $section");
@@ -62,12 +55,10 @@ $pdf->SetKeywords("FitFlow, leaderboard, $section, PDF");
 $pdf->SetMargins(15, 20, 15);
 $pdf->AddPage();
 
-// Font compatibil UTF-8 + diacritice
 $pdf->SetFont('dejavusans', 'B', 16);
 $pdf->Cell(0, 10, 'Clasament FitFlow - ' . ucfirst($section), 0, 1, 'C');
 $pdf->Ln(5);
 
-// Top General
 $pdf->SetFont('dejavusans', 'B', 12);
 $pdf->Cell(0, 10, 'Top General (sesiuni):', 0, 1);
 $pdf->SetFont('dejavusans', '', 10);
@@ -83,7 +74,6 @@ if (!empty($rows)) {
 
 $pdf->Ln(6);
 
-// Top pe Nivel
 $pdf->SetFont('dejavusans', 'B', 12);
 $pdf->Cell(0, 10, 'Top pe Nivel:', 0, 1);
 $pdf->SetFont('dejavusans', '', 10);
@@ -104,7 +94,6 @@ if (!empty($by_level)) {
 
 $pdf->Ln(4);
 
-// Top pe Clasă de Vârstă
 $pdf->SetFont('dejavusans', 'B', 12);
 $pdf->Cell(0, 10, 'Top pe Clasă de Vârstă:', 0, 1);
 $pdf->SetFont('dejavusans', '', 10);

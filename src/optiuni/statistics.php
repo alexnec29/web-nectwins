@@ -5,9 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$pdo = new PDO("pgsql:host=db;port=5432;dbname=wow_db", 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+require './../db.php';
 
 $uid = $_SESSION['user_id'];
 $allowedSections = ['gym', 'kineto', 'fizio'];
@@ -16,7 +14,6 @@ if (!in_array($section, $allowedSections)) {
     $section = 'gym';
 }
 
-// Preluăm datele statistice din funcții/proceduri
 $totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid, '$section')")->fetchColumn();
 $totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid, '$section')")->fetchColumn();
 $subgroupRows  = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid, '$section')")->fetchAll(PDO::FETCH_ASSOC);
