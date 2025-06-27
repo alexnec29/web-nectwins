@@ -30,11 +30,11 @@ foreach ($rows_level as $r) {
 $by_age = [];
 foreach ($rows as $r) {
     $grupa = match (true) {
-        $r['varsta'] < 18      => "<18",
-        $r['varsta'] <= 25     => "18–25",
-        $r['varsta'] <= 35     => "26–35",
-        $r['varsta'] <= 50     => "36–50",
-        default                => ">50"
+        $r['varsta'] < 18 => "<18",
+        $r['varsta'] <= 25 => "18-25",
+        $r['varsta'] <= 35 => "26-35",
+        $r['varsta'] <= 50 => "36-50",
+        default => ">50"
     };
     $by_age[$grupa][] = $r;
 }

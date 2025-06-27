@@ -2,7 +2,7 @@
 session_start();
 require_once 'db.php';
 
-$error = null; // Inițializăm variabila pentru eroare
+$error = null;
 
 if (isset($_SESSION["username"])) {
   header("Location: index.php");

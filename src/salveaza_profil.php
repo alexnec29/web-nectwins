@@ -9,9 +9,9 @@ if (!isset($_SESSION["user_id"])) {
 
 $userId = $_SESSION["user_id"];
 
-$nume     = $_POST["nume"];
-$varsta   = $_POST["varsta"];
-$gen      = $_POST["gen"];
+$nume = $_POST["nume"];
+$varsta = $_POST["varsta"];
+$gen = $_POST["gen"];
 $inaltime = $_POST["inaltime"];
 $greutate = $_POST["greutate"];
 $conditii = $_POST["conditii_sanatate"] ?? [];

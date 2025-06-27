@@ -12,10 +12,8 @@ $wid = $_GET['wid'] ?? null;
 $sid = $_GET['sid'] ?? null;
 $section = $_GET['section'] ?? 'gym';
 
-// Validăm workout ID
 if (!$wid || !is_numeric($wid)) die("Link invalid.");
 
-// Procesăm update inline al numelui antrenamentului
 if (
   $_SERVER['REQUEST_METHOD'] === 'POST'
   && isset($_POST['update_name'])
@@ -25,19 +23,16 @@ if (
   $newName = trim($_POST['new_name']);
   $upd = $pdo->prepare("UPDATE workout SET name = ? WHERE id = ? AND user_id = ?");
   $upd->execute([$newName, $wid, $uid]);
-  // Redirect pentru a încărca numele nou (păstrăm sid dacă există)
   $redirectSid = $sid ? "&sid=$sid" : '';
   header("Location: workout.php?section=$section&wid=$wid{$redirectSid}");
   exit;
 }
 
-// Fetch workout
 $stmt = $pdo->prepare("SELECT * FROM workout WHERE id = ? AND section = ? AND user_id = ?");
 $stmt->execute([$wid, $section, $uid]);
 $workout = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$workout) die("Workout inexistent.");
 
-// Gestionează sesiunea curentă
 if (!$sid || !is_numeric($sid)) {
   $stmt = $pdo->prepare("SELECT * FROM get_latest_session(:uid, :wid)");
   $stmt->execute(['uid' => $uid, 'wid' => $wid]);
@@ -54,7 +49,6 @@ if (!$sid || !is_numeric($sid)) {
   $session = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Procesăm completarea sau anularea sesiunii
 if (
   $_SERVER['REQUEST_METHOD'] === 'POST'
   && $session
@@ -74,7 +68,6 @@ if (
   exit;
 }
 
-// Fetch exerciții pentru antrenament
 $ex = $pdo->prepare("SELECT * FROM get_exercises_for_workout(:wid)");
 $ex->execute(['wid' => $wid]);
 $exercises = $ex->fetchAll(PDO::FETCH_ASSOC);

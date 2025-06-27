@@ -11,9 +11,9 @@ $userId = (int)$_SESSION['user_id'];
 $section = $_GET['section'] ?? 'gym';
 
 $sectionMap = [
-    'gym'    => 'Gym',
+    'gym' => 'Gym',
     'kineto' => 'kinetoterapie',
-    'fizio'  => 'fizioterapie',
+    'fizio' => 'fizioterapie',
 ];
 
 $sectionKey = strtolower($section);
@@ -26,7 +26,7 @@ $typeId = $typeStmt->fetchColumn() ?: 1;
 $dbSection = $sectionMap[$sectionKey] ?? 'gym';
 
 $trainingLevels = $pdo->query("SELECT id, name FROM training_level ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
-$trainingGoals  = $pdo->query("SELECT id, name FROM training_goal ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
+$trainingGoals = $pdo->query("SELECT id, name FROM training_goal ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
 
 $locationsStmt = $pdo->prepare("SELECT l.id, l.name FROM location l JOIN location_section ls ON ls.location_id = l.id WHERE LOWER(TRIM(ls.section)) = LOWER(:section) ORDER BY l.name");
 $locationsStmt->execute(['section' => $sectionKey]);
@@ -42,18 +42,18 @@ foreach ($splits as $s) {
     $slug2id[$slugify($s['name'])] = $s['id'];
 }
 
-$act   = $_POST['action'] ?? '';
+$act = $_POST['action'] ?? '';
 $split = $_POST['tipAntrenament'] ?? array_key_first($slug2id);
 if (!isset($slug2id[$split])) {
     $split = array_key_first($slug2id);
 }
 $splitId = $slug2id[$split] ?? null;
 
-$part   = ctype_digit($_POST['muscleGroup'] ?? '') ? (int)$_POST['muscleGroup'] : null;
-$mins   = (int)($_POST['duration'] ?? 60);
-$level  = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
-$goal   = ctype_digit($_POST['goal'] ?? '') ? (int)$_POST['goal'] : null;
-$locId  = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
+$part = ctype_digit($_POST['muscleGroup'] ?? '') ? (int)$_POST['muscleGroup'] : null;
+$mins = (int)($_POST['duration'] ?? 60);
+$level = ctype_digit($_POST['nivel'] ?? '') ? (int)$_POST['nivel'] : null;
+$goal = ctype_digit($_POST['goal'] ?? '') ? (int)$_POST['goal'] : null;
+$locId = ctype_digit($_POST['location'] ?? '') ? (int)$_POST['location'] : null;
 
 $subtypes = [];
 if ($splitId) {
@@ -100,8 +100,8 @@ function getSetsAndRepsByGoal(?int $goalId): array
     };
 }
 
-$sr  = getSetsAndRepsByGoal($goal);
-$ex  = [];
+$sr = getSetsAndRepsByGoal($goal);
+$ex = [];
 $msg = '';
 if (in_array($act, ['generate', 'save']) && isset($opt[$split][$part])) {
     try {

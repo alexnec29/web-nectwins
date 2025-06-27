@@ -15,9 +15,9 @@ if (!in_array($section, $allowedSections)) {
 }
 
 $totalWorkouts = (int) $pdo->query("SELECT get_total_completed_workouts($uid, '$section')")->fetchColumn();
-$totalMinutes  = (int) $pdo->query("SELECT get_total_workout_duration($uid, '$section')")->fetchColumn();
-$subgroupRows  = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid, '$section')")->fetchAll(PDO::FETCH_ASSOC);
-$exerciseRows  = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 5)")->fetchAll(PDO::FETCH_ASSOC);
+$totalMinutes = (int) $pdo->query("SELECT get_total_workout_duration($uid, '$section')")->fetchColumn();
+$subgroupRows = $pdo->query("SELECT * FROM get_muscle_subgroup_stats($uid, '$section')")->fetchAll(PDO::FETCH_ASSOC);
+$exerciseRows = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 5)")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="ro">
