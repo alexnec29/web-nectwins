@@ -108,33 +108,33 @@ $locations = $pdo->query("
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($locations as $loc): ?>
-            <tr>
-                <td><?= htmlspecialchars($loc['id']) ?></td>
-                <td><?= htmlspecialchars($loc['name']) ?></td>
-                <td>
-                    <div class="section-edit">
-                        <form method="post">
-                            <input type="hidden" name="edit_id" value="<?= $loc['id'] ?>">
-                            <?php foreach ($sections as $sec): ?>
-                                <label style="margin-right: 10px;">
-                                    <input type="checkbox" name="sections[]" value="<?= $sec ?>"
-                                        <?= (strpos($loc['sections'], "[$sec]") !== false) ? 'checked' : '' ?>>
-                                    <?= ucfirst($sec) ?>
-                                </label>
-                            <?php endforeach; ?>
-                            <button type="submit" class="save-button">Salvează</button>
+            <?php foreach ($locations as $loc): ?>
+                <tr>
+                    <td><?= htmlspecialchars($loc['id']) ?></td>
+                    <td><?= htmlspecialchars($loc['name']) ?></td>
+                    <td>
+                        <div class="section-edit">
+                            <form method="post">
+                                <input type="hidden" name="edit_id" value="<?= $loc['id'] ?>">
+                                <?php foreach ($sections as $sec): ?>
+                                    <label style="margin-right: 10px;">
+                                        <input type="checkbox" name="sections[]" value="<?= $sec ?>"
+                                            <?= (strpos($loc['sections'], "[$sec]") !== false) ? 'checked' : '' ?>>
+                                        <?= ucfirst($sec) ?>
+                                    </label>
+                                <?php endforeach; ?>
+                                <button type="submit" class="save-button">Salvează</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi această locație?');">
+                            <input type="hidden" name="delete_id" value="<?= $loc['id'] ?>">
+                            <button type="submit" class="delete-button">Șterge</button>
                         </form>
-                    </div>
-                </td>
-                <td>
-                    <form method="post" onsubmit="return confirm('Ești sigur că vrei să ștergi această locație?');">
-                        <input type="hidden" name="delete_id" value="<?= $loc['id'] ?>">
-                        <button type="submit" class="delete-button">Șterge</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </body>

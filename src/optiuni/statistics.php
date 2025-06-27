@@ -24,6 +24,7 @@ $exerciseRows = $pdo->query("SELECT * FROM get_top_exercises($uid, '$section', 5
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Statistici | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/statistics.css">

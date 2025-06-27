@@ -142,7 +142,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.3em;
-    /* mai puțin spațiu între rânduri */
     padding: 1em;
     background-color: #2b2b2e;
     border: 1px solid #444;
@@ -152,9 +151,7 @@
   .checkbox-group label {
     display: flex;
     align-items: center;
-    /* aliniere verticală perfectă */
     font-size: 0.95rem;
-    /* mai compact */
     color: #d3e0f0;
     cursor: pointer;
     gap: 0.5em;

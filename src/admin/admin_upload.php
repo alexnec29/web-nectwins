@@ -6,13 +6,26 @@ if (!isset($_SESSION["username"]) || !isset($_SESSION["role"]) || $_SESSION["rol
 }
 
 $allowedTables = [
-    'muscle_group', 'muscle_subgroup',
-    'training_type', 'training_level',
-    'split_type', 'section_split', 'split_subtype', 'split_subtype_muscle_group',
-    'location', 'location_section',
-    'exercise', 'exercise_location', 'exercise_muscle_group', 'exercise_section',
-    'health_condition', 'exercise_health_condition',
-    'training_goal', 'workout', 'workout_exercise', 'workout_session'
+    'muscle_group',
+    'muscle_subgroup',
+    'training_type',
+    'training_level',
+    'split_type',
+    'section_split',
+    'split_subtype',
+    'split_subtype_muscle_group',
+    'location',
+    'location_section',
+    'exercise',
+    'exercise_location',
+    'exercise_muscle_group',
+    'exercise_section',
+    'health_condition',
+    'exercise_health_condition',
+    'training_goal',
+    'workout',
+    'workout_exercise',
+    'workout_session'
 ];
 
 $status = $_GET['status'] ?? null;
@@ -23,13 +36,15 @@ if ($message !== null) {
 ?>
 <!DOCTYPE html>
 <html lang="ro">
-    <head>
-        <meta charset="UTF-8">
-        <title>Importă date | FitFlow</title>
-        <link rel="stylesheet" href="/css/styles.css">
-        <link rel="stylesheet" href="/css/upload.css">
-    </head>
-    <body>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Importă date | FitFlow</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/upload.css">
+</head>
+
+<body>
     <nav>
         <h1>Importă date CSV/JSON</h1>
         <a href="admin.php" class="nav-link">Înapoi la Panou</a>
@@ -60,4 +75,5 @@ if ($message !== null) {
         <?php endif; ?>
     </main>
 </body>
+
 </html>
