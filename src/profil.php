@@ -13,6 +13,12 @@ $stmt->execute([$userId]);
 $userProfile = $stmt->fetch();
 
 $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) || empty($userProfile['gen']);
+
+$conditions = $pdo->query("SELECT id, name FROM health_condition ORDER BY name")->fetchAll();
+
+$userConditions = $pdo->prepare("SELECT condition_id FROM user_health_condition WHERE user_id = ?");
+$userConditions->execute([$userId]);
+$userConditionIds = array_column($userConditions->fetchAll(), 'condition_id');
 ?>
 
 <!DOCTYPE html>
@@ -70,14 +76,10 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
             <label>Condiții medicale:</label>
             <div class="checkbox-group">
                 <?php
-                $conditions = $pdo->query("SELECT id, name FROM health_condition ORDER BY name")->fetchAll();
-                $userConditions = $pdo->prepare("SELECT condition_id FROM user_health_condition WHERE user_id = ?");
-                $userConditions->execute([$userId]);
-                $userConditionIds = array_column($userConditions->fetchAll(), 'condition_id');
-
                 foreach ($conditions as $cond) {
                     $isChecked = in_array($cond['id'], $userConditionIds) ? 'checked' : '';
-                    echo "<label><input type='checkbox' name='conditii_sanatate[]' value='{$cond['id']}' $isChecked> {$cond['name']}</label><br>";
+                    $name = htmlspecialchars($cond['name']);
+                    echo "<label><input type='checkbox' name='conditii_sanatate[]' value='{$cond['id']}' $isChecked> {$name}</label><br>";
                 }
                 ?>
             </div>
