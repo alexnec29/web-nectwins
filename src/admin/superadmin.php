@@ -47,6 +47,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <nav>
         <h1>👑 Administrare Admini</h1>
+        <a href="./../documentation.html" class="back-btn">Documentație</a>
         <a href="./../principal.php" class="back-btn">Înapoi</a>
     </nav>
 

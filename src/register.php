@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $hashed = hash("sha256", $password);
                 $insert = $pdo->prepare("INSERT INTO users (username, password, email) VALUES (:username, :password, :email)");
                 if ($insert->execute(['username' => $username, 'password' => $hashed, 'email' => $email])) {
-                    $success = "✅ Registration successful! You can now <a href='login.php'>log in</a>.";
+                    $success = "Registration successful! You can now log in.";
                 } else {
                     $error = "Something went wrong. Try again.";
                 }
@@ -65,9 +65,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="register-card">
         <h2>Register</h2>
-
-        <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
-        <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
+        
+        <?php if ($error): ?>
+            <div class="error-message">
+                <?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
+        <?php if ($success): ?>
+            <div class="success-message">
+                <?= htmlspecialchars($success) ?>
+            </div>
+        <?php endif; ?>
 
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required><br>

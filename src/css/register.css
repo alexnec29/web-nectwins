@@ -49,3 +49,15 @@ a {
   color: #7da4d8;
   text-decoration: underline;
 }
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.success-message {
+  color: green;
+  margin: 10px 0;
+  font-weight: bold;
+}

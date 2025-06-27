@@ -288,6 +288,13 @@
                 </div>
 
                 <div class="security-item">
+                    <h3>Protecție împotriva XSS</h3>
+                    <p>Toate datele afișate în paginile aplicației sunt filtrate și escapate corespunzător folosind funcții precum 
+                       <code>htmlspecialchars()</code>, prevenind injectarea de scripturi malițioase care ar putea compromite securitatea utilizatorilor. 
+                       Se evită afișarea directă a inputului utilizatorului fără procesare prealabilă.</p>
+                </div>
+
+                <div class="security-item">
                     <h3>Autentificare Securizată</h3>
                     <p>Hash-uirea parolelor folosind SHA-256, validarea robustă a credențialelor și
                         managementul securizat al sesiunilor utilizatorilor.</p>
@@ -331,7 +338,15 @@
                         serverului și măsuri de securitate pentru protejarea datelor.</p>
                 </div>
 
-                <p><em>[Aici se va insera diagrama C4 pentru vizualizarea arhitecturii]</em></p>
+                <div class="highlight-box image-box">
+                    <img src="assets/documentation/C4context.png" alt="Diagrama C4 Containere">
+                </div>
+                <div class="highlight-box image-box">
+                    <img src="assets/documentation/C4containers.png" alt="Diagrama C4 Containere">
+                </div>
+                <div class="highlight-box image-box">
+                    <img src="assets/documentation/C4components.png" alt="Diagrama C4 Containere">
+                </div>
             </section>
 
             <section id="concluzie">

@@ -23,30 +23,29 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
     <meta charset="UTF-8">
     <title>Principal | FitFlow</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/principal.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/css/principal.css">
 </head>
 
 <body>
     <nav>
         <h1>Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h1>
 
-        <button type="button" class="gym<?php echo $section === 'gym' ? ' buton-apasat' : ''; ?>" onclick="window.location.href='?section=gym'">
+        <a href="?section=gym" class="gym<?php echo $section === 'gym' ? ' buton-apasat' : ''; ?>" role="button">
             <img src="/assets/gym.png" alt="gym">
             <span class="nav-tooltip">Bodybuilding</span>
-        </button>
-        <button type="button" class="kineto<?php echo $section === 'kineto' ? ' buton-apasat' : ''; ?>" onclick="window.location.href='?section=kineto'">
+        </a>
+        <a href="?section=kineto" class="kineto<?php echo $section === 'kineto' ? ' buton-apasat' : ''; ?>" role="button">
             <img src="/assets/kineto.png" alt="kineto">
             <span class="nav-tooltip">Kinetoterapie</span>
-        </button>
-        <button type="button" class="fizioterapie<?php echo $section === 'fizio' ? ' buton-apasat' : ''; ?>" onclick="window.location.href='?section=fizio'">
+        </a>
+        <a href="?section=fizio" class="fizioterapie<?php echo $section === 'fizio' ? ' buton-apasat' : ''; ?>" role="button">
             <img src="/assets/fizio.png" alt="fizioterapie">
             <span class="nav-tooltip">Fizioterapie</span>
-        </button>
+        </a>
 
         <?php if ($role == 3): ?>
             <a href="./admin/superadmin.php" class="admin-button">👑 Superadmin</a>
         <?php endif; ?>
-
 
         <?php if ($role >= 2): ?>
             <a href="./admin/admin.php" class="admin-button">🛠️ Admin</a>
@@ -54,7 +53,7 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
 
         <div class="nav-user">
             <div class="dropdown">
-                <button class="dropbtn">
+                <button class="dropbtn" type="button">
                     <img src="/assets/user.png" alt="Profil" style="height: 24px; vertical-align: middle;">
                 </button>
                 <div class="dropdown-content">
@@ -67,31 +66,31 @@ $leaderboard_url = "./optiuni/leaderboard.php?section={$section}";
 
     <div class="grid">
         <div class="card">
-            <button class="card-button" onclick="window.location.href='<?php echo $generate_url; ?>'">
+            <a href="<?php echo htmlspecialchars($generate_url); ?>" class="card-button" role="button">
                 <p>Generare Antrenament</p>
                 <img src="/assets/generare-<?php echo $section; ?>.png" alt="Generate Workout">
-            </button>
+            </a>
         </div>
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='<?php echo $workouts_url; ?>'">
+            <a href="<?php echo htmlspecialchars($workouts_url); ?>" class="card-button" role="button">
                 <p>Antrenamentele mele</p>
                 <img src="/assets/workouts-<?php echo $section; ?>.png" alt="Workouts">
-            </button>
+            </a>
         </div>
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='<?php echo $statistics_url; ?>'">
+            <a href="<?php echo htmlspecialchars($statistics_url); ?>" class="card-button" role="button">
                 <p>Statistici</p>
                 <img src="/assets/statistics-<?php echo $section; ?>.png" alt="Statistics">
-            </button>
+            </a>
         </div>
 
         <div class="card">
-            <button class="card-button" onclick="window.location.href='<?php echo $leaderboard_url; ?>'">
+            <a href="<?php echo htmlspecialchars($leaderboard_url); ?>" class="card-button" role="button">
                 <p>Clasament</p>
                 <img src="/assets/clasament-<?php echo $section; ?>.png" alt="Leaderboard">
-            </button>
+            </a>
         </div>
     </div>
 
