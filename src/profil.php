@@ -38,8 +38,6 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
                     </button>
                     <div class="dropdown-content">
                         <a href="/principal.php">Înapoi</a>
-                        <a href="change-password.php">Schimba parola</a>
-                        <a href="delete-account.php">Sterge cont</a>
                         <a href="/logout.php">Logout</a>
                     </div>
                 </div>
@@ -51,7 +49,7 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
         <h2>Date personale</h2>
         <form method="POST" action="salveaza_profil.php">
             <label for="nume">Nume:</label>
-            <input type="text" name="nume" value="<?= htmlspecialchars($userProfile['nume'] ?? '') ?>" required>
+            <input type="text" name="nume" value="<?= htmlspecialchars($userProfile['nume'] ?? '') ?>" required pattern="[A-Za-zĂăÂâÎîȘșȚțăâîșț\s\-]+" title="Numele poate conține doar litere și spații">
 
             <label for="varsta">Vârstă:</label>
             <input type="number" name="varsta" value="<?= $userProfile['varsta'] ?? '' ?>" required>
@@ -86,6 +84,15 @@ $profilIncomplet = empty($userProfile['nume']) || empty($userProfile['varsta']) 
 
             <button type="submit">Salvează modificările</button>
         </form>
+
+        <div class="profile-action-btns-wrapper">
+            <a href="change-password.php" class="profile-action-btn">
+                <button type="button">Schimbă parola</button>
+            </a>
+            <a href="delete-account.php" class="profile-action-btn">
+                <button type="button">Șterge contul</button>
+            </a>
+        </div>
     </div>
 
 </body>
