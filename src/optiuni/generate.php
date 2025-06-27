@@ -75,7 +75,8 @@ if (!isset($opt[$split][$part])) {
     $part = array_key_first($opt[$split] ?? []);
 }
 
-function getFilteredExercises(PDO $pdo, int $userId, array $groups, ?int $levelId, int $duration, int $typeId, int $locationId): array {
+function getFilteredExercises(PDO $pdo, int $userId, array $groups, ?int $levelId, int $duration, int $typeId, int $locationId): array
+{
     if (empty($groups)) return [];
     $stmt = $pdo->prepare("SELECT * FROM get_exercises_filtered(:user_id, :groups, :level_id, :duration, :type_id, :location_id)");
     $stmt->execute([
@@ -89,7 +90,8 @@ function getFilteredExercises(PDO $pdo, int $userId, array $groups, ?int $levelI
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getSetsAndRepsByGoal(?int $goalId): array {
+function getSetsAndRepsByGoal(?int $goalId): array
+{
     return match ($goalId) {
         1 => ['reps' => 3,  'sets' => 5],
         2 => ['reps' => 12, 'sets' => 4],
@@ -236,7 +238,7 @@ if ($act === 'save' && $ex) {
                 <div class="exercise-card">
                     <h4><?= htmlspecialchars($e['name']) ?></h4>
                     <p><?= htmlspecialchars($e['description'] ?? '-') ?></p>
-                    <p><strong><?= $sr['sets'] ?> seturi × <?= $sr['reps'] ?> repetări</strong></p>
+                    <p><strong><?= $sr['sets'] ?> seturi x <?= $sr['reps'] ?> repetări</strong></p>
                     <?php if ($e['link']): ?>
                         <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank">Tutorial</a>
                     <?php endif; ?>

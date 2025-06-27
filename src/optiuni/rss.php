@@ -41,29 +41,29 @@ $baseUrl = $protocol . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 ?>
 <rss version="2.0">
-<channel>
-    <title>FitFlow – antrenamente <?= htmlspecialchars($sectiune) ?></title>
-    <link><?= htmlspecialchars("$baseUrl/optiuni/statistics.php?section=$sectiune") ?></link>
-    <description>Ultimele antrenamente finalizate în secțiunea <?= htmlspecialchars($sectiune) ?></description>
-    <language>ro</language>
+    <channel>
+        <title>FitFlow - antrenamente <?= htmlspecialchars($sectiune) ?></title>
+        <link><?= htmlspecialchars("$baseUrl/optiuni/statistics.php?section=$sectiune") ?></link>
+        <description>Ultimele antrenamente finalizate în secțiunea <?= htmlspecialchars($sectiune) ?></description>
+        <language>ro</language>
 
-<?php if ($antrenamente): ?>
-    <?php foreach ($antrenamente as $a): ?>
-    <item>
-        <title><?= htmlspecialchars($a['name']) ?></title>
-        <link><?= htmlspecialchars("$baseUrl/optiuni/workout.php?section=$sectiune&wid=" . $a['wid']) ?></link>
-        <guid isPermaLink="false"><?= 'fitflow-' . $a['wid'] ?></guid>
-        <pubDate><?= gmdate(DATE_RSS, strtotime($a['completed_at'])) ?></pubDate>
-        <description>Antrenament finalizat la <?= htmlspecialchars($a['completed_at']) ?></description>
-    </item>
-    <?php endforeach; ?>
-<?php else: ?>
-    <item>
-        <title>Nicio intrare recentă</title>
-        <description>Nu au fost găsite antrenamente finalizate pentru această secțiune.</description>
-        <pubDate><?= gmdate(DATE_RSS) ?></pubDate>
-        <guid isPermaLink="false"><?= 'fitflow-empty-' . time() ?></guid>
-    </item>
-<?php endif; ?>
-</channel>
+        <?php if ($antrenamente): ?>
+            <?php foreach ($antrenamente as $a): ?>
+                <item>
+                    <title><?= htmlspecialchars($a['name']) ?></title>
+                    <link><?= htmlspecialchars("$baseUrl/optiuni/workout.php?section=$sectiune&wid=" . $a['wid']) ?></link>
+                    <guid isPermaLink="false"><?= 'fitflow-' . $a['wid'] ?></guid>
+                    <pubDate><?= gmdate(DATE_RSS, strtotime($a['completed_at'])) ?></pubDate>
+                    <description>Antrenament finalizat la <?= htmlspecialchars($a['completed_at']) ?></description>
+                </item>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <item>
+                <title>Nicio intrare recentă</title>
+                <description>Nu au fost găsite antrenamente finalizate pentru această secțiune.</description>
+                <pubDate><?= gmdate(DATE_RSS) ?></pubDate>
+                <guid isPermaLink="false"><?= 'fitflow-empty-' . time() ?></guid>
+            </item>
+        <?php endif; ?>
+    </channel>
 </rss>

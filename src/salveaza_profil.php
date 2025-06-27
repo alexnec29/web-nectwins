@@ -37,9 +37,7 @@ try {
 
     header("Location: principal.php");
     exit();
-
 } catch (Exception $e) {
     $pdo->rollBack();
     echo "Eroare la salvare: " . $e->getMessage();
 }
-?>
