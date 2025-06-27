@@ -117,17 +117,17 @@
                 <section id="autentificare">
                     <h2>2.2 Sistem de Autentificare (login.php, register.php, logout.php)</h2>
                     <div class="file-description">
-                        <p><strong>login.php:</strong>Implementează sistemul de autentificare securizat cu validarea
+                        <p><strong>login.php:</strong> Implementează sistemul de autentificare securizat cu validarea
                             credențialelor folosind
                             hash SHA-256. Sistemul gestionează sesiunile utilizatorilor și redirecționează automat
                             utilizatorii noi către completarea profilului. Include mecanisme de protecție împotriva
                             atacurilor de tip brute force și validarea robustă a datelor de intrare.</p>
-                        <p><strong>register.php:</strong>Permite crearea unui cont nou. Colectează datele de bază
+                        <p><strong>register.php:</strong> Permite crearea unui cont nou. Colectează datele de bază
                             (username,
                             parolă, email etc.),
                             validează și salvează utilizatorul în baza de date. Oferă feedback pentru erori sau succes.
                         </p>
-                        <p><strong>logout.php:</strong>Închide sesiunea curentă a utilizatorului și îl redirecționează
+                        <p><strong>logout.php:</strong> sesiunea curentă a utilizatorului și îl redirecționează
                             către pagina de login.
                             Asigură
                             ieșirea completă din cont.</p>
@@ -138,22 +138,22 @@
                     <h2>2.3 Managementul Profilului (profil.php, change-password.php, delete-account.php,
                         salveaza_profil.php)</h2>
                     <div class="file-description">
-                        <p><strong>profil.php</strong> Permite utilizatorilor să-și gestioneze datele personale
+                        <p><strong>profil.php:</strong> Permite utilizatorilor să-și gestioneze datele personale
                             și condițiile medicale. Sistemul validează obligativitatea completării profilului pentru
                             utilizatorii noi și oferă opțiuni pentru actualizarea continuă a informațiilor. Condițiile
                             medicale sunt folosite pentru personalizarea antrenamentelor.</p>
-                        <p><strong>change-password.php</strong>Permite utilizatorilor autentificați să își schimbe
+                        <p><strong>change-password.php:</strong> Permite utilizatorilor autentificați să își schimbe
                             parola. Verifică parola curentă,
                             validează
                             noua parolă după reguli stricte de securitate și actualizează parola în baza de date. Oferă
                             feedback pentru succes sau erori.</p>
-                        <p><strong>delete-account.php</strong>Oferă utilizatorului posibilitatea de a-și șterge
+                        <p><strong>delete-account.php:</strong> Oferă utilizatorului posibilitatea de a-și șterge
                             definitiv contul. Solicită confirmarea
                             parolei
                             curente, șterge datele din baza de date și închide sesiunea. Include avertismente
                             privind
                             ireversibilitatea acțiunii.</p>
-                        <p><strong>salveaza_profil.php</strong>Procesează datele trimise din formularul de editare
+                        <p><strong>salveaza_profil.php:</strong> Procesează datele trimise din formularul de editare
                             profil. Actualizează informațiile
                             personale
                             ale utilizatorului în baza de date și redirecționează către pagina de profil cu mesaj de
@@ -240,13 +240,13 @@
                 <section id="export">
                     <h2>2.9 Export și integrare (leaderboard.json.php, leaderboard.pdf.php, rss.php)</h2>
                     <div class="file-description">
-                        <p><strong>leaderboard.json.php</strong>Generează un export al clasamentului curent în format
+                        <p><strong>leaderboard.json.php:</strong> Generează un export al clasamentului curent în format
                             JSON pentru integrare sau descărcare
                             externă.</p>
-                        <p><strong>leaderboard.pdf.php</strong>Generează un export al clasamentului curent în format
+                        <p><strong>leaderboard.pdf.php:</strong> Generează un export al clasamentului curent în format
                             PDF, pregătit pentru printare sau
                             distribuire.</p>
-                        <p><strong>rss.php</strong>Generează un flux RSS cu ultimele antrenamente finalizate de
+                        <p><strong>rss.php:</strong> Generează un flux RSS cu ultimele antrenamente finalizate de
                             utilizator pentru secțiunea
                             selectată. Permite urmărirea progresului din aplicații externe.</p>
                     </div>
@@ -255,10 +255,10 @@
                 <section id="alte-fisiere">
                     <h2>2.10 Alte Fișiere Importante (index.php, db.php)</h2>
                     <div class="file-description">
-                        <p><strong>index.php:</strong>Punctul de intrare în aplicație. Verifică dacă utilizatorul este
+                        <p><strong>index.php:</strong> Punctul de intrare în aplicație. Verifică dacă utilizatorul este
                             autentificat și îl
                             redirecționează către pagina principală sau către login, după caz.</p>
-                        <p><strong>db.php:</strong>Centralizează logica de conectare la baza de date folosind PDO. Este
+                        <p><strong>db.php:</strong> Centralizează logica de conectare la baza de date folosind PDO. Este
                             inclus în toate
                             fișierele
                             care au nevoie de acces la date, asigurând o conexiune unică și sigură.</p>
