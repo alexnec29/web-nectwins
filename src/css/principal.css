@@ -21,9 +21,9 @@ nav {
     border-bottom: 1px solid #0b0b0c;
 }
 
-nav button.gym,
-nav button.kineto,
-nav button.fizioterapie {
+nav .gym,
+nav .kineto,
+nav .fizioterapie {
     position: relative;
     background: none;
     border: none;
@@ -35,19 +35,20 @@ nav button.fizioterapie {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
 nav form {
     display: inline;
 }
 
-nav button.buton-apasat img {
+nav .buton-apasat img {
     filter: brightness(0.7) drop-shadow(0 0 8px #4885d4);
     transform: scale(0.95);
     transition: filter 0.2s, transform 0.2s;
 }
 
-nav button .nav-tooltip {
+nav .nav-tooltip {
     display: none;
     position: absolute;
     left: 110%;
@@ -66,18 +67,24 @@ nav button .nav-tooltip {
     transition: opacity 0.2s;
 }
 
-nav button:hover .nav-tooltip {
+nav .gym:hover .nav-tooltip,
+nav .kineto:hover .nav-tooltip,
+nav .fizioterapie:hover .nav-tooltip {
     display: block;
     opacity: 1;
 }
 
-nav button:active img {
+nav .gym:active img,
+nav .kineto:active img,
+nav .fizioterapie:active img {
     transform: scale(0.92) rotate(-3deg);
     filter: brightness(0.8);
     transition: transform 0.1s, filter 0.1s;
 }
 
-nav button img {
+nav .gym img,
+nav .kineto img,
+nav .fizioterapie img {
     width: 100%;
     height: 100%;
     display: block;
@@ -179,7 +186,6 @@ footer a:hover {
 
 .dropdown-content a {
     color: #0077cc;
-    ;
     background-color: #242427;
 }
 
