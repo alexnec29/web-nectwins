@@ -254,7 +254,7 @@ $section_options = [
             dayDiv.className = 'day-item';
             dayDiv.innerHTML = `
                 <div class="day-header">
-                    <input type="text" name="day_name_${dayCounter}" placeholder="Nume zi (ex: Push, Pull, Legs)" 
+                    <input type="text" name="day_name_${dayCounter}" placeholder="Nume zi (ex: Push, Pull, Legs)" >
                     <button type="button" class="remove-day" onclick="removeDay(this)">Șterge</button>
                 </div>
                 <div class="muscle-groups-grid">
