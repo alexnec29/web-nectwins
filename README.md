@@ -1,5 +1,7 @@
 # Workout Web Generator - NecTwins
 
+## VIDEO: https://youtu.be/NS9RUDW21MY
+
 Before running the program, you should add on the root folder an .env file that has the fields necesary for connecting to the database:
 ```
 DB_HOST=
