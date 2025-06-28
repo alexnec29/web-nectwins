@@ -8,14 +8,6 @@ if (!isset($_SESSION["user_id"])) {
 
 require './../db.php';
 
-if (isset($_GET['ajax']) && $_GET['ajax'] === 'subgroups') {
-    $group_id = (int)($_GET['group_id'] ?? 0);
-    $stmt = $pdo->prepare("SELECT id, name FROM muscle_subgroup WHERE principal_group = :gid ORDER BY name");
-    $stmt->execute([':gid' => $group_id]);
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-    exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $delete_id = (int)$_POST['delete_id'];
     $pdo->prepare("DELETE FROM exercise_health_condition WHERE exercise_id = :id")->execute([':id' => $delete_id]);
